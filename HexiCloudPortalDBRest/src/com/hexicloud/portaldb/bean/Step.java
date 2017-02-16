@@ -15,6 +15,7 @@ public class Step implements Serializable {
 	private boolean isRoleSelelction;
 	private boolean isDecisionMaking;
 	private boolean nonRedirectStep;
+        private String stepLabel;
 
 	public int getStepId() {
 		return stepId;
@@ -64,4 +65,11 @@ public class Step implements Serializable {
 		this.nonRedirectStep = nonRedirectStep;
 	}
 
+    public void setStepLabel(String stepLabel) {
+        this.stepLabel = stepLabel;
+    }
+
+    public String getStepLabel() {
+        return stepLabel;
+    }
 }
