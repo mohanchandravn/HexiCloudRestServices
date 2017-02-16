@@ -7,11 +7,11 @@ import com.hexicloud.portaldb.bean.StepDocument;
 import com.hexicloud.portaldb.bean.UserStep;
 
 public interface UserStepsService {
-	public List<StepDocument> findDocsByStepId(int stepId);
+    public List<StepDocument> findDocsByStepId(int stepId);
 
-	public void createUserSteps(UserStep userStep);
+    public void createUserSteps(UserStep userStep);
 
-	public UserStep getUsersCurrentStep(String userId);
-	
-	public List<Step> getApplicationSteps();
+    public UserStep getUsersCurrentStep(String userId);
+
+    public List<Step> getApplicationSteps();
 }

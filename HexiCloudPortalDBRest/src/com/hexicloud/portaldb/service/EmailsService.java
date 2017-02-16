@@ -6,8 +6,8 @@ import com.hexicloud.portaldb.bean.UserEmail;
 
 public interface EmailsService {
 
-	public List<UserEmail> getUserEmails(String userId);
+    public List<UserEmail> getUserEmails(String userId);
 
-	public UserEmail saveUserEmail(UserEmail userEmail);
+    public UserEmail saveUserEmail(UserEmail userEmail);
 
 }

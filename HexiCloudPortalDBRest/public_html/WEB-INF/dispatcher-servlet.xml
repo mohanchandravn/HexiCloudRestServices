@@ -29,4 +29,7 @@
     <bean id="userEmailsDAO" class="com.hexicloud.portaldb.daoImpl.UserEmailsDAOImpl">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+    <bean id="usersDAO" class="com.hexicloud.portaldb.daoImpl.UsersDAOImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
 </beans>
