@@ -38,7 +38,7 @@ public class LoginController {
         if (loggedInUser == null) {
 
             logger.info("Users with user id " + loggedInUser + " not found");
-            return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<User>(HttpStatus.UNAUTHORIZED);
         }
         logger.info("******** End of authenticate() in controller ***********");
         return new ResponseEntity<User>(loggedInUser, HttpStatus.OK);
