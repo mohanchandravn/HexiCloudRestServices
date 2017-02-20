@@ -24,10 +24,18 @@ public class StepDocumentsServiceImpl implements StepDocumentsService {
         logger.info("*******  findDocsByStepId() of  service *****************");
         return stepDocumentsDAO.findDocsByStepId(stepId);
     }
+    
+    @Override
+    public List<StepDocument> findDocsByStepCode(String stepCode) {
+        logger.info("*******  findDocsByStepCode() of  service *****************");
+        return stepDocumentsDAO.findDocsByStepCode(stepCode);
+    }
 
     @Override
     public void addStepDocument(StepDocument stepDocument) {
         logger.info("*******  addStepDocument() of  service *****************");
         stepDocumentsDAO.addStepDocument(stepDocument);
     }
+
+
 }
