@@ -22,13 +22,14 @@ public class LoginServiceImpl implements LoginService {
         logger.info("******* starting authenticate() of  service *****************");
         User dbUser = null;
         if (user != null && user.getUserId() != null) {
-           
+
             dbUser = usersDAO.getUser(user.getUserId());
             if (dbUser != null) {
                 byte[] decodedPasswordBytes = Base64.decodeBase64(user.getPassword().getBytes());
                 String decodedPassword = new String(decodedPasswordBytes);
                 if (decodedPassword.equalsIgnoreCase(dbUser.getPassword())) {
                     usersDAO.updateLastLoggedIn(user.getUserId());
+                    dbUser.setPassword(null);
                     return dbUser;
                 }
             }

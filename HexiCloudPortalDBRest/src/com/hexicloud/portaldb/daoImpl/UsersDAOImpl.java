@@ -44,6 +44,6 @@ public class UsersDAOImpl implements UsersDAO {
     public void updateLastLoggedIn(String userId) {
         logger.info(" Begining of updateLastLoggedIn() ");
         jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_USER_LAST_LOGGED_IN, new Object[] { userId });
-        logger.info(" Begining of updateLastLoggedIn() ");
+        logger.info(" Ending of updateLastLoggedIn() ");
     }
 }

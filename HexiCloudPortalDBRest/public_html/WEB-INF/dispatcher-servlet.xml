@@ -32,4 +32,7 @@
     <bean id="usersDAO" class="com.hexicloud.portaldb.daoImpl.UsersDAOImpl">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+     <bean id="clmDataDAO" class="com.hexicloud.portaldb.daoImpl.ClmDataDAOImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
 </beans>
