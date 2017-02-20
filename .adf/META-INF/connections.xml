@@ -7,14 +7,14 @@
         <Contents>thin</Contents>
       </StringRefAddr>
       <StringRefAddr addrType="hostname">
-        <Contents>140.86.1.182</Contents>
+        <Contents>localhost</Contents>
       </StringRefAddr>
       <SecureRefAddr addrType="password"/>
       <StringRefAddr addrType="subtype">
         <Contents>oraJDBC</Contents>
       </StringRefAddr>
       <StringRefAddr addrType="port">
-        <Contents>1521</Contents>
+        <Contents>8888</Contents>
       </StringRefAddr>
       <StringRefAddr addrType="serviceName">
         <Contents>PDB1.gse00000514.oraclecloud.internal</Contents>

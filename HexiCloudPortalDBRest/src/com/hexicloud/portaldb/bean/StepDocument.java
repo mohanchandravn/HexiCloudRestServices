@@ -10,25 +10,29 @@ public class StepDocument implements Serializable {
     private static final long serialVersionUID = -6606025768623129422L;
 
     private int stepId;
+    private String stepCode;
     private String docType;
     private String docTypeExtn;
-    private String docFieldId;
+    private String docFileId;
+    private String docMetaData;
+    private String fileName;
+    private String publicLinkId;
 
     public StepDocument() {
 
     }
 
-    /**
-     * @param stepId
-     * @param docType
-     * @param docTypeExtn
-     * @param docFieldId
-     */
-    public StepDocument(int stepId, String docType, String docTypeExtn, String docFieldId) {
+
+    public StepDocument(int stepId, String stepCode, String docType, String docTypeExtn, String docFileId,
+                        String docMetaData, String fileName, String publicLinkId) {
         this.stepId = stepId;
+        this.stepCode = stepCode;
         this.docType = docType;
         this.docTypeExtn = docTypeExtn;
-        this.docFieldId = docFieldId;
+        this.docFileId = docFileId;
+        this.docMetaData = docMetaData;
+        this.fileName = fileName;
+        this.publicLinkId = publicLinkId;
     }
 
     /**
@@ -76,19 +80,44 @@ public class StepDocument implements Serializable {
         this.docTypeExtn = docTypeExtn;
     }
 
-    /**
-     * @return the docFieldId
-     */
-    public String getDocFieldId() {
-        return docFieldId;
+
+    public void setStepCode(String stepCode) {
+        this.stepCode = stepCode;
     }
 
-    /**
-     * @param docFieldId
-     *            the docFieldId to set
-     */
-    public void setDocFieldId(String docFieldId) {
-        this.docFieldId = docFieldId;
+    public String getStepCode() {
+        return stepCode;
     }
 
+    public void setDocMetaData(String docMetaData) {
+        this.docMetaData = docMetaData;
+    }
+
+    public String getDocMetaData() {
+        return docMetaData;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setPublicLinkId(String publicLinkId) {
+        this.publicLinkId = publicLinkId;
+    }
+
+    public String getPublicLinkId() {
+        return publicLinkId;
+    }
+
+    public void setDocFileId(String docFileId) {
+        this.docFileId = docFileId;
+    }
+
+    public String getDocFileId() {
+        return docFileId;
+    }
 }

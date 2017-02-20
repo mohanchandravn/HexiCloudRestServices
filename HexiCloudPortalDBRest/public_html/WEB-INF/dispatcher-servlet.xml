@@ -35,4 +35,8 @@
      <bean id="clmDataDAO" class="com.hexicloud.portaldb.daoImpl.ClmDataDAOImpl">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+    
+     <bean id="stepDocumentsDAO" class="com.hexicloud.portaldb.daoImpl.StepDocumentsDAOImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
 </beans>

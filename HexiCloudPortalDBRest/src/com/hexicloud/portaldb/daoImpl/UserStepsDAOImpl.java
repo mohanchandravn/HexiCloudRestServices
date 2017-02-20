@@ -1,5 +1,11 @@
 package com.hexicloud.portaldb.daoImpl;
 
+import com.hexicloud.portaldb.bean.Step;
+import com.hexicloud.portaldb.bean.UserStep;
+import com.hexicloud.portaldb.dao.UserStepsDAO;
+import com.hexicloud.portaldb.factory.Steps;
+import com.hexicloud.portaldb.util.SqlQueryConstantsUtil;
+
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -9,13 +15,6 @@ import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import com.hexicloud.portaldb.bean.Step;
-import com.hexicloud.portaldb.bean.StepDocument;
-import com.hexicloud.portaldb.bean.UserStep;
-import com.hexicloud.portaldb.dao.UserStepsDAO;
-import com.hexicloud.portaldb.factory.Steps;
-import com.hexicloud.portaldb.util.SqlQueryConstantsUtil;
 
 @Repository
 public class UserStepsDAOImpl implements UserStepsDAO {
@@ -34,20 +33,6 @@ public class UserStepsDAOImpl implements UserStepsDAO {
         this.steps = steps;
     }
 
-    @Override
-    public List<StepDocument> findDocsByStepId(int stepId) {
-        logger.info(" Begining of findDocsByStepId() ");
-
-        @SuppressWarnings({ "unchecked", "rawtypes" })
-        List<StepDocument> stepDocumentsList =
-            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_FIND_STEP_DOCS_BY_STEP_ID, new Object[] { stepId },
-                               new BeanPropertyRowMapper(StepDocument.class));
-
-        logger.info("stepDocumentsList size ===========> " + stepDocumentsList != null ? stepDocumentsList.size() :
-                    null);
-        logger.info(" End of findDocsByStepId() ");
-        return stepDocumentsList;
-    }
 
     @Override
     public void createUserSteps(UserStep userStep) {
