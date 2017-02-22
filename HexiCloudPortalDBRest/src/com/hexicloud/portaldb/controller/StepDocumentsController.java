@@ -48,7 +48,7 @@ public class StepDocumentsController {
 
     }
     
-    @RequestMapping(value = "/services/rest/findStepDocsByStepCode/{stepCode}/{subStepCode}", method = RequestMethod.GET)
+    @RequestMapping(value = "/services/rest/findStepDocsByCode/{stepCode}/{subStepCode}", method = RequestMethod.GET)
     public ResponseEntity<List<StepDocument>> findStepDocsByStepCodeAndSubStep(@PathVariable("stepCode")
                                                                    String stepCode, @PathVariable("subStepCode")
                                                                    String subStepCode) throws Exception {
@@ -66,7 +66,7 @@ public class StepDocumentsController {
 
     }
     
-    @RequestMapping(value = "/services/rest/findStepDocsByStepCode/{stepCode}", method = RequestMethod.GET)
+    @RequestMapping(value = "/services/rest/findStepDocsByCode/{stepCode}", method = RequestMethod.GET)
     public ResponseEntity<List<StepDocument>> findStepDocsByStepCode(@PathVariable("stepCode")
                                                                    String stepCode) throws Exception {
         logger.info("******* Start of findStepDocsByStepCode() in controller ***********");

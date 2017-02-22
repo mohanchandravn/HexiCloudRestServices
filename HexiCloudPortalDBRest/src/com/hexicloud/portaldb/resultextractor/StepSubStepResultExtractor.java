@@ -37,7 +37,6 @@ public class StepSubStepResultExtractor implements ResultSetExtractor<List<Step>
 
                 step.setStepLabel(resultSet.getString("STEP_LABEL"));
                 step.setHasSubStep(resultSet.getString("HAS_SUB_STEP"));
-                step.setSubStepLabel(resultSet.getString("SUB_STEP_LABEL"));
                 stepsMap.put(id, step);
             }
             if (step.getHasSubStep().equalsIgnoreCase("Y") && resultSet.getString("SUB_STEP_CODE") != null) {

@@ -19,7 +19,6 @@ public class Step implements Serializable {
     private boolean nonRedirectStep;
     private String stepLabel;
     private String hasSubStep;
-    private String subStepLabel;
     private List<SubStep> subSteps;
 
     public int getStepId() {
@@ -85,14 +84,6 @@ public class Step implements Serializable {
         return hasSubStep;
     }
 
-    public void setSubStepLabel(String subStepLabel) {
-        this.subStepLabel = subStepLabel;
-    }
-
-    public String getSubStepLabel() {
-        return subStepLabel;
-    }
-    
     public void setSubSteps(List<SubStep> subSteps) {
         this.subSteps = subSteps;
     }
