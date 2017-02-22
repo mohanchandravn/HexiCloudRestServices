@@ -10,4 +10,6 @@ public interface StepDocumentsService {
     public List<StepDocument> findDocsByStepCode(String stepCode);
 
     public void addStepDocument(StepDocument stepDocument);
+    
+//    public void saveOrUpdateStepDocument(UploadStepDocument uploadStepDocument);
 }

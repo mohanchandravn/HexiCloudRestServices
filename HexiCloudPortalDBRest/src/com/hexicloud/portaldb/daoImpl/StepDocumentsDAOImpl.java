@@ -73,5 +73,17 @@ public class StepDocumentsDAOImpl implements StepDocumentsDAO {
         logger.info(" End of addStepDocument() ");
     }
 
+//    @Override
+//       public void saveOrUpdateStepDocument(UploadStepDocument uploadStepDocument)
+//       {
+//    //           this.jdbcTemplate.update(SqlQueryConstantsUtil.SQL_CREATE_STEP_DOCUMENT,new Object[] {uploadStepDocument.getStepId(),
+//    //                                                                                                  uploadStepDocument.getStepCode(),
+//    //                                                                                                   uploadStepDocument.getDocType(),
+//    //                                                                                                   uploadStepDocument.getDocTypeExtn(),
+//    //                                                                                                  uploadStepDocument.getDocFieldId(),
+//    //                                                                                                 uploadStepDocument.getDocMetaData(),
+//    //                                                                                                 uploadStepDocument.getFileName(),
+//    //                                                                                                 uploadStepDocument.getPublicLinkId()});
+//       }
 
 }
