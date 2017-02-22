@@ -2,6 +2,8 @@ package com.hexicloud.portaldb.bean;
 
 import java.io.Serializable;
 
+import java.util.List;
+
 public class Step implements Serializable {
 
     /**
@@ -16,6 +18,9 @@ public class Step implements Serializable {
     private boolean isDecisionMaking;
     private boolean nonRedirectStep;
     private String stepLabel;
+    private String hasSubStep;
+    private String subStepLabel;
+    private List<SubStep> subSteps;
 
     public int getStepId() {
         return stepId;
@@ -71,5 +76,28 @@ public class Step implements Serializable {
 
     public String getStepLabel() {
         return stepLabel;
+    }
+    public void setHasSubStep(String hasSubStep) {
+        this.hasSubStep = hasSubStep;
+    }
+
+    public String getHasSubStep() {
+        return hasSubStep;
+    }
+
+    public void setSubStepLabel(String subStepLabel) {
+        this.subStepLabel = subStepLabel;
+    }
+
+    public String getSubStepLabel() {
+        return subStepLabel;
+    }
+    
+    public void setSubSteps(List<SubStep> subSteps) {
+        this.subSteps = subSteps;
+    }
+
+    public List<SubStep> getSubSteps() {
+        return subSteps;
     }
 }

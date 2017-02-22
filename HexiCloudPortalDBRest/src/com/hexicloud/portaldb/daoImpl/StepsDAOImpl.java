@@ -3,19 +3,19 @@
  */
 package com.hexicloud.portaldb.daoImpl;
 
+import com.hexicloud.portaldb.bean.Step;
+import com.hexicloud.portaldb.dao.StepsDAO;
+import com.hexicloud.portaldb.resultextractor.StepSubStepResultExtractor;
+import com.hexicloud.portaldb.util.SqlQueryConstantsUtil;
+
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import com.hexicloud.portaldb.bean.Step;
-import com.hexicloud.portaldb.dao.StepsDAO;
-import com.hexicloud.portaldb.util.SqlQueryConstantsUtil;
 
 /**
  * @author mohchand
@@ -40,7 +40,7 @@ public class StepsDAOImpl implements StepsDAO {
 
         @SuppressWarnings({ "unchecked", "rawtypes" })
         List<Step> stepsList =
-            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_FIND_APPLICATION_STEPS, new BeanPropertyRowMapper(Step.class));
+            ( List<Step>)jdbcTemplate.query(SqlQueryConstantsUtil.SQL_FIND_APPLICATION_STEPS, new StepSubStepResultExtractor());
 
         logger.info("stepsList size ===========> " + stepsList != null ? stepsList.size() : null);
         logger.info(" End of getApplicationSteps() ");
