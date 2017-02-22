@@ -48,12 +48,30 @@ public class StepDocumentsController {
 
     }
     
+    @RequestMapping(value = "/services/rest/findStepDocsByStepCode/{stepCode}/{subStepCode}", method = RequestMethod.GET)
+    public ResponseEntity<List<StepDocument>> findStepDocsByStepCodeAndSubStep(@PathVariable("stepCode")
+                                                                   String stepCode, @PathVariable("subStepCode")
+                                                                   String subStepCode) throws Exception {
+        logger.info("******* Start of findStepDocsByStepCode() in controller ***********");
+
+        List<StepDocument> stepDocsList = stepDocumentsService.findDocsByStepCode(stepCode, subStepCode);
+        if (stepDocsList.isEmpty()) {
+
+            logger.info("Step documents with code " + stepCode + " not found");
+            return new ResponseEntity<List<StepDocument>>(HttpStatus.NO_CONTENT);
+        }
+
+        logger.info("******** End of findStepDocsByStepCode() in controller ***********");
+        return new ResponseEntity<List<StepDocument>>(stepDocsList, HttpStatus.OK);
+
+    }
+    
     @RequestMapping(value = "/services/rest/findStepDocsByStepCode/{stepCode}", method = RequestMethod.GET)
     public ResponseEntity<List<StepDocument>> findStepDocsByStepCode(@PathVariable("stepCode")
                                                                    String stepCode) throws Exception {
         logger.info("******* Start of findStepDocsByStepCode() in controller ***********");
 
-        List<StepDocument> stepDocsList = stepDocumentsService.findDocsByStepCode(stepCode);
+        List<StepDocument> stepDocsList = stepDocumentsService.findDocsByStepCode(stepCode, null);
         if (stepDocsList.isEmpty()) {
 
             logger.info("Step documents with code " + stepCode + " not found");

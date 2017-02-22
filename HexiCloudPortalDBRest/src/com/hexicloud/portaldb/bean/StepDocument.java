@@ -17,23 +17,12 @@ public class StepDocument implements Serializable {
     private String docMetaData;
     private String fileName;
     private String publicLinkId;
+    private String subStepCode;
 
     public StepDocument() {
 
     }
 
-
-    public StepDocument(int stepId, String stepCode, String docType, String docTypeExtn, String docFileId,
-                        String docMetaData, String fileName, String publicLinkId) {
-        this.stepId = stepId;
-        this.stepCode = stepCode;
-        this.docType = docType;
-        this.docTypeExtn = docTypeExtn;
-        this.docFileId = docFileId;
-        this.docMetaData = docMetaData;
-        this.fileName = fileName;
-        this.publicLinkId = publicLinkId;
-    }
 
     /**
      * @return the stepId
@@ -119,5 +108,13 @@ public class StepDocument implements Serializable {
 
     public String getDocFileId() {
         return docFileId;
+    }
+
+    public void setSubStepCode(String subStepCode) {
+        this.subStepCode = subStepCode;
+    }
+
+    public String getSubStepCode() {
+        return subStepCode;
     }
 }

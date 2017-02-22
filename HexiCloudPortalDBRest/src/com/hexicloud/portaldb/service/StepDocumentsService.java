@@ -7,7 +7,7 @@ import java.util.List;
 public interface StepDocumentsService {
     public List<StepDocument> findDocsByStepId(int stepId);
     
-    public List<StepDocument> findDocsByStepCode(String stepCode);
+    public List<StepDocument> findDocsByStepCode(String stepCode, String subStepCode);
 
     public void addStepDocument(StepDocument stepDocument);
     

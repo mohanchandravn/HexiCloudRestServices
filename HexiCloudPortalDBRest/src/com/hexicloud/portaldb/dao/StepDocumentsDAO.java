@@ -8,6 +8,8 @@ public interface StepDocumentsDAO {
     public List<StepDocument> findDocsByStepId(int stepId);
     
     public List<StepDocument> findDocsByStepCode(String stepCode);
+    
+    public List<StepDocument> findDocsByStepCodeAndSubStep(String stepCode, String subStepCode);
 
     public void addStepDocument(StepDocument stepDocument);
 

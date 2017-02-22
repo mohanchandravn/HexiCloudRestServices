@@ -26,9 +26,14 @@ public class StepDocumentsServiceImpl implements StepDocumentsService {
     }
     
     @Override
-    public List<StepDocument> findDocsByStepCode(String stepCode) {
+    public List<StepDocument> findDocsByStepCode(String stepCode, String subStepCode) {
         logger.info("*******  findDocsByStepCode() of  service *****************");
-        return stepDocumentsDAO.findDocsByStepCode(stepCode);
+        if (subStepCode == null) {
+            return stepDocumentsDAO.findDocsByStepCode(stepCode);
+        } else {
+            return stepDocumentsDAO.findDocsByStepCodeAndSubStep(stepCode, subStepCode);
+        }
+        
     }
 
     @Override

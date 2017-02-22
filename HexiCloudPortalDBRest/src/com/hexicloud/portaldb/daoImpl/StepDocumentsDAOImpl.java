@@ -42,7 +42,7 @@ public class StepDocumentsDAOImpl implements StepDocumentsDAO {
         logger.info(" End of findDocsByStepId() ");
         return stepDocumentsList;
     }
-    
+
     @Override
     public List<StepDocument> findDocsByStepCode(String stepCode) {
         logger.info(" Begining of findDocsByStepCode() ");
@@ -50,6 +50,21 @@ public class StepDocumentsDAOImpl implements StepDocumentsDAO {
         @SuppressWarnings({ "unchecked", "rawtypes" })
         List<StepDocument> stepDocumentsList =
             jdbcTemplate.query(SqlQueryConstantsUtil.SQL_FIND_STEP_DOCS_BY_STEP_CODE, new Object[] { stepCode },
+                               new BeanPropertyRowMapper(StepDocument.class));
+
+        logger.info("stepDocumentsList size ===========> " + stepDocumentsList != null ? stepDocumentsList.size() :
+                    null);
+        logger.info(" End of findDocsByStepCode() ");
+        return stepDocumentsList;
+    }
+    
+    @Override
+    public List<StepDocument> findDocsByStepCodeAndSubStep(String stepCode, String subStepCode) {
+        logger.info(" Begining of findDocsByStepCode() ");
+
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        List<StepDocument> stepDocumentsList =
+            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_FIND_STEP_DOCS_BY_STEP_CODE_AND_SUB_STEP, new Object[] { stepCode, subStepCode },
                                new BeanPropertyRowMapper(StepDocument.class));
 
         logger.info("stepDocumentsList size ===========> " + stepDocumentsList != null ? stepDocumentsList.size() :
@@ -67,23 +82,24 @@ public class StepDocumentsDAOImpl implements StepDocumentsDAO {
                                 new Object[] { stepDocument.getStepId(), stepDocument.getStepCode(),
                                                stepDocument.getDocType(), stepDocument.getDocTypeExtn(),
                                                stepDocument.getDocFileId(), stepDocument.getDocMetaData(),
-                                               stepDocument.getFileName(), stepDocument.getPublicLinkId()});
+                                               stepDocument.getFileName(), stepDocument.getPublicLinkId() });
 
         }
         logger.info(" End of addStepDocument() ");
     }
 
-//    @Override
-//       public void saveOrUpdateStepDocument(UploadStepDocument uploadStepDocument)
-//       {
-//    //           this.jdbcTemplate.update(SqlQueryConstantsUtil.SQL_CREATE_STEP_DOCUMENT,new Object[] {uploadStepDocument.getStepId(),
-//    //                                                                                                  uploadStepDocument.getStepCode(),
-//    //                                                                                                   uploadStepDocument.getDocType(),
-//    //                                                                                                   uploadStepDocument.getDocTypeExtn(),
-//    //                                                                                                  uploadStepDocument.getDocFieldId(),
-//    //                                                                                                 uploadStepDocument.getDocMetaData(),
-//    //                                                                                                 uploadStepDocument.getFileName(),
-//    //                                                                                                 uploadStepDocument.getPublicLinkId()});
-//       }
+    //    @Override
+    //       public void saveOrUpdateStepDocument(UploadStepDocument uploadStepDocument)
+    //       {
+    //    //           this.jdbcTemplate.update(SqlQueryConstantsUtil.SQL_CREATE_STEP_DOCUMENT,new Object[] {uploadStepDocument.getStepId(),
+    //    //                                                                                                  uploadStepDocument.getStepCode(),
+    //    //                                                                                                   uploadStepDocument.getDocType(),
+    //    //                                                                                                   uploadStepDocument.getDocTypeExtn(),
+    //    //                                                                                                  uploadStepDocument.getDocFieldId(),
+    //    //                                                                                                 uploadStepDocument.getDocMetaData(),
+    //    //                                                                                                 uploadStepDocument.getFileName(),
+    //    //                                                                                                 uploadStepDocument.getPublicLinkId()});
+    //       }
+
 
 }
