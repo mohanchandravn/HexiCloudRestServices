@@ -62,8 +62,7 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
         // userEmail.getSentTo(), userEmail.getSentCC(), userEmail.getSentBCC()
         // });
 
-        SqlParameterSource in = new MapSqlParameterSource().
-
+        SqlParameterSource inParamsMap = new MapSqlParameterSource().
                                                            addValue("IN_USER_ID", userEmail.getUserId())
                                                            .addValue("IN_SUBJECT", userEmail.getSubject())
                                                            .addValue("IN_MESSAGE", userEmail.getMessage())
@@ -71,7 +70,7 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
                                                            .addValue("IN_SENT_CC", userEmail.getSentCC())
                                                            .addValue("IN_SENT_BCC", userEmail.getSentBCC());
 
-        Map<String, Object> out = saveUserEmailPrc.execute(in);
+        Map<String, Object> out = saveUserEmailPrc.execute(inParamsMap);
         userEmail.setSrId(((BigDecimal) out.get("OUT_SR_ID")).intValue());
         logger.info(" End of saveUserEmail() ");
         return userEmail;

@@ -22,14 +22,16 @@ public class UserStep implements Serializable {
     private boolean decisionMakingStep;
     private boolean nonRedirectStep;
     private boolean roleSelectionStep;
+    private String userAction;
 
     public UserStep() {
 
     }
 
+
     public UserStep(String userId, String userRole, int curStepId, String curStepCode, int preStepId,
-                    String preStepCode, Timestamp createdDate, Timestamp updatedDate) {
-        super();
+                    String preStepCode, Timestamp createdDate, Timestamp updatedDate, boolean decisionMakingStep,
+                    boolean nonRedirectStep, boolean roleSelectionStep, String userAction) {
         this.userId = userId;
         this.userRole = userRole;
         this.curStepId = curStepId;
@@ -38,6 +40,10 @@ public class UserStep implements Serializable {
         this.preStepCode = preStepCode;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
+        this.decisionMakingStep = decisionMakingStep;
+        this.nonRedirectStep = nonRedirectStep;
+        this.roleSelectionStep = roleSelectionStep;
+        this.userAction = userAction;
     }
 
     public String getUserId() {
@@ -146,4 +152,11 @@ public class UserStep implements Serializable {
         this.roleSelectionStep = roleSelectionStep;
     }
 
+    public void setUserAction(String userAction) {
+        this.userAction = userAction;
+    }
+
+    public String getUserAction() {
+        return userAction;
+    }
 }

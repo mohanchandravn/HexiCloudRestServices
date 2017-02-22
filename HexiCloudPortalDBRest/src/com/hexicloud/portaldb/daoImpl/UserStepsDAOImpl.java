@@ -14,6 +14,9 @@ import org.apache.log4j.Logger;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -23,10 +26,14 @@ public class UserStepsDAOImpl implements UserStepsDAO {
     private JdbcTemplate jdbcTemplate;
     private DataSource dataSource;
     private Steps steps;
+    private SimpleJdbcCall saveUserNavAudit;
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
         jdbcTemplate = new JdbcTemplate(this.dataSource);
+        this.saveUserNavAudit =
+            new SimpleJdbcCall(dataSource).withCatalogName("PKG_USER_NAV_AUDIT")
+            .withProcedureName("PRC_SAVE_USER_NAV_AUDIT");
     }
 
     public void setSteps(Steps steps) {
@@ -50,6 +57,9 @@ public class UserStepsDAOImpl implements UserStepsDAO {
         // SQL_UPDATE_USER_STEP = "UPDATE USER_STEPS SET USER_ROLE = ?,
         // CUR_STEP_ID = ?, CUR_STEP_CODE = ?, PRE_STEP_ID = ?, PRE_STEP_CODE =
         // ?, UPDATED_DATE = SYSDATE WHERE USER_ID = ?";
+        SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_USER_ID", userStep.getUserId())
+                                                                    .addValue("IN_STEP_LABEL", steps.getStepLabel(userStep.getPreStepCode()))
+                                                                    .addValue("IN_ACTION", userStep.getUserAction());
 
         if (null != existingUserSteps && existingUserSteps.size() > 0) {
             jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_USER_STEP,
@@ -62,6 +72,7 @@ public class UserStepsDAOImpl implements UserStepsDAO {
                                                steps.getStepId(userStep.getCurStepCode()), userStep.getCurStepCode(),
                                                steps.getStepId(userStep.getPreStepCode()), userStep.getPreStepCode() });
         }
+        saveUserNavAudit.execute(inParamsMap);
         logger.info(" End of createUserSteps() ");
 
     }
