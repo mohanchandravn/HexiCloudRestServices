@@ -18,6 +18,13 @@ public class StepDocument implements Serializable {
     private String fileName;
     private String publicLinkId;
     private String subStepCode;
+    private String appLinkUrl;
+    private String accessToken;
+    private String refreshToken;
+    private String appLinkId;
+    private String docCsRole;
+    private Integer displayOrder;
+    private String displayLabel;
 
     public StepDocument() {
 
@@ -116,5 +123,61 @@ public class StepDocument implements Serializable {
 
     public String getSubStepCode() {
         return subStepCode;
+    }
+
+    public void setAppLinkUrl(String appLinkUrl) {
+        this.appLinkUrl = appLinkUrl;
+    }
+
+    public String getAppLinkUrl() {
+        return appLinkUrl;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setAppLinkId(String appLinkId) {
+        this.appLinkId = appLinkId;
+    }
+
+    public String getAppLinkId() {
+        return appLinkId;
+    }
+
+    public void setDocCsRole(String docCsRole) {
+        this.docCsRole = docCsRole;
+    }
+
+    public String getDocCsRole() {
+        return docCsRole;
+    }
+
+    public void setDisplayOrder(Integer displayOrder) {
+        this.displayOrder = displayOrder;
+    }
+
+    public Integer getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayLabel(String displayLabel) {
+        this.displayLabel = displayLabel;
+    }
+
+    public String getDisplayLabel() {
+        return displayLabel;
     }
 }
