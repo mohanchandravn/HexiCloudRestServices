@@ -24,8 +24,8 @@ public class LoginController {
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Not found authenticate in the system")
     @ExceptionHandler(Exception.class)
-    public void exceptionHandler() {
-
+    public void exceptionHandler(Exception ex) {
+        logger.error("Exception is :", ex);
     }
 
 

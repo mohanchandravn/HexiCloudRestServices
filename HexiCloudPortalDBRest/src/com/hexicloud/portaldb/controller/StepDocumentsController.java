@@ -27,8 +27,8 @@ public class StepDocumentsController {
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Not found in the system")
     @ExceptionHandler(Exception.class)
-    public void exceptionHandler() {
-
+    public void exceptionHandler(Exception ex) {
+        logger.error("Exception is :", ex);
     }
 
     @RequestMapping(value = "/services/rest/findStepDocsByStepId/{stepId}", method = RequestMethod.GET)
