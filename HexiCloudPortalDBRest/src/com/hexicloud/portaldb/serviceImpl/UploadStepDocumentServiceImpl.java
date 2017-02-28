@@ -58,7 +58,7 @@ public class UploadStepDocumentServiceImpl implements UploadStepDocumentService 
 
                 if (multipartFile != null) {
                     FormDataMultiPart multipart = new FormDataMultiPart();
-                    String tempDir = System.getProperty("java.io.tmpdir");
+                    String tempDir = UploadStepDocumentService.TEMP_DIR;//System.getProperty("java.io.tmpdir");
                     uploadFile = new File(tempDir + multipartFile.getOriginalFilename());
                     multipartFile.transferTo(uploadFile);
                     String jsonPayload = "{\"parentID\":\"" + parentFolderId + "\"}";

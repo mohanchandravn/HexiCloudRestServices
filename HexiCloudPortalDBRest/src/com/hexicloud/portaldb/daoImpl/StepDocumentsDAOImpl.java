@@ -77,29 +77,19 @@ public class StepDocumentsDAOImpl implements StepDocumentsDAO {
     public void addStepDocument(StepDocument stepDocument) {
         logger.info(" Begining of addStepDocument() ");
 
-        if (null != stepDocument) {
-            jdbcTemplate.update(SqlQueryConstantsUtil.SQL_ADD_DOC_BY_STEP_ID,
-                                new Object[] { stepDocument.getStepId(), stepDocument.getStepCode(),
-                                               stepDocument.getDocType(), stepDocument.getDocTypeExtn(),
-                                               stepDocument.getDocFileId(), stepDocument.getDocMetaData(),
-                                               stepDocument.getFileName(), stepDocument.getPublicLinkId() });
-
-        }
+        jdbcTemplate.update(SqlQueryConstantsUtil.SQL_ADD_DOC_BY_STEP_ID,
+                            new Object[] { stepDocument.getStepId(), stepDocument.getStepCode(),
+                                           stepDocument.getDocType(), stepDocument.getDocTypeExtn(),
+                                           stepDocument.getDocFileId(), stepDocument.getDocMetaData(),
+                                           stepDocument.getFileName(), stepDocument.getPublicLinkId(),
+                                           stepDocument.getSubStepCode(), stepDocument.getAppLinkUrl(),
+                                           stepDocument.getAccessToken(), stepDocument.getRefreshToken(),
+                                           stepDocument.getAppLinkId(), stepDocument.getDisplayOrder(),
+                                           stepDocument.getDisplayLabel()});
         logger.info(" End of addStepDocument() ");
     }
 
-    //    @Override
-    //       public void saveOrUpdateStepDocument(UploadStepDocument uploadStepDocument)
-    //       {
-    //    //           this.jdbcTemplate.update(SqlQueryConstantsUtil.SQL_CREATE_STEP_DOCUMENT,new Object[] {uploadStepDocument.getStepId(),
-    //    //                                                                                                  uploadStepDocument.getStepCode(),
-    //    //                                                                                                   uploadStepDocument.getDocType(),
-    //    //                                                                                                   uploadStepDocument.getDocTypeExtn(),
-    //    //                                                                                                  uploadStepDocument.getDocFieldId(),
-    //    //                                                                                                 uploadStepDocument.getDocMetaData(),
-    //    //                                                                                                 uploadStepDocument.getFileName(),
-    //    //                                                                                                 uploadStepDocument.getPublicLinkId()});
-    //       }
+
 
 
 }
