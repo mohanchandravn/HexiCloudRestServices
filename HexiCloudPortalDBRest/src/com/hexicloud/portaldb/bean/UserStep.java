@@ -1,148 +1,162 @@
 package com.hexicloud.portaldb.bean;
 
 import java.io.Serializable;
+
 import java.sql.Timestamp;
 
 public class UserStep implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8187903799798651849L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -8187903799798651849L;
 
-	private String userId;
-	private String userRole;
-	private int curStepId;
-	private String curStepCode;
-	private int preStepId;
-	private String preStepCode;
-	private Timestamp createdDate;
-	private Timestamp updatedDate;
-	private boolean decisionMakingStep;
-	private boolean nonRedirectStep;
-	private boolean roleSelectionStep;
-	
-	public UserStep() {
+    private String userId;
+    private String userRole;
+    private int curStepId;
+    private String curStepCode;
+    private int preStepId;
+    private String preStepCode;
+    private Timestamp createdDate;
+    private Timestamp updatedDate;
+    private boolean decisionMakingStep;
+    private boolean nonRedirectStep;
+    private boolean roleSelectionStep;
+    private String userAction;
 
-	}
+    public UserStep() {
 
-	public UserStep(String userId, String userRole, int curStepId, String curStepCode, int preStepId,
-			String preStepCode, Timestamp createdDate, Timestamp updatedDate) {
-		super();
-		this.userId = userId;
-		this.userRole = userRole;
-		this.curStepId = curStepId;
-		this.curStepCode = curStepCode;
-		this.preStepId = preStepId;
-		this.preStepCode = preStepCode;
-		this.createdDate = createdDate;
-		this.updatedDate = updatedDate;
-	}
+    }
 
-	public String getUserId() {
-		return userId;
-	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+    public UserStep(String userId, String userRole, int curStepId, String curStepCode, int preStepId,
+                    String preStepCode, Timestamp createdDate, Timestamp updatedDate, boolean decisionMakingStep,
+                    boolean nonRedirectStep, boolean roleSelectionStep, String userAction) {
+        this.userId = userId;
+        this.userRole = userRole;
+        this.curStepId = curStepId;
+        this.curStepCode = curStepCode;
+        this.preStepId = preStepId;
+        this.preStepCode = preStepCode;
+        this.createdDate = createdDate;
+        this.updatedDate = updatedDate;
+        this.decisionMakingStep = decisionMakingStep;
+        this.nonRedirectStep = nonRedirectStep;
+        this.roleSelectionStep = roleSelectionStep;
+        this.userAction = userAction;
+    }
 
-	public String getUserRole() {
-		return userRole;
-	}
+    public String getUserId() {
+        return userId;
+    }
 
-	public void setUserRole(String userRole) {
-		this.userRole = userRole;
-	}
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
-	public int getCurStepId() {
-		return curStepId;
-	}
+    public String getUserRole() {
+        return userRole;
+    }
 
-	public void setCurStepId(int curStepId) {
-		this.curStepId = curStepId;
-	}
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+    }
 
-	public String getCurStepCode() {
-		return curStepCode;
-	}
+    public int getCurStepId() {
+        return curStepId;
+    }
 
-	public void setCurStepCode(String curStepCode) {
-		this.curStepCode = curStepCode;
-	}
+    public void setCurStepId(int curStepId) {
+        this.curStepId = curStepId;
+    }
 
-	public int getPreStepId() {
-		return preStepId;
-	}
+    public String getCurStepCode() {
+        return curStepCode;
+    }
 
-	public void setPreStepId(int preStepId) {
-		this.preStepId = preStepId;
-	}
+    public void setCurStepCode(String curStepCode) {
+        this.curStepCode = curStepCode;
+    }
 
-	public String getPreStepCode() {
-		return preStepCode;
-	}
+    public int getPreStepId() {
+        return preStepId;
+    }
 
-	public void setPreStepCode(String preStepCode) {
-		this.preStepCode = preStepCode;
-	}
+    public void setPreStepId(int preStepId) {
+        this.preStepId = preStepId;
+    }
 
-	public Timestamp getCreatedDate() {
-		return createdDate;
-	}
+    public String getPreStepCode() {
+        return preStepCode;
+    }
 
-	public void setCreatedDate(Timestamp createdDate) {
-		this.createdDate = createdDate;
-	}
+    public void setPreStepCode(String preStepCode) {
+        this.preStepCode = preStepCode;
+    }
 
-	public Timestamp getUpdatedDate() {
-		return updatedDate;
-	}
+    public Timestamp getCreatedDate() {
+        return createdDate;
+    }
 
-	public void setUpdatedDate(Timestamp updatedDate) {
-		this.updatedDate = updatedDate;
-	}
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
+    }
 
-	/**
-	 * @return the decisionMakingStep
-	 */
-	public boolean isDecisionMakingStep() {
-		return decisionMakingStep;
-	}
+    public Timestamp getUpdatedDate() {
+        return updatedDate;
+    }
 
-	/**
-	 * @param decisionMakingStep the decisionMakingStep to set
-	 */
-	public void setDecisionMakingStep(boolean decisionMakingStep) {
-		this.decisionMakingStep = decisionMakingStep;
-	}
+    public void setUpdatedDate(Timestamp updatedDate) {
+        this.updatedDate = updatedDate;
+    }
 
-	/**
-	 * @return the nonRedirectStep
-	 */
-	public boolean isNonRedirectStep() {
-		return nonRedirectStep;
-	}
+    /**
+     * @return the decisionMakingStep
+     */
+    public boolean isDecisionMakingStep() {
+        return decisionMakingStep;
+    }
 
-	/**
-	 * @param nonRedirectStep the nonRedirectStep to set
-	 */
-	public void setNonRedirectStep(boolean nonRedirectStep) {
-		this.nonRedirectStep = nonRedirectStep;
-	}
+    /**
+     * @param decisionMakingStep the decisionMakingStep to set
+     */
+    public void setDecisionMakingStep(boolean decisionMakingStep) {
+        this.decisionMakingStep = decisionMakingStep;
+    }
 
-	/**
-	 * @return the roleSelectionStep
-	 */
-	public boolean isRoleSelectionStep() {
-		return roleSelectionStep;
-	}
+    /**
+     * @return the nonRedirectStep
+     */
+    public boolean isNonRedirectStep() {
+        return nonRedirectStep;
+    }
 
-	/**
-	 * @param roleSelectionStep the roleSelectionStep to set
-	 */
-	public void setRoleSelectionStep(boolean roleSelectionStep) {
-		this.roleSelectionStep = roleSelectionStep;
-	}
+    /**
+     * @param nonRedirectStep the nonRedirectStep to set
+     */
+    public void setNonRedirectStep(boolean nonRedirectStep) {
+        this.nonRedirectStep = nonRedirectStep;
+    }
 
+    /**
+     * @return the roleSelectionStep
+     */
+    public boolean isRoleSelectionStep() {
+        return roleSelectionStep;
+    }
+
+    /**
+     * @param roleSelectionStep the roleSelectionStep to set
+     */
+    public void setRoleSelectionStep(boolean roleSelectionStep) {
+        this.roleSelectionStep = roleSelectionStep;
+    }
+
+    public void setUserAction(String userAction) {
+        this.userAction = userAction;
+    }
+
+    public String getUserAction() {
+        return userAction;
+    }
 }

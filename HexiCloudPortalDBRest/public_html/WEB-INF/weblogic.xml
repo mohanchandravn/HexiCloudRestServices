@@ -2,6 +2,6 @@
 <weblogic-web-app xmlns="http://xmlns.oracle.com/weblogic/weblogic-web-app">
     <context-root>hexiCloudRest</context-root>
     <container-descriptor>
-      <prefer-web-inf-classes>true</prefer-web-inf-classes>
-  </container-descriptor>
+        <prefer-web-inf-classes>true</prefer-web-inf-classes>
+    </container-descriptor>
 </weblogic-web-app>
