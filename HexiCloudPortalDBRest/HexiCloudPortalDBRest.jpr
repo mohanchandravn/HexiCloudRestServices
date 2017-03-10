@@ -90,6 +90,8 @@
          <string v="JSF"/>
          <string v="JSP"/>
          <string v="Java"/>
+         <string v="RESTWebServices"/>
+         <string v="Spring"/>
          <string v="XML"/>
       </list>
    </hash>
@@ -486,6 +488,14 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
+            <value n="id" v="JSON Jersey 2.x"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="JAX-RS Jersey 2.x"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
             <value n="id" v="Aopalliance-1.0.jar"/>
             <value n="isJDK" v="false"/>
          </hash>
@@ -611,6 +621,14 @@
          </hash>
          <hash>
             <value n="id" v="Jersey-media-multipart-2.0-m11.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Json-simple-1.1.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Org.json.jar"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>
@@ -895,6 +913,24 @@
                <value n="id" v="Jersey-media-multipart-2.0-m11.jar"/>
                <value n="locked" v="true"/>
             </hash>
+            <hash>
+               <list n="classPath">
+                  <url path="public_html/WEB-INF/lib/json-simple-1.1.jar" jar-entry=""/>
+               </list>
+               <value n="deployedByDefault" v="true"/>
+               <value n="description" v="Json-simple-1.1.jar"/>
+               <value n="id" v="Json-simple-1.1.jar"/>
+               <value n="locked" v="true"/>
+            </hash>
+            <hash>
+               <list n="classPath">
+                  <url path="public_html/WEB-INF/lib/org.json.jar" jar-entry=""/>
+               </list>
+               <value n="deployedByDefault" v="true"/>
+               <value n="description" v="Org.json.jar"/>
+               <value n="id" v="Org.json.jar"/>
+               <value n="locked" v="true"/>
+            </hash>
          </list>
       </hash>
       <list n="libraryReferences">
@@ -908,6 +944,14 @@
          </hash>
          <hash>
             <value n="id" v="Servlet Runtime"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="JSON Jersey 2.x"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="JAX-RS Jersey 2.x"/>
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
@@ -1036,6 +1080,14 @@
          </hash>
          <hash>
             <value n="id" v="Jersey-media-multipart-2.0-m11.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Json-simple-1.1.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Org.json.jar"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>

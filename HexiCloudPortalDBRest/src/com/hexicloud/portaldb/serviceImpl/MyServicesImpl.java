@@ -34,6 +34,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import org.springframework.stereotype.Service;
+@Service("myservice")
 public class MyServicesImpl implements MyServices{
 
     public String getCookie(@QueryParam("restEndPoint") String restEndPoint, @QueryParam("input") String input) {
