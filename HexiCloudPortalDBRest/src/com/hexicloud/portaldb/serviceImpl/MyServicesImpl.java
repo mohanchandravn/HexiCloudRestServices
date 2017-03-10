@@ -1,5 +1,7 @@
 package com.hexicloud.portaldb.serviceImpl;
 
+import com.hexicloud.portaldb.service.MyServices;
+
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
@@ -32,7 +34,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class MyServicesImpl {
+public class MyServicesImpl implements MyServices{
 
     public String getCookie(@QueryParam("restEndPoint") String restEndPoint, @QueryParam("input") String input) {
         //Properties prop = readProperties();
