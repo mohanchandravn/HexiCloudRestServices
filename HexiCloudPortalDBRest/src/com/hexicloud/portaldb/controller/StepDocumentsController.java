@@ -47,11 +47,12 @@ public class StepDocumentsController {
         return new ResponseEntity<List<StepDocument>>(stepDocsList, HttpStatus.OK);
 
     }
-    
+
     @RequestMapping(value = "/services/rest/findStepDocsByCode/{stepCode}/{subStepCode}", method = RequestMethod.GET)
     public ResponseEntity<List<StepDocument>> findStepDocsByStepCodeAndSubStep(@PathVariable("stepCode")
-                                                                   String stepCode, @PathVariable("subStepCode")
-                                                                   String subStepCode) throws Exception {
+                                                                               String stepCode,
+                                                                               @PathVariable("subStepCode")
+                                                                               String subStepCode) throws Exception {
         logger.info("******* Start of findStepDocsByStepCode() in controller ***********");
 
         List<StepDocument> stepDocsList = stepDocumentsService.findDocsByStepCode(stepCode, subStepCode);
@@ -65,10 +66,10 @@ public class StepDocumentsController {
         return new ResponseEntity<List<StepDocument>>(stepDocsList, HttpStatus.OK);
 
     }
-    
+
     @RequestMapping(value = "/services/rest/findStepDocsByCode/{stepCode}", method = RequestMethod.GET)
     public ResponseEntity<List<StepDocument>> findStepDocsByStepCode(@PathVariable("stepCode")
-                                                                   String stepCode) throws Exception {
+                                                                     String stepCode) throws Exception {
         logger.info("******* Start of findStepDocsByStepCode() in controller ***********");
 
         List<StepDocument> stepDocsList = stepDocumentsService.findDocsByStepCode(stepCode, null);

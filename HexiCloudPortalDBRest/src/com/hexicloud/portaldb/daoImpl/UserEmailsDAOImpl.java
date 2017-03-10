@@ -35,13 +35,37 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
     }
 
     @Override
-    public List<UserEmail> getUserEmails(String userId) {
+    public List<UserEmail> getUserEmails(String userId, String isResolved, Number requestId) {
         logger.info(" Begining of getUserEmails() ");
+        StringBuilder whereClause = new StringBuilder();
+        String query = SqlQueryConstantsUtil.SQL_FIND_USER_EMAILS;
+        if (null != userId) {
+            whereClause.append(" WHERE USER_ID = '" + userId + "'");
+        }
+        if (null != isResolved && isResolved != "A") {
+            if (whereClause.length() > 0) {
+                whereClause.append(" AND IS_RESOLVED = ");
+                whereClause.append(isResolved == "Y" ? "1" : "0");
 
+            } else {
+                whereClause.append(" WHERE IS_RESOLVED = " + isResolved == "Y" ? "1" : "0");
+            }
+        }
+        if (null != requestId) {
+            if (whereClause.length() > 0) {
+                whereClause.append(" AND SR_ID = " + requestId.toString());
+
+            } else {
+                whereClause.append(" WHERE SR_ID = " + requestId.toString());
+            }
+        }
+
+        if (whereClause.length() > 0) {
+            query = query.concat(whereClause.toString());
+        }
         @SuppressWarnings({ "unchecked", "rawtypes" })
         List<UserEmail> userEmailsList =
-            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_FIND_USER_EMAILS_BY_ID, new Object[] { userId },
-                               new BeanPropertyRowMapper(UserEmail.class));
+            jdbcTemplate.query(query, new BeanPropertyRowMapper(UserEmail.class));
 
         logger.info("getUserEmails size ===========> " + userEmailsList != null ? userEmailsList.size() : null);
         logger.info(" End of getUserEmails() ");
@@ -62,13 +86,12 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
         // userEmail.getSentTo(), userEmail.getSentCC(), userEmail.getSentBCC()
         // });
 
-        SqlParameterSource inParamsMap = new MapSqlParameterSource().
-                                                           addValue("IN_USER_ID", userEmail.getUserId())
-                                                           .addValue("IN_SUBJECT", userEmail.getSubject())
-                                                           .addValue("IN_MESSAGE", userEmail.getMessage())
-                                                           .addValue("IN_SENT_TO", userEmail.getSentTo())
-                                                           .addValue("IN_SENT_CC", userEmail.getSentCC())
-                                                           .addValue("IN_SENT_BCC", userEmail.getSentBCC());
+        SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_USER_ID", userEmail.getUserId())
+                                                                    .addValue("IN_SUBJECT", userEmail.getSubject())
+                                                                    .addValue("IN_MESSAGE", userEmail.getMessage())
+                                                                    .addValue("IN_SENT_TO", userEmail.getSentTo())
+                                                                    .addValue("IN_SENT_CC", userEmail.getSentCC())
+                                                                    .addValue("IN_SENT_BCC", userEmail.getSentBCC());
 
         Map<String, Object> out = saveUserEmailPrc.execute(inParamsMap);
         userEmail.setSrId(((BigDecimal) out.get("OUT_SR_ID")).intValue());

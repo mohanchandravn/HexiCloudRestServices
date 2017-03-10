@@ -19,9 +19,9 @@ public class EmailsServiceImpl implements EmailsService {
     UserEmailsDAO userEmailsDAO;
 
     @Override
-    public List<UserEmail> getUserEmails(String userId) {
+    public List<UserEmail> getUserEmails(String userId, String isResolved, Number requestId) {
         logger.info("*******  findDocsByStepId() of  service *****************");
-        return userEmailsDAO.getUserEmails(userId);
+        return userEmailsDAO.getUserEmails(userId, isResolved, requestId);
     }
 
     @Override
