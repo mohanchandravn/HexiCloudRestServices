@@ -45,10 +45,10 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
         if (null != isResolved && isResolved != "A") {
             if (whereClause.length() > 0) {
                 whereClause.append(" AND IS_RESOLVED = ");
-                whereClause.append(isResolved == "Y" ? "1" : "0");
+                whereClause.append(isResolved.equalsIgnoreCase("Y") ? "1" : "0");
 
             } else {
-                whereClause.append(" WHERE IS_RESOLVED = " + isResolved == "Y" ? "1" : "0");
+                whereClause.append(" WHERE IS_RESOLVED = " + (isResolved.equalsIgnoreCase("Y") ? "1" : "0"));
             }
         }
         if (null != requestId) {
@@ -103,7 +103,7 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
         logger.info(" Begining of updateResolution() ");
 
         jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_EMAIL_RESOLUTION,
-                            new Object[] { userEmail.isResolved(), userEmail.getResolutionComments(),userEmail.getSrId()});
+                            new Object[] { userEmail.isIsResolved(), userEmail.getResolutionComments(),userEmail.getSrId()});
         logger.info(" End of updateResolution() ");
 
     }

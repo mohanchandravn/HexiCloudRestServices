@@ -24,23 +24,6 @@ public class UserEmail implements Serializable {
     public UserEmail() {
     }
 
-
-    public UserEmail(Number srId, String userId, String subject, String message, String sentTo, String sentCC,
-                     String sentBCC, boolean isResolved, int csmEmailCount, String resolutionComments,
-                     String createdDate) {
-        this.srId = srId;
-        this.userId = userId;
-        this.subject = subject;
-        this.message = message;
-        this.sentTo = sentTo;
-        this.sentCC = sentCC;
-        this.sentBCC = sentBCC;
-        this.isResolved = isResolved;
-        this.csmEmailCount = csmEmailCount;
-        this.resolutionComments = resolutionComments;
-        this.createdDate = createdDate;
-    }
-
     /**
      * @return the srId
      */
@@ -146,20 +129,6 @@ public class UserEmail implements Serializable {
         this.sentBCC = sentBCC;
     }
 
-    /**
-     * @return the isResolved
-     */
-    public boolean isResolved() {
-        return isResolved;
-    }
-
-    /**
-     * @param isResolved
-     *            the isResolved to set
-     */
-    public void setResolved(boolean isResolved) {
-        this.isResolved = isResolved;
-    }
 
     /**
      * @return the csmEmailCount
@@ -190,5 +159,13 @@ public class UserEmail implements Serializable {
 
     public String getCreatedDate() {
         return createdDate;
+    }
+
+    public void setIsResolved(boolean isResolved) {
+        this.isResolved = isResolved;
+    }
+
+    public boolean isIsResolved() {
+        return isResolved;
     }
 }
