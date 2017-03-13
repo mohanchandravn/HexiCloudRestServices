@@ -9,7 +9,7 @@ public class UserEmail implements Serializable {
      */
     private static final long serialVersionUID = 8940802173458170997L;
 
-    private int srId;
+    private Number srId;
     private String userId;
     private String subject;
     private String message;
@@ -18,13 +18,16 @@ public class UserEmail implements Serializable {
     private String sentBCC;
     private boolean isResolved;
     private int csmEmailCount;
+    private String resolutionComments;
+    private String createdDate;
 
     public UserEmail() {
     }
 
-    public UserEmail(int srId, String userId, String subject, String message, String sentTo, String sentCC,
-                     String sentBCC, boolean isResolved, int csmEmailCount) {
-        super();
+
+    public UserEmail(Number srId, String userId, String subject, String message, String sentTo, String sentCC,
+                     String sentBCC, boolean isResolved, int csmEmailCount, String resolutionComments,
+                     String createdDate) {
         this.srId = srId;
         this.userId = userId;
         this.subject = subject;
@@ -34,12 +37,14 @@ public class UserEmail implements Serializable {
         this.sentBCC = sentBCC;
         this.isResolved = isResolved;
         this.csmEmailCount = csmEmailCount;
+        this.resolutionComments = resolutionComments;
+        this.createdDate = createdDate;
     }
 
     /**
      * @return the srId
      */
-    public int getSrId() {
+    public Number getSrId() {
         return srId;
     }
 
@@ -47,7 +52,7 @@ public class UserEmail implements Serializable {
      * @param srId
      *            the srId to set
      */
-    public void setSrId(int srId) {
+    public void setSrId(Number srId) {
         this.srId = srId;
     }
 
@@ -171,4 +176,19 @@ public class UserEmail implements Serializable {
         this.csmEmailCount = csmEmailCount;
     }
 
+    public void setResolutionComments(String resolutionComments) {
+        this.resolutionComments = resolutionComments;
+    }
+
+    public String getResolutionComments() {
+        return resolutionComments;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
 }

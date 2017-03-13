@@ -1,6 +1,5 @@
 package com.hexicloud.portaldb.bean;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
@@ -36,7 +35,6 @@ public class UploadStepDocument {
     }
 
 
-
     public String getDocType() {
         return docType;
     }
@@ -60,7 +58,6 @@ public class UploadStepDocument {
     public void setDocFieldId(String docFieldId) {
         this.docFieldId = docFieldId;
     }
-
 
 
     public String getParentID() {

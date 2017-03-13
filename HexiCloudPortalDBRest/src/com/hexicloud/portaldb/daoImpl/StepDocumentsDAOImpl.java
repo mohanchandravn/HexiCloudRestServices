@@ -57,15 +57,15 @@ public class StepDocumentsDAOImpl implements StepDocumentsDAO {
         logger.info(" End of findDocsByStepCode() ");
         return stepDocumentsList;
     }
-    
+
     @Override
     public List<StepDocument> findDocsByStepCodeAndSubStep(String stepCode, String subStepCode) {
         logger.info(" Begining of findDocsByStepCode() ");
 
         @SuppressWarnings({ "unchecked", "rawtypes" })
         List<StepDocument> stepDocumentsList =
-            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_FIND_STEP_DOCS_BY_STEP_CODE_AND_SUB_STEP, new Object[] { stepCode, subStepCode },
-                               new BeanPropertyRowMapper(StepDocument.class));
+            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_FIND_STEP_DOCS_BY_STEP_CODE_AND_SUB_STEP,
+                               new Object[] { stepCode, subStepCode }, new BeanPropertyRowMapper(StepDocument.class));
 
         logger.info("stepDocumentsList size ===========> " + stepDocumentsList != null ? stepDocumentsList.size() :
                     null);
@@ -85,11 +85,9 @@ public class StepDocumentsDAOImpl implements StepDocumentsDAO {
                                            stepDocument.getSubStepCode(), stepDocument.getAppLinkUrl(),
                                            stepDocument.getAccessToken(), stepDocument.getRefreshToken(),
                                            stepDocument.getAppLinkId(), stepDocument.getDisplayOrder(),
-                                           stepDocument.getDisplayLabel()});
+                                           stepDocument.getDisplayLabel() });
         logger.info(" End of addStepDocument() ");
     }
-
-
 
 
 }

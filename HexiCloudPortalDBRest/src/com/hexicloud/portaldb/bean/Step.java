@@ -76,6 +76,7 @@ public class Step implements Serializable {
     public String getStepLabel() {
         return stepLabel;
     }
+
     public void setHasSubStep(String hasSubStep) {
         this.hasSubStep = hasSubStep;
     }

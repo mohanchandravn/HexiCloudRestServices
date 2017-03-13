@@ -40,7 +40,8 @@ public class StepsDAOImpl implements StepsDAO {
 
         @SuppressWarnings({ "unchecked", "rawtypes" })
         List<Step> stepsList =
-            ( List<Step>)jdbcTemplate.query(SqlQueryConstantsUtil.SQL_FIND_APPLICATION_STEPS, new StepSubStepResultExtractor());
+            (List<Step>) jdbcTemplate.query(SqlQueryConstantsUtil.SQL_FIND_APPLICATION_STEPS,
+                                            new StepSubStepResultExtractor());
 
         logger.info("stepsList size ===========> " + stepsList != null ? stepsList.size() : null);
         logger.info(" End of getApplicationSteps() ");

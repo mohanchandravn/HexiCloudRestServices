@@ -37,7 +37,7 @@ public class Steps {
     public int getStepId(String stepCode) {
         return getSteps() != null ? getSteps().get(stepCode).getStepId() : 0;
     }
-    
+
     public String getStepLabel(String stepCode) {
         return getSteps() != null ? getSteps().get(stepCode).getStepLabel() : null;
     }
