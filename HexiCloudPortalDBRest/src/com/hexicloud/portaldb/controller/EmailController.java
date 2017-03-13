@@ -32,9 +32,12 @@ public class EmailController {
     }
 
     @RequestMapping(value = "/services/rest/findUserEmails", method = RequestMethod.GET)
-    public ResponseEntity<List<UserEmail>> findUserEmails(@RequestParam(value = "userId",  required = false) String userId,
-                                                          @RequestParam(value = "isResolved",  required = false) String isResolved,
-                                                          @RequestParam(value = "requestId",  required = false) Number requestId) throws Exception {
+    public ResponseEntity<List<UserEmail>> findUserEmails(@RequestParam(value = "userId", required = false)
+                                                          String userId,
+                                                          @RequestParam(value = "isResolved", required = false)
+                                                          String isResolved,
+                                                          @RequestParam(value = "requestId", required = false)
+                                                          Number requestId) throws Exception {
         logger.info("******* Start of findUserEmails() in controller ***********");
         List<UserEmail> emailsList = emailsService.getUserEmails(userId, isResolved, requestId);
         if (emailsList.isEmpty()) {
@@ -56,5 +59,15 @@ public class EmailController {
         }
         logger.info("******** End of findUserEmails() in controller ***********");
         return new ResponseEntity<UserEmail>(resEmail, HttpStatus.CREATED);
+    }
+    
+    @RequestMapping(value = "/services/rest/updateEmailResolution/", method = RequestMethod.POST)
+    public ResponseEntity<Void> updateEmailResolution(@RequestBody UserEmail userEmail) throws Exception {
+        logger.info("******* Start of updateEmailResolution() in controller ***********");
+
+        emailsService.updateEmailResolution(userEmail);
+
+        logger.info("******** End of updateEmailResolution() in controller ***********");
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 }

@@ -11,24 +11,24 @@ import org.springframework.stereotype.Service;
 
 @Service("stepFolderService")
 public class StepFolderServiceImpl implements StepFolderService {
-    
+
     @Autowired
     private StepFolderDAO stepFolderDAO;
-    
-    
+
+
     @Override
     public List<StepFolder> retrieveStepFolderDetails(String stepId) {
-        if(stepId != null) {
+        if (stepId != null) {
             return stepFolderDAO.retrieveStepFolderDetails(stepId);
         }
-        
+
         return null;
     }
-    
+
     @Override
     public void addStepFolder(StepFolder stepFolder) {
-       if(stepFolder != null) {
-           stepFolderDAO.addStepFolder(stepFolder);
-       }
+        if (stepFolder != null) {
+            stepFolderDAO.addStepFolder(stepFolder);
+        }
     }
 }

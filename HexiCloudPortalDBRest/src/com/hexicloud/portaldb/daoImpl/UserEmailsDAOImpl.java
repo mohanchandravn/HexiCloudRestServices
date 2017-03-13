@@ -64,8 +64,7 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
             query = query.concat(whereClause.toString());
         }
         @SuppressWarnings({ "unchecked", "rawtypes" })
-        List<UserEmail> userEmailsList =
-            jdbcTemplate.query(query, new BeanPropertyRowMapper(UserEmail.class));
+        List<UserEmail> userEmailsList = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserEmail.class));
 
         logger.info("getUserEmails size ===========> " + userEmailsList != null ? userEmailsList.size() : null);
         logger.info(" End of getUserEmails() ");
@@ -99,4 +98,13 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
         return userEmail;
     }
 
+    @Override
+    public void updateResolution(UserEmail userEmail) {
+        logger.info(" Begining of updateResolution() ");
+
+        jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_EMAIL_RESOLUTION,
+                            new Object[] { userEmail.isResolved(), userEmail.getResolutionComments(),userEmail.getSrId()});
+        logger.info(" End of updateResolution() ");
+
+    }
 }

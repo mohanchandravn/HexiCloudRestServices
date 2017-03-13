@@ -10,4 +10,5 @@ public interface EmailsService {
 
     public UserEmail saveUserEmail(UserEmail userEmail);
 
+    public void updateEmailResolution(UserEmail userEmail);
 }

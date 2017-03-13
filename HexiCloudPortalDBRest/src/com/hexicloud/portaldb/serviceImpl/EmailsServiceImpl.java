@@ -31,4 +31,9 @@ public class EmailsServiceImpl implements EmailsService {
 
     }
 
+    @Override
+    public void updateEmailResolution(UserEmail userEmail) {
+        logger.info("*******  updateEmailResolution() of  service *****************");
+        userEmailsDAO.updateResolution(userEmail);
+    }
 }
