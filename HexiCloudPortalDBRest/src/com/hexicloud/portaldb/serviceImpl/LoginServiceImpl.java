@@ -37,4 +37,22 @@ public class LoginServiceImpl implements LoginService {
         logger.info("******* starting authenticate() of  service *****************");
         return null;
     }
+
+    @Override
+    public void createUser(User user) throws Exception {
+        logger.info("*******  createUser() of  service *****************");
+        usersDAO.createUser(user);
+    }
+
+    @Override
+    public void updatePassword(User user) throws Exception {
+        logger.info("*******  updatePassword() of  service *****************");
+        usersDAO.updatePassword(user);
+    }
+
+    @Override
+    public boolean checkExistingUser(String userId) {
+        logger.info("*******  checkExistingUser() of  service *****************");
+        return usersDAO.checkExistingUser(userId);
+    }
 }

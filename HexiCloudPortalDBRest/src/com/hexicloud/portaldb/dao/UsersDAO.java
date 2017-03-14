@@ -6,4 +6,10 @@ public interface UsersDAO {
     public User getUser(String userId);
 
     public void updateLastLoggedIn(String userId);
+
+    public void createUser(User user) throws Exception;
+
+    public void updatePassword(User user) throws Exception;
+
+    public boolean checkExistingUser(String userId);
 }

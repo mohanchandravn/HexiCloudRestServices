@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,8 +43,32 @@ public class LoginController {
         }
         logger.info("******** End of authenticate() in controller ***********");
         return new ResponseEntity<User>(loggedInUser, HttpStatus.OK);
-
     }
+    
+    @RequestMapping(value = "/services/rest/createPortalUser/", method = RequestMethod.POST)
+    public ResponseEntity<Void> createPortalUser(@RequestBody User user) throws Exception {
+        logger.info("******* Start of createPortalUser() in controller ***********");
+        loginService.createUser(user);
+   
+        logger.info("******** End of createPortalUser() in controller ***********");
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
+    }
+    
+    @RequestMapping(value = "/services/rest/updateUserPassword/", method = RequestMethod.POST)
+    public ResponseEntity<Void> updateUserPassword(@RequestBody User user) throws Exception {
+        logger.info("******* Start of updateUserPassword() in controller ***********");
+        loginService.updatePassword(user);
+    
+        logger.info("******** End of updateUserPassword() in controller ***********");
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
+    }
+    
+    @RequestMapping(value = "/services/rest/checkUserIdAvailable/{userId}/", method = RequestMethod.GET)
+    public ResponseEntity<Boolean> checkUserIdExist(@PathVariable("userId") String userId) throws Exception {
 
-
+        logger.info("******* Start of checkUserIdExist() in controller ***********");
+        boolean userIdExists = loginService.checkExistingUser(userId);
+        logger.info("******* End of checkUserIdExist() in controller ***********");
+        return new ResponseEntity<Boolean>(userIdExists, HttpStatus.OK);
+    }
 }
