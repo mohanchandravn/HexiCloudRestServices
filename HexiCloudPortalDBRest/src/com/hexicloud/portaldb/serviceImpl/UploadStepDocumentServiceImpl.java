@@ -41,7 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * Created by shiva on 2/23/2017.
  */
-@Service(value = "uploadStepDocumentService")
+@Service("uploadStepDocumentService")
 public class UploadStepDocumentServiceImpl implements UploadStepDocumentService {
 
 
