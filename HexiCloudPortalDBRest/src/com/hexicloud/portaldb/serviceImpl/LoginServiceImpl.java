@@ -55,4 +55,16 @@ public class LoginServiceImpl implements LoginService {
         logger.info("*******  checkExistingUser() of  service *****************");
         return usersDAO.checkExistingUser(userId);
     }
+    
+    @Override
+        public User queryUserInfoByUserId(String userId) {
+            logger.info("*******  queryUserInfoByUserId() of  service *****************");
+            User dbUser = null;
+            if(userId != null)
+            {
+                dbUser = usersDAO.getUser(userId);
+                return dbUser;
+            }
+            return null;
+        }
 }

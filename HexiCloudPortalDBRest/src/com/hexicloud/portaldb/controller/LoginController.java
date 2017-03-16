@@ -1,7 +1,13 @@
 package com.hexicloud.portaldb.controller;
 
 import com.hexicloud.portaldb.bean.User;
+import com.hexicloud.portaldb.service.EmailsService;
 import com.hexicloud.portaldb.service.LoginService;
+
+import com.hexicloud.portaldb.util.encryption.EncryptionUtil;
+
+import java.sql.SQLException;
+import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 
@@ -22,6 +28,8 @@ public class LoginController {
 
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private EmailsService emailsService;
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Not found authenticate in the system")
     @ExceptionHandler(Exception.class)
@@ -71,4 +79,46 @@ public class LoginController {
         logger.info("******* End of checkUserIdExist() in controller ***********");
         return new ResponseEntity<Boolean>(userIdExists, HttpStatus.OK);
     }
+    
+    @RequestMapping(value="/services/rest/forgotPasswordService/{userId}/", method = RequestMethod.GET)
+        public ResponseEntity<String> forgotPasswordService(@PathVariable("userId") String userId)
+        {
+            try {
+                if (userId != null) {
+                    User user = loginService.queryUserInfoByUserId(userId);
+                    if (user == null)
+                        return new ResponseEntity<String>("not a valid user id", HttpStatus.NO_CONTENT);
+                    else {
+                        String decodedPassword = EncryptionUtil.decryptString(user.getPassword());;
+                        String subject = "Password Details";
+                        String emailContent = "your password is : " + decodedPassword;
+                        //String emailId = "shivakumar.gunjur.manjukumar@oracle.com";//user.getEmail()
+                        String result = emailsService.sendEmail(user.getEmail(), subject, emailContent);
+                        if (result != null && result.equalsIgnoreCase("N")) {
+                            return new ResponseEntity<String>(HttpStatus.EXPECTATION_FAILED);
+                        }
+
+                    }
+                }
+            }catch(SQLException sqlExp)
+            {
+                sqlExp.printStackTrace();
+                return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            catch(NamingException nmExp)
+            {
+                nmExp.printStackTrace();
+                return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            catch(Exception exp)
+            {
+                exp.printStackTrace();
+                return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+
+
+            return  new ResponseEntity<String>(HttpStatus.OK);
+        }
+
 }
