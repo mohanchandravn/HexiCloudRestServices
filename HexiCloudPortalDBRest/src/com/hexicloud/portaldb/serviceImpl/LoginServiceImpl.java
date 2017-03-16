@@ -67,4 +67,18 @@ public class LoginServiceImpl implements LoginService {
             }
             return null;
         }
+    
+    @Override
+    public User getMimimalUser(String userId) {
+        logger.info("******* starting authenticate() of  service *****************");
+        User dbUser = null;
+        dbUser = usersDAO.getUser(userId);
+        if (dbUser != null) {
+            dbUser.setPassword(null);
+            return dbUser;
+        }
+        logger.info("******* starting authenticate() of  service *****************");
+        return null;
+    }
+
 }

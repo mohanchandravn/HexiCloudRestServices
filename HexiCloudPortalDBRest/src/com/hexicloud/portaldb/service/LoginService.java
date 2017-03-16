@@ -12,4 +12,6 @@ public interface LoginService {
     public boolean checkExistingUser(String userId);
     
     public User queryUserInfoByUserId(String userId);
+    
+    public User getMimimalUser(String userId);
 }

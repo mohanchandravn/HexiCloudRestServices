@@ -20,7 +20,7 @@ public class User implements Serializable {
     private Timestamp pwdLastChanged;
     private Timestamp lastLoggedIn;
     private BigDecimal registryId;
-
+    private String authority;
 
     public User() {
         super();
@@ -28,7 +28,8 @@ public class User implements Serializable {
 
 
     public User(String userId, String password, String email, String userRole, String firstName, String lastName,
-                boolean active, Timestamp pwdLastChanged, Timestamp lastLoggedIn, BigDecimal registryId) {
+                boolean active, Timestamp pwdLastChanged, Timestamp lastLoggedIn, BigDecimal registryId,
+                String authority) {
         this.userId = userId;
         this.password = password;
         this.email = email;
@@ -39,6 +40,7 @@ public class User implements Serializable {
         this.pwdLastChanged = pwdLastChanged;
         this.lastLoggedIn = lastLoggedIn;
         this.registryId = registryId;
+        this.authority = authority;
     }
 
     public void setUserId(String userId) {
@@ -119,5 +121,13 @@ public class User implements Serializable {
 
     public BigDecimal getRegistryId() {
         return registryId;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
+    }
+
+    public String getAuthority() {
+        return authority;
     }
 }

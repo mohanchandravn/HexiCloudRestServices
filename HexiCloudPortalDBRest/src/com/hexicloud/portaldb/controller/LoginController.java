@@ -1,13 +1,17 @@
 package com.hexicloud.portaldb.controller;
 
 import com.hexicloud.portaldb.bean.User;
+import com.hexicloud.portaldb.exceptions.FailedToLoginException;
 import com.hexicloud.portaldb.service.EmailsService;
+import com.hexicloud.portaldb.service.JwtService;
 import com.hexicloud.portaldb.service.LoginService;
-
 import com.hexicloud.portaldb.util.encryption.EncryptionUtil;
 
 import java.sql.SQLException;
+
 import javax.naming.NamingException;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
@@ -26,8 +30,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
     private static final Logger logger = Logger.getLogger(LoginController.class);
 
+
+    private final LoginService loginService;
+
+    private final JwtService jwtService;
+
+    @SuppressWarnings("unused")
+    public LoginController() {
+        this(null, null);
+    }
+
     @Autowired
-    private LoginService loginService;
+    public LoginController(LoginService loginService, JwtService jwtService) {
+        this.loginService = loginService;
+        this.jwtService = jwtService;
+    }
     @Autowired
     private EmailsService emailsService;
 
@@ -38,39 +55,45 @@ public class LoginController {
     }
 
 
-    @RequestMapping(value = "/services/rest/authenticate/", method = RequestMethod.POST)
-    public ResponseEntity<User> authenticateUser(@RequestBody User user) throws Exception {
+    @RequestMapping(value = "/portal/login", method = RequestMethod.POST)
+    public ResponseEntity<User> authenticateUser(@RequestBody User user,
+                                                 HttpServletResponse response) throws Exception {
 
         logger.info("******* Start of authenticate() in controller ***********");
         User loggedInUser = null;
         loggedInUser = loginService.authenticate(user);
+        try {
+            response.setHeader("Token", jwtService.tokenFor(user));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         if (loggedInUser == null) {
 
             logger.info("Users with user id " + loggedInUser + " not found");
-            return new ResponseEntity<User>(HttpStatus.UNAUTHORIZED);
+            throw new FailedToLoginException(user.getUserId());
         }
         logger.info("******** End of authenticate() in controller ***********");
         return new ResponseEntity<User>(loggedInUser, HttpStatus.OK);
     }
-    
+
     @RequestMapping(value = "/services/rest/createPortalUser/", method = RequestMethod.POST)
     public ResponseEntity<Void> createPortalUser(@RequestBody User user) throws Exception {
         logger.info("******* Start of createPortalUser() in controller ***********");
         loginService.createUser(user);
-   
+
         logger.info("******** End of createPortalUser() in controller ***********");
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
-    
+
     @RequestMapping(value = "/services/rest/updateUserPassword/", method = RequestMethod.POST)
     public ResponseEntity<Void> updateUserPassword(@RequestBody User user) throws Exception {
         logger.info("******* Start of updateUserPassword() in controller ***********");
         loginService.updatePassword(user);
-    
+
         logger.info("******** End of updateUserPassword() in controller ***********");
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
-    
+
     @RequestMapping(value = "/services/rest/checkUserIdAvailable/{userId}/", method = RequestMethod.GET)
     public ResponseEntity<Boolean> checkUserIdExist(@PathVariable("userId") String userId) throws Exception {
 
@@ -79,46 +102,40 @@ public class LoginController {
         logger.info("******* End of checkUserIdExist() in controller ***********");
         return new ResponseEntity<Boolean>(userIdExists, HttpStatus.OK);
     }
-    
-    @RequestMapping(value="/services/rest/forgotPasswordService/{userId}/", method = RequestMethod.GET)
-        public ResponseEntity<String> forgotPasswordService(@PathVariable("userId") String userId)
-        {
-            try {
-                if (userId != null) {
-                    User user = loginService.queryUserInfoByUserId(userId);
-                    if (user == null)
-                        return new ResponseEntity<String>("not a valid user id", HttpStatus.NO_CONTENT);
-                    else {
-                        String decodedPassword = EncryptionUtil.decryptString(user.getPassword());;
-                        String subject = "Password Details";
-                        String emailContent = "your password is : " + decodedPassword;
-                        //String emailId = "shivakumar.gunjur.manjukumar@oracle.com";//user.getEmail()
-                        String result = emailsService.sendEmail(user.getEmail(), subject, emailContent);
-                        if (result != null && result.equalsIgnoreCase("N")) {
-                            return new ResponseEntity<String>(HttpStatus.EXPECTATION_FAILED);
-                        }
 
+    @RequestMapping(value = "/services/rest/forgotPasswordService/{userId}/", method = RequestMethod.GET)
+    public ResponseEntity<String> forgotPasswordService(@PathVariable("userId") String userId) {
+        try {
+            if (userId != null) {
+                User user = loginService.queryUserInfoByUserId(userId);
+                if (user == null)
+                    return new ResponseEntity<String>("not a valid user id", HttpStatus.NO_CONTENT);
+                else {
+                    String decodedPassword = EncryptionUtil.decryptString(user.getPassword());
+                    ;
+                    String subject = "Password Details";
+                    String emailContent = "your password is : " + decodedPassword;
+                    //String emailId = "shivakumar.gunjur.manjukumar@oracle.com";//user.getEmail()
+                    String result = emailsService.sendEmail(user.getEmail(), subject, emailContent);
+                    if (result != null && result.equalsIgnoreCase("N")) {
+                        return new ResponseEntity<String>(HttpStatus.EXPECTATION_FAILED);
                     }
+
                 }
-            }catch(SQLException sqlExp)
-            {
-                sqlExp.printStackTrace();
-                return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            catch(NamingException nmExp)
-            {
-                nmExp.printStackTrace();
-                return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-            catch(Exception exp)
-            {
-                exp.printStackTrace();
-                return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-
-
-
-            return  new ResponseEntity<String>(HttpStatus.OK);
+        } catch (SQLException sqlExp) {
+            sqlExp.printStackTrace();
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NamingException nmExp) {
+            nmExp.printStackTrace();
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception exp) {
+            exp.printStackTrace();
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
 
 }
