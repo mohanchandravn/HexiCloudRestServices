@@ -10,4 +10,6 @@ public interface LoginService {
     public void updatePassword(User user) throws Exception;
 
     public boolean checkExistingUser(String userId);
+    
+    public User queryUserInfoByUserId(String userId);
 }
