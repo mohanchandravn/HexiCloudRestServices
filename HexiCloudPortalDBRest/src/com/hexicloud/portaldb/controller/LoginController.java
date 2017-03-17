@@ -45,7 +45,7 @@ public class LoginController {
     //        return new ResponseEntity<User>(loggedInUser, HttpStatus.OK);
     //    }
 
-    @RequestMapping(value = "/services/rest/getUserDetails/{userId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/services/rest/getUserDetails/{userId}/", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER') and #userId == authentication.name")
     public ResponseEntity<User> getUserDetails(@PathVariable("userId") String userId) throws Exception {
         logger.info("******* Start of findStepDocsByStepId() in controller ***********");
