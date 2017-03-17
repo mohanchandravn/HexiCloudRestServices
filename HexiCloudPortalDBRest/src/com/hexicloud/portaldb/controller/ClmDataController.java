@@ -12,11 +12,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,13 +25,8 @@ public class ClmDataController {
     @Autowired
     private ClmDataService clmDataService;
 
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Not found in the system")
-    @ExceptionHandler(Exception.class)
-    public void exceptionHandler(Exception ex) {
-        logger.error("Exception is :", ex);
-    }
-
     @RequestMapping(value = "/services/rest/getClmData/{registryId}", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<ClmData>> getClmDataByRegistryId(@PathVariable("registryId")
                                                                 BigDecimal registryId) throws Exception {
         logger.info("******* Start of getClmDataByRegistryId() in controller ***********");

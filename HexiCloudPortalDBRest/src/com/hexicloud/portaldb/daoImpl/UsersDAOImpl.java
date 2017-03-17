@@ -1,5 +1,6 @@
 package com.hexicloud.portaldb.daoImpl;
 
+import com.hexicloud.portaldb.bean.AuthUser;
 import com.hexicloud.portaldb.bean.User;
 import com.hexicloud.portaldb.dao.UsersDAO;
 import com.hexicloud.portaldb.util.SqlQueryConstantsUtil;
@@ -88,5 +89,19 @@ public class UsersDAOImpl implements UsersDAO {
         logger.info("users size ===========> " + users != null ? users.size() : null);
         logger.info(" End of checkExistingUser() ");
         return users.isEmpty();
+    }
+
+    @Override
+    public AuthUser getUserDetailsForAuthentication(String userId) {
+        logger.info(" Begining of getUser() ");
+
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        List<AuthUser> users =
+            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_USER_FOR_AUTHENTICATION, new Object[] { userId },
+                               new BeanPropertyRowMapper(AuthUser.class));
+
+        logger.info("users size ===========> " + users != null ? users.size() : null);
+        logger.info(" End of getUser() ");
+        return !users.isEmpty() ? users.get(0) : null;
     }
 }

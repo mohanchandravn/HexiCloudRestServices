@@ -10,12 +10,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -25,13 +24,8 @@ public class EmailController {
     @Autowired
     private EmailsService emailsService;
 
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Not found in the system")
-    @ExceptionHandler(Exception.class)
-    public void exceptionHandler(Exception ex) {
-        logger.error("Exception is :", ex);
-    }
-
     @RequestMapping(value = "/services/rest/findUserEmails", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserEmail>> findUserEmails(@RequestParam(value = "userId", required = false)
                                                           String userId,
                                                           @RequestParam(value = "isResolved", required = false)
@@ -49,6 +43,7 @@ public class EmailController {
     }
 
     @RequestMapping(value = "/services/rest/saveAndSendEmail/", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('USER') and #userEmail.userId == authentication.name")
     public ResponseEntity<UserEmail> saveAndSendEmail(@RequestBody UserEmail userEmail) throws Exception {
         logger.info("******* Start of create() in controller ***********");
         UserEmail resEmail = emailsService.saveUserEmail(userEmail);
@@ -62,6 +57,7 @@ public class EmailController {
     }
     
     @RequestMapping(value = "/services/rest/updateEmailResolution/", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> updateEmailResolution(@RequestBody UserEmail userEmail) throws Exception {
         logger.info("******* Start of updateEmailResolution() in controller ***********");
 

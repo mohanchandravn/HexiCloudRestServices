@@ -11,12 +11,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,13 +25,8 @@ public class UserStepsController {
     @Autowired
     private UserStepsService userStepsService;
 
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Not found in the system")
-    @ExceptionHandler(Exception.class)
-    public void exceptionHandler(Exception ex) {
-        logger.error("Exception is :", ex);
-    }
-
     @RequestMapping(value = "/services/rest/createUserStep/", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('USER') and #userStep.userId == authentication.name")
     public ResponseEntity<Void> createUserStep(@RequestBody UserStep userStep) throws Exception {
 
         logger.info("******* Start of create() in controller ***********");
@@ -45,7 +39,8 @@ public class UserStepsController {
     }
 
     @RequestMapping(value = "/services/rest/findUsersCurrentStep/{userId}/", method = RequestMethod.GET)
-    public ResponseEntity<UserStep> findStepDocsByStepId(@PathVariable("userId") String userId) throws Exception {
+    @PreAuthorize("hasRole('USER') and #userId == authentication.name")
+    public ResponseEntity<UserStep> findUsersCurrentStep(@PathVariable("userId") String userId) throws Exception {
         logger.info("******* Start of findStepDocsByStepId() in controller ***********");
 
         UserStep currentStep = userStepsService.getUsersCurrentStep(userId);
@@ -62,6 +57,7 @@ public class UserStepsController {
 
 
     @RequestMapping(value = "/services/rest/getApplicationSteps", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Step>> getApplicationSteps() throws Exception {
         logger.info("******* Start of getApplicationSteps() in controller ***********");
         List<Step> stepsList = userStepsService.getApplicationSteps();
