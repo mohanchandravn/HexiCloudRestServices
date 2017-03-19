@@ -10,7 +10,12 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
 public class EncryptionUtil {
+    @Value("${pwdencrypt.key}")
     public static final String ENC_KEY = "~!@oApTI0o.o0987";
 
     public EncryptionUtil() {

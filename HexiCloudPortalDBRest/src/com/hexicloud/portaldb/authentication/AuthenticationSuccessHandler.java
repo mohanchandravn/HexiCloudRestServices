@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -23,13 +24,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private static final Logger logger = Logger.getLogger(AuthenticationSuccessHandler.class);
-    private int EXPIRES_IN = 600;
+    @Value("${usercookie.expiresIn}")
+    private int EXPIRES_IN;
 
 
     //    private String TOKEN_COOKIE = "AUTH-TOKEN";
 
-
-    private String USER_COOKIE = "c_user";
+    @Value("${usercookie.name}")
+    private String USER_COOKIE;
 
     @Autowired
     TokenHelper tokenHelper;

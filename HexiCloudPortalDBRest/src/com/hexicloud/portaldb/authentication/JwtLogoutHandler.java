@@ -6,13 +6,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 public class JwtLogoutHandler implements LogoutHandler {
     private static final Logger logger = Logger.getLogger(JwtLogoutHandler.class);
-    //        @Value("${app.user_cookie}")
-    private String USER_COOKIE = "c_user";
+    @Value("${usercookie.name}")
+    private String USER_COOKIE;
 
     //        @Value("${jwt.cookie}")
     //        private String TOKEN_COOKIE;

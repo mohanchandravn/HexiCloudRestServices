@@ -8,13 +8,17 @@ import java.util.Date;
 
 import org.joda.time.DateTime;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TokenHelper {
-    private String APP_NAME = "hexi-cloud-jwt";
-    private String SECRET = "QPvunFWvcI";
-    private int EXPIRES_IN = 600;
+    @Value("${token.appname}")
+    private String APP_NAME;
+    @Value("${token.secret}")
+    private String SECRET;
+    @Value("${token.expiresin}")
+    private int EXPIRES_IN;
 
     private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 

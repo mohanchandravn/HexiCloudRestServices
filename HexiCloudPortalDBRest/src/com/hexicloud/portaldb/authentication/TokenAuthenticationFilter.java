@@ -14,14 +14,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private static final Logger logger = Logger.getLogger(TokenAuthenticationFilter.class);
-    //    @Value("${jwt.header}")
-    private String AUTH_HEADER = "Authorization";
+    @Value("${auth.header}")
+    private String AUTH_HEADER;
 
     //    @Value("${jwt.cookie}")
     //    private String AUTH_COOKIE;
