@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -41,6 +42,14 @@ private static final Logger logger = Logger.getLogger(HexiSecurityConfiguration.
     }
     @Autowired
     AuthenticateHexiUserServiceImpl jwtUserDetailsService;
+    
+    @Bean
+    public DaoAuthenticationProvider authProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(jwtUserDetailsService);
+        authProvider.setPasswordEncoder(new HexiPasswordEncoder());
+        return authProvider;
+    }
 
     @Autowired
     RestAuthenticationEntryPoint restAuthenticationEntryPoint;
@@ -48,7 +57,7 @@ private static final Logger logger = Logger.getLogger(HexiSecurityConfiguration.
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         logger.info("Adding the authentication manager");
-        auth.userDetailsService(jwtUserDetailsService);
+        auth.authenticationProvider(authProvider());
     }
 
     @Autowired
