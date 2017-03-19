@@ -43,7 +43,7 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
         logger.info("Authentication success, generating the token");
         clearAuthenticationAttributes(request);
         AuthUser user = (AuthUser) authentication.getPrincipal();
-
+        
         String jws = tokenHelper.generateToken(user.getUsername());
 
         // Create token auth Cookie
@@ -59,7 +59,7 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
         //              response.addCookie( authCookie );
         response.addCookie(userCookie);
         // JWT is also in the response
-        AuthUserTokenState userTokenState = new AuthUserTokenState(jws, EXPIRES_IN);
+        AuthUserTokenState userTokenState = new AuthUserTokenState(jws, EXPIRES_IN, user.getAuthority().replace("ROLE_", ""));
         ObjectMapper mapper = new ObjectMapper();
         String jwtResponse = mapper.writeValueAsString(userTokenState);
         response.setContentType("application/json");
