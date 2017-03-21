@@ -4,9 +4,8 @@ import com.hexicloud.portaldb.bean.User;
 import com.hexicloud.portaldb.service.EmailsService;
 import com.hexicloud.portaldb.service.LoginService;
 
-import com.hexicloud.portaldb.util.encryption.EncryptionUtil;
-
 import java.sql.SQLException;
+
 import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
@@ -89,11 +88,7 @@ public class LoginController {
                     if (user == null)
                         return new ResponseEntity<String>("not a valid user id", HttpStatus.NO_CONTENT);
                     else {
-                        String decodedPassword = EncryptionUtil.decryptString(user.getPassword());;
-                        String subject = "Password Details";
-                        String emailContent = "your password is : " + decodedPassword;
-                        //String emailId = "shivakumar.gunjur.manjukumar@oracle.com";//user.getEmail()
-                        String result = emailsService.sendEmail(user.getEmail(), subject, emailContent);
+                        String result = emailsService.sendEmail(user.getEmail(),user);
                         if (result != null && result.equalsIgnoreCase("N")) {
                             return new ResponseEntity<String>(HttpStatus.EXPECTATION_FAILED);
                         }

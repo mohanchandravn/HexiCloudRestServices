@@ -1,5 +1,10 @@
 package com.hexicloud.portaldb.daoImpl;
 
+import com.hexicloud.portaldb.bean.RuleConfiguration;
+import com.hexicloud.portaldb.bean.UserEmail;
+import com.hexicloud.portaldb.dao.UserEmailsDAO;
+import com.hexicloud.portaldb.util.SqlQueryConstantsUtil;
+
 import java.math.BigDecimal;
 
 import java.util.List;
@@ -15,10 +20,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
-
-import com.hexicloud.portaldb.bean.UserEmail;
-import com.hexicloud.portaldb.dao.UserEmailsDAO;
-import com.hexicloud.portaldb.util.SqlQueryConstantsUtil;
 
 @Repository
 public class UserEmailsDAOImpl implements UserEmailsDAO {
@@ -106,5 +107,21 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
                             new Object[] { userEmail.isIsResolved(), userEmail.getResolutionComments(),userEmail.getSrId()});
         logger.info(" End of updateResolution() ");
 
+    }
+
+
+    @Override
+    public RuleConfiguration getEmailRule(String ruleKey) {
+        logger.info(" Begining of getEmailContent() ");
+       List<RuleConfiguration> rulesList = 
+           jdbcTemplate.query(SqlQueryConstantsUtil.SQL_RULE_CONFIGURATION,new Object[]{ruleKey}, new BeanPropertyRowMapper(RuleConfiguration.class));
+
+        if(rulesList != null && !(rulesList.isEmpty())) {
+            if(rulesList.size() == 1) {
+                return rulesList.get(0);
+            }
+        }
+        logger.info(" End of getEmailContent() ");
+        return null;
     }
 }

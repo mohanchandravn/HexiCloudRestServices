@@ -4,7 +4,9 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -27,13 +29,13 @@ public class EncryptionUtil {
 
     }
 
-    public static byte[] encrypt(String plainText) throws Exception {
+    public static byte[] encrypt(String plainText) throws NoSuchAlgorithmException,NoSuchPaddingException,InvalidKeyException,IllegalBlockSizeException,BadPaddingException{
         byte[] encrypted = getCypher(Cipher.ENCRYPT_MODE).doFinal(plainText.getBytes());
         System.err.println(new String(encrypted));
         return encrypted;
     }
 
-    public static String decrypt(byte[] encryptedText) throws Exception {
+    public static String decrypt(byte[] encryptedText) throws NoSuchAlgorithmException,NoSuchPaddingException,InvalidKeyException,IllegalBlockSizeException,BadPaddingException {
         byte[] decryptedByte = getCypher(Cipher.DECRYPT_MODE).doFinal(encryptedText);
         String decryptedText = new String(decryptedByte);
         return decryptedText;
@@ -57,7 +59,7 @@ public class EncryptionUtil {
         return encryptedText;
     }
 
-    public static String decryptString(String encryptedText) throws Exception {
+    public static String decryptString(String encryptedText) throws NoSuchAlgorithmException,NoSuchPaddingException,InvalidKeyException,IllegalBlockSizeException,BadPaddingException {
         byte[] encryptedTextByte = Base64.decodeBase64(encryptedText.getBytes());
         byte[] decryptedByte = getCypher(Cipher.DECRYPT_MODE).doFinal(encryptedTextByte);
         String decryptedText = new String(decryptedByte);
