@@ -1,9 +1,7 @@
 package com.hexicloud.portaldb.controller;
 
-import com.hexicloud.portaldb.bean.ClmData;
+import com.hexicloud.portaldb.bean.ProvisionedService;
 import com.hexicloud.portaldb.service.ClmDataService;
-
-import java.math.BigDecimal;
 
 import java.util.List;
 
@@ -25,21 +23,21 @@ public class ClmDataController {
     @Autowired
     private ClmDataService clmDataService;
 
-    @RequestMapping(value = "/services/rest/getClmData/{registryId}", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<List<ClmData>> getClmDataByRegistryId(@PathVariable("registryId")
-                                                                BigDecimal registryId) throws Exception {
-        logger.info("******* Start of getClmDataByRegistryId() in controller ***********");
+    @RequestMapping(value = "/services/rest/getClmData/{userId}/", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER') and #userId == authentication.name")
+    public ResponseEntity<List<ProvisionedService>> getClmDataByUserId(@PathVariable("userId")
+                                                                String userId) throws Exception {
+        logger.info("******* Start of getClmDataByUserId() in controller ***********");
 
-        List<ClmData> clmDataList = clmDataService.getClmData(registryId);
+        List<ProvisionedService> clmDataList = clmDataService.getClmData(userId);
         if (clmDataList.isEmpty()) {
 
-            logger.info("CLM Data with id " + registryId + " not found");
-            return new ResponseEntity<List<ClmData>>(HttpStatus.NO_CONTENT);
+            logger.info("CLM Data with id " + userId + " not found");
+            return new ResponseEntity<List<ProvisionedService>>(HttpStatus.NO_CONTENT);
         }
 
-        logger.info("******** End of getClmDataByRegistryId() in controller ***********");
-        return new ResponseEntity<List<ClmData>>(clmDataList, HttpStatus.OK);
+        logger.info("******** End of getClmDataByUserId() in controller ***********");
+        return new ResponseEntity<List<ProvisionedService>>(clmDataList, HttpStatus.OK);
 
     }
 

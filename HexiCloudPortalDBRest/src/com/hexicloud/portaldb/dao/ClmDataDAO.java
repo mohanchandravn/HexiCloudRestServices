@@ -1,12 +1,9 @@
 package com.hexicloud.portaldb.dao;
 
-import com.hexicloud.portaldb.bean.ClmData;
-
-import java.math.BigDecimal;
+import com.hexicloud.portaldb.bean.ProvisionedService;
 
 import java.util.List;
 
 public interface ClmDataDAO {
-    public List<ClmData> getClmData(BigDecimal registryId);
-
+    public List<ProvisionedService> getClmData(String userId);
 }

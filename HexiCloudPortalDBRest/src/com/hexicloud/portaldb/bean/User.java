@@ -2,8 +2,6 @@ package com.hexicloud.portaldb.bean;
 
 import java.io.Serializable;
 
-import java.math.BigDecimal;
-
 import java.sql.Timestamp;
 
 public class User implements Serializable {
@@ -19,16 +17,12 @@ public class User implements Serializable {
     private boolean active;
     private Timestamp pwdLastChanged;
     private Timestamp lastLoggedIn;
-    private BigDecimal registryId;
-
-
+    private String registryId;
     public User() {
-        super();
+
     }
-
-
     public User(String userId, String password, String email, String userRole, String firstName, String lastName,
-                boolean active, Timestamp pwdLastChanged, Timestamp lastLoggedIn, BigDecimal registryId) {
+                boolean active, Timestamp pwdLastChanged, Timestamp lastLoggedIn, String registryId) {
         this.userId = userId;
         this.password = password;
         this.email = email;
@@ -113,11 +107,11 @@ public class User implements Serializable {
         return lastLoggedIn;
     }
 
-    public void setRegistryId(BigDecimal registryId) {
+    public void setRegistryId(String registryId) {
         this.registryId = registryId;
     }
 
-    public BigDecimal getRegistryId() {
+    public String getRegistryId() {
         return registryId;
     }
 }
