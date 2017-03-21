@@ -1,11 +1,14 @@
 package com.hexicloud.portaldb.controller;
 
+import com.hexicloud.portaldb.bean.CustomerRegistry;
 import com.hexicloud.portaldb.bean.User;
 import com.hexicloud.portaldb.service.EmailsService;
 import com.hexicloud.portaldb.service.LoginService;
 import com.hexicloud.portaldb.util.encryption.EncryptionUtil;
 
 import java.sql.SQLException;
+
+import java.util.List;
 
 import javax.naming.NamingException;
 
@@ -124,4 +127,20 @@ public class LoginController {
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/services/rest/getCustRegistries/", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<CustomerRegistry>> getCustRegistries() {
+        logger.info("******* Start of getCustRegistries() in controller ***********");
+
+        List<CustomerRegistry> customerRegistries = loginService.getCustRegistries();
+        if (customerRegistries.isEmpty()) {
+
+            logger.info("customerRegistries  not found");
+            return new ResponseEntity<List<CustomerRegistry>>(HttpStatus.NO_CONTENT);
+        }
+
+        logger.info("******** End of getClmDataByUserId() in controller ***********");
+        return new ResponseEntity<List<CustomerRegistry>>(customerRegistries, HttpStatus.OK);
+
+    }
 }

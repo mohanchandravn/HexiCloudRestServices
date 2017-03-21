@@ -1,8 +1,11 @@
 package com.hexicloud.portaldb.serviceImpl;
 
+import com.hexicloud.portaldb.bean.CustomerRegistry;
 import com.hexicloud.portaldb.bean.User;
 import com.hexicloud.portaldb.dao.UsersDAO;
 import com.hexicloud.portaldb.service.LoginService;
+
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -73,5 +76,11 @@ public class LoginServiceImpl implements LoginService {
         User dbUser = usersDAO.getUser(userName);
         logger.info("*******  getUserDetails() of  service *****************");
         return dbUser;
+    }
+
+    @Override
+    public List<CustomerRegistry> getCustRegistries() {
+        logger.info("*******  getCustRegistries() of  service *****************");
+        return usersDAO.getCustomerRegistryForLov();
     }
 }
