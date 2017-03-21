@@ -57,7 +57,7 @@ public class UsersDAOImpl implements UsersDAO {
             jdbcTemplate.update(SqlQueryConstantsUtil.SQL_CREATE_USER,
                                 new Object[] { user.getUserId(), EncryptionUtil.encryptString(user.getPassword()),
                                                user.getEmail(), user.getUserRole(), user.getFirstName(),
-                                               user.getLastName() });
+                                               user.getLastName(), user.getRegistryId() });
         } catch (Exception ex) {
             logger.error("Encryption failed or user creation failed" + ex);
             throw ex;

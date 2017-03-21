@@ -50,7 +50,7 @@ public class SqlQueryConstantsUtil {
 
 
     public static final String SQL_CREATE_USER =
-        "INSERT INTO USERS (USER_ID,PASSWORD,EMAIL,USER_ROLE,FIRST_NAME,LAST_NAME) VALUES (?, ?, ?, ?, ?, ?)";
+        "INSERT INTO USERS (USER_ID, PASSWORD, EMAIL, USER_ROLE, FIRST_NAME, LAST_NAME, REGISTRY_ID) VALUES (?, ?, ?, ?, ?, ?, ?)";
     public static final String SQL_CHECK_USER_ID_EXISTS = "SELECT USER_ID FROM USERS WHERE USER_ID = ?";
     public static final String SQL_UPDATE_USER_PASSWORD =
         "UPDATE USERS SET PASSWORD = ?, PWD_LAST_CHANGED = SYSDATE WHERE USER_ID = ?";
