@@ -1,11 +1,8 @@
 package com.hexicloud.portaldb.serviceImpl;
 
-import com.hexicloud.portaldb.bean.CustomerRegistry;
 import com.hexicloud.portaldb.bean.User;
 import com.hexicloud.portaldb.dao.UsersDAO;
 import com.hexicloud.portaldb.service.LoginService;
-
-import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -41,36 +38,6 @@ public class LoginServiceImpl implements LoginService {
 //    }
 
     @Override
-    public void createUser(User user) throws Exception {
-        logger.info("*******  createUser() of  service *****************");
-        usersDAO.createUser(user);
-    }
-
-    @Override
-    public void updatePassword(User user) throws Exception {
-        logger.info("*******  updatePassword() of  service *****************");
-        usersDAO.updatePassword(user);
-    }
-
-    @Override
-    public boolean checkExistingUser(String userId) {
-        logger.info("*******  checkExistingUser() of  service *****************");
-        return usersDAO.checkExistingUser(userId);
-    }
-    
-    @Override
-        public User queryUserInfoByUserId(String userId) {
-            logger.info("*******  queryUserInfoByUserId() of  service *****************");
-            User dbUser = null;
-            if(userId != null)
-            {
-                dbUser = usersDAO.getUser(userId);
-                return dbUser;
-            }
-            return null;
-        }
-
-    @Override
     public User getUserDetails(String userName) {
         logger.info("*******  getUserDetails() of  service *****************");
         User dbUser = usersDAO.getUser(userName);
@@ -78,9 +45,5 @@ public class LoginServiceImpl implements LoginService {
         return dbUser;
     }
 
-    @Override
-    public List<CustomerRegistry> getCustRegistries() {
-        logger.info("*******  getCustRegistries() of  service *****************");
-        return usersDAO.getCustomerRegistryForLov();
-    }
+
 }
