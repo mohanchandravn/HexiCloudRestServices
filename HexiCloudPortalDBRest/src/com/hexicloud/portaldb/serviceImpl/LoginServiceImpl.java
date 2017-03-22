@@ -41,6 +41,7 @@ public class LoginServiceImpl implements LoginService {
     public User getUserDetails(String userName) {
         logger.info("*******  getUserDetails() of  service *****************");
         User dbUser = usersDAO.getUser(userName);
+        dbUser.setPassword(null);
         logger.info("*******  getUserDetails() of  service *****************");
         return dbUser;
     }
