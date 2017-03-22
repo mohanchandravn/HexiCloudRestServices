@@ -77,7 +77,7 @@ public class UsersController {
                     String subject = "Password Details";
                     String emailContent = "your password is : " + decodedPassword;
                     //String emailId = "shivakumar.gunjur.manjukumar@oracle.com";//user.getEmail()
-                    String result = emailsService.sendEmail(user.getEmail(), subject, emailContent);
+                    String result = emailsService.sendEmail(user.getEmail(),user);
                     if (result != null && result.equalsIgnoreCase("N")) {
                         return new ResponseEntity<String>(HttpStatus.EXPECTATION_FAILED);
                     }
