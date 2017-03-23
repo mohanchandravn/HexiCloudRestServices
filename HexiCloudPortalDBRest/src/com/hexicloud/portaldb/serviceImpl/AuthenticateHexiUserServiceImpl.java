@@ -27,7 +27,7 @@ public class AuthenticateHexiUserServiceImpl implements UserDetailsService {
             logger.error("Could not find user with user name "  + username);
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
         } else {
-            usersDAO.updateLastLoggedIn(username);
+//            usersDAO.updateLastLoggedIn(username);
             return authUser;
         }
     }
