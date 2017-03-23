@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.hexicloud.portaldb.bean.AuthUser;
 import com.hexicloud.portaldb.bean.AuthUserTokenState;
+import com.hexicloud.portaldb.dao.UsersDAO;
 import com.hexicloud.portaldb.util.token.TokenHelper;
 
 import java.io.IOException;
@@ -24,6 +25,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private static final Logger logger = Logger.getLogger(AuthenticationSuccessHandler.class);
+    
+    @Autowired
+    UsersDAO usersDAO;
+    
     @Value("${usercookie.expiresIn}")
     private int EXPIRES_IN;
 
@@ -70,6 +75,7 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
             // JWT is also in the response
             AuthUserTokenState userTokenState =
                 new AuthUserTokenState(jws, EXPIRES_IN, user.getUserId());
+            usersDAO.updateLastLoggedIn(user.getUsername());
             ObjectMapper mapper = new ObjectMapper();
             String jwtResponse = mapper.writeValueAsString(userTokenState);
             response.setContentType("application/json");
