@@ -80,7 +80,7 @@ private static final Logger logger = Logger.getLogger(HexiSecurityConfiguration.
             .and()
             .addFilterBefore(jwtAuthenticationTokenFilter(), BasicAuthenticationFilter.class)
             .authorizeRequests()
-            .antMatchers("/login")
+            .antMatchers("/login","/services/rest/forgotPasswordService/**")
             .permitAll()
             .anyRequest()
             .authenticated()

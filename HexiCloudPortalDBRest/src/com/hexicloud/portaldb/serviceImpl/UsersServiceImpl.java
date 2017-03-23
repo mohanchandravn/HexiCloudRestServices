@@ -57,4 +57,17 @@ public class UsersServiceImpl implements UsersService {
         logger.info("*******  getCustRegistries() of  service *****************");
         return usersDAO.getCustomerRegistryForLov();
     }
+
+    @Override
+    public List<User> searchUserDetails(String userId, String emailId, String customerId) {
+        logger.info("entering method searchUserDetails");
+        return usersDAO.searchUserDetails(userId,emailId,customerId);
+    }
+
+    @Override
+    public void updateUser(User user) {
+        logger.info("Entering method updateUser()");
+        usersDAO.updateUser(user);
+        logger.info("Exiting method updateUser()");
+    }
 }

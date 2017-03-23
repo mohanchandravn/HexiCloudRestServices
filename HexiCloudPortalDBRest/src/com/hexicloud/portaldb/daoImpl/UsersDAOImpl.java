@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 @Repository
 public class UsersDAOImpl implements UsersDAO {
@@ -127,5 +128,50 @@ public class UsersDAOImpl implements UsersDAO {
         logger.info(" End of getCustomerRegistryForLov() ");
         return customerRegistries;
     }
-    
+
+    @Override
+    public List<User> searchUserDetails(String userId, String emailId, String customerId) {
+        logger.info("Entering method searchUserDetails");
+        String query = SqlQueryConstantsUtil.SQL_USER_QUERY;
+        StringBuilder whereClause = new StringBuilder();
+        if (!(StringUtils.isEmpty(userId))) {
+            whereClause.append(" WHERE USER_ID = '" + userId + "'");
+        }
+        if (!(StringUtils.isEmpty(emailId))) {
+            if (whereClause.length() > 0) {
+                whereClause.append(" AND EMAIL = '"+ emailId + "'");
+
+            } else {
+                whereClause.append(" WHERE EMAIL = '"+ emailId + "'");
+            }
+        }
+        if (!(StringUtils.isEmpty(customerId))) {
+            if (whereClause.length() > 0) {
+                whereClause.append(" AND REGISTRY_ID = '" +customerId + "'" );
+
+            } else {
+                whereClause.append(" WHERE REGISTRY_ID = '" +customerId + "'" );
+            }
+        }
+
+        if (whereClause.length() > 0) {
+            query = query.concat(whereClause.toString());
+        }
+        List<User> usersList = jdbcTemplate.query(query, new BeanPropertyRowMapper(User.class));
+
+        logger.info("searchUserDetails ->users size ===========> " + usersList != null ? usersList.size() : null);
+        logger.info("Exiting method searchUserDetails");
+        return usersList;
+    }
+
+    @Override
+    public void updateUser(User user) {
+        logger.info("Entering method updateUser()");
+        if(user != null)
+        {
+              jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_USER_QUERY,
+                      new Object[]{user.getEmail(),user.getUserRole(),user.getFirstName(),user.getLastName(),user.getRegistryId(), user.getUserId()});
+        }
+        logger.info("Exiting method updateUser()");
+    }
 }

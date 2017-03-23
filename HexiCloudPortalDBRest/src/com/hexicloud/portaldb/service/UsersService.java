@@ -16,4 +16,8 @@ public interface UsersService {
     public boolean checkExistingUser(String userId);
     
     public User queryUserInfoByUserId(String userId);
+
+    public List<User> searchUserDetails(String userId, String emailId, String customerId);
+
+    public void updateUser(User user);
 }
