@@ -20,4 +20,9 @@ public interface UsersDAO {
     public List<CustomerRegistry> getCustomerRegistryForLov();
     
     public AuthUser getUserDetailsForAuthentication(String userId);
+
+    public List<User> searchUserDetails(String userId, String emailId, String customerId);
+
+    public void updateUser(User user);
+
 }

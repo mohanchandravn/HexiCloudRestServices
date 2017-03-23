@@ -17,11 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UsersController {
@@ -114,4 +110,30 @@ public class UsersController {
         return new ResponseEntity<List<CustomerRegistry>>(customerRegistries, HttpStatus.OK);
 
     }
+
+    @RequestMapping(value = "/services/rest/searchUsers/", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<User>> searchUserDetails(@RequestParam(value = "userId", required = false)String userId,
+                                                        @RequestParam(value = "emailId", required = false)String emailId,
+                                                        @RequestParam(value = "customerId", required = false)String customerId)
+    {
+       List<User> usersList = usersService.searchUserDetails(userId,emailId,customerId);
+
+        return  new ResponseEntity<List<User>>(usersList, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "services/rest/updateUser/", method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity updateUserDetails(@RequestBody User user)
+    {
+        try{
+            usersService.updateUser(user);
+        }catch(Exception exp)
+        {
+            logger.error("error in services/rest/updateUser/ rest service:",exp);
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity(HttpStatus.OK);
+    }
+    
 }
