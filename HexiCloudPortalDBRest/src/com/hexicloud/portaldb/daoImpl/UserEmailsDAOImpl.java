@@ -1,14 +1,27 @@
 package com.hexicloud.portaldb.daoImpl;
 
 import com.hexicloud.portaldb.bean.RuleConfiguration;
+import com.hexicloud.portaldb.bean.User;
 import com.hexicloud.portaldb.bean.UserEmail;
 import com.hexicloud.portaldb.dao.UserEmailsDAO;
 import com.hexicloud.portaldb.util.SqlQueryConstantsUtil;
+import com.hexicloud.portaldb.util.encryption.EncryptionUtil;
 
 import java.math.BigDecimal;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import java.sql.SQLException;
+
 import java.util.List;
 import java.util.Map;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+import javax.naming.NamingException;
 
 import javax.sql.DataSource;
 
@@ -28,6 +41,9 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
     private JdbcTemplate jdbcTemplate;
     private DataSource dataSource;
     private SimpleJdbcCall saveUserEmailPrc;
+    private static String FORGOT_PASSWORD_EMAIL_TEMPLATE_KEY = "FORGOT_PASSWORD_EMAIL_TEMPLATE";
+    private static String FORGOT_PASSWORD_EMAIL_SUBJECT_KEY = "FORGOT_PASSWORD_EMAIL_SUBJECT";
+    private static String EMAIL_ACCOUND_ADMIN = "metcs-cloud.admin@oracleads.com";
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -105,28 +121,76 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
         logger.info(" Begining of updateResolution() ");
 
         jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_EMAIL_RESOLUTION,
-                            new Object[] { userEmail.isIsResolved(), userEmail.getResolutionComments(),userEmail.getSrId()});
+                            new Object[] { userEmail.isIsResolved(), userEmail.getResolutionComments(),
+                                           userEmail.getSrId() });
         logger.info(" End of updateResolution() ");
 
     }
-    
 
 
-     
-        @Override
-        public RuleConfiguration getEmailRule(String ruleKey) {
-            logger.info(" Begining of getEmailContent() ");
-           List<RuleConfiguration> rulesList = 
-               jdbcTemplate.query(SqlQueryConstantsUtil.SQL_RULE_CONFIGURATION,new Object[]{ruleKey}, new BeanPropertyRowMapper(RuleConfiguration.class));
+    private RuleConfiguration getEmailRule(String ruleKey) {
+        logger.info(" Begining of getEmailContent() ");
+        List<RuleConfiguration> rulesList =
+            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_RULE_CONFIGURATION, new Object[] { ruleKey },
+                               new BeanPropertyRowMapper(RuleConfiguration.class));
 
-     
-            if(rulesList != null && !(rulesList.isEmpty())) {
-                if(rulesList.size() == 1) {
-                    return rulesList.get(0);
-                }
+
+        if (rulesList != null && !(rulesList.isEmpty())) {
+            if (rulesList.size() == 1) {
+                return rulesList.get(0);
             }
-            logger.info(" End of getEmailContent() ");
-            return null;
         }
+        logger.info(" End of getEmailContent() ");
+        return null;
+    }
+
+
+    @Override
+    public String sendEmail(String sendTo, User user) throws SQLException, NamingException, NoSuchAlgorithmException,
+                                                             NoSuchPaddingException, InvalidKeyException,
+                                                             IllegalBlockSizeException, BadPaddingException {
+            
+            String result = null;
+            if (user != null && this.dataSource != null) {
+                SimpleJdbcCall sendEmailPrc = new SimpleJdbcCall(this.dataSource).withProcedureName("SEND_EMAIL");
+                String decodedPassword = EncryptionUtil.decryptString(user.getPassword());
+                String emailSubject = null;
+                String emailContent = null;
+
+                RuleConfiguration emailSubjectRule = this.getEmailRule(FORGOT_PASSWORD_EMAIL_SUBJECT_KEY);
+                RuleConfiguration emailContentRule = this.getEmailRule(FORGOT_PASSWORD_EMAIL_TEMPLATE_KEY);
+                if (emailSubjectRule == null) {
+                    emailSubject = "Password Details";
+                    logger.error("no rule is not configured for forgot password email subject and hence subject is described by application");
+                } else {
+                    emailSubject = emailSubjectRule.getRuleValue();
+                }
+                if (emailContentRule == null) {
+                    logger.error("rule is not configured for forgot password email content hence content is described by application");
+                    emailContent = "The requested password for user id " + user.getUserId() + " is " + decodedPassword;
+                } else {
+                    emailContent = emailContentRule.getRuleValue();
+                    emailContent = emailContent.replaceAll("<<USER_ID>>", user.getUserId());
+                    emailContent = emailContent.replaceAll("<<PASSWORD>>", decodedPassword);
+                }
+                SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("from_email_address", EMAIL_ACCOUND_ADMIN)
+                                                                            .addValue("to_email_address", sendTo)
+                                                                            .addValue("email_subject", emailSubject)
+                                                                            .addValue("email_body", emailContent);
+                Map<String, Object> out = sendEmailPrc.execute(inParamsMap);
+                 if(out != null && !(out.isEmpty())) {
+                    result = (String)out.get("OUT_SR_ID");
+                 }
+                 
+
+
+            }
+
+        
+
+
+        return result;
+    }
+
 
 }
