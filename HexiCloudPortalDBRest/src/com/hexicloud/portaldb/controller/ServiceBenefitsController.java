@@ -23,38 +23,48 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ServiceBenefitsController {
     public ServiceBenefitsController() {
-	super();
+        super();
     }
     @Autowired
     private ServiceBenefitService serviceBenefitService;
-    
+
     private static final Logger logger = Logger.getLogger(ServiceBenefitsController.class);
 
-    
+
     @RequestMapping(value = "/services/rest/serviceBenefits/{serviceName}/", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
-    public JSONObject getServiceBenefits(@PathVariable(value = "serviceName")
-							  String serviceName) throws Exception {
-	logger.info("******* Start of getServiceBenefits() in controller ***********");
-	String benefit = serviceBenefitService.getServiceBenefits(serviceName);
-	JSONParser parser = new JSONParser();
-	//JSONObject json = (JSONObject) parser.parse("{\"phonetype\":\""+serviceName+"\",\"cat\":\"WP\"}");
-	JSONObject json = (JSONObject) parser.parse(benefit);
-	return json;
-    }    
-    
+    public ResponseEntity<JSONObject> getServiceBenefits(@PathVariable(value = "serviceName")
+                                                         String serviceName) throws Exception {
+        logger.info("******* Start of getServiceBenefits() in controller ***********");
+        String benefit = null;
+        benefit = serviceBenefitService.getServiceBenefits(serviceName);
+        if (null == benefit || benefit.isEmpty()) {
+            return new ResponseEntity<JSONObject>(HttpStatus.NO_CONTENT);
+        }
+        JSONParser parser = new JSONParser();
+        //JSONObject json = (JSONObject) parser.parse("{\"phonetype\":\""+serviceName+"\",\"cat\":\"WP\"}");
+        JSONObject json = (JSONObject) parser.parse(benefit);
+        //	return json;
+        return new ResponseEntity<JSONObject>(json, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/services/rest/usecases/{usecaseCode}/", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
-    public JSONObject getUsecaseDetails(@PathVariable(value = "usecaseCode")
-                                                          String usecaseCode) throws Exception {
+    public ResponseEntity<JSONObject> getUsecaseDetails(@PathVariable(value = "usecaseCode")
+                                                        String usecaseCode) throws Exception {
         logger.info("******* Start of getUsecaseDetails() in controller ***********");
-        String usecaseDetails = serviceBenefitService.getUsecaseDetails(usecaseCode);
+        String usecaseDetails = null;
+        usecaseDetails = serviceBenefitService.getUsecaseDetails(usecaseCode);
+        if (null == usecaseDetails || usecaseDetails.isEmpty()) {
+            return new ResponseEntity<JSONObject>(HttpStatus.NO_CONTENT);
+        }
         JSONParser parser = new JSONParser();
         //JSONObject json = (JSONObject) parser.parse("{\"phonetype\":\""+serviceName+"\",\"cat\":\"WP\"}");
         JSONObject json = (JSONObject) parser.parse(usecaseDetails);
-        return json;
-    }    
-    
+        //        return json;
+        return new ResponseEntity<JSONObject>(json, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/services/rest/usecases/", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<Usecase>> getUsecases() throws Exception {
@@ -71,6 +81,6 @@ public class ServiceBenefitsController {
         return new ResponseEntity<List<Usecase>>(usecaseList, HttpStatus.OK);
 
     }
-    
-    
+
+
 }
