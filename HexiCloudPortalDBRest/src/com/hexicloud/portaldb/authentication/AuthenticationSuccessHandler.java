@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.hexicloud.portaldb.bean.AuthUser;
 import com.hexicloud.portaldb.bean.AuthUserTokenState;
+import com.hexicloud.portaldb.bean.User;
+import com.hexicloud.portaldb.bean.UserStep;
+import com.hexicloud.portaldb.dao.UserStepsDAO;
 import com.hexicloud.portaldb.dao.UsersDAO;
 import com.hexicloud.portaldb.util.token.TokenHelper;
 
@@ -25,10 +28,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private static final Logger logger = Logger.getLogger(AuthenticationSuccessHandler.class);
-    
+
     @Autowired
     UsersDAO usersDAO;
-    
+    @Autowired
+    UserStepsDAO userStepsDao;
+
     @Value("${usercookie.expiresIn}")
     private int EXPIRES_IN;
 
@@ -73,8 +78,27 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
             //              response.addCookie( authCookie );
             response.addCookie(userCookie);
             // JWT is also in the response
-            AuthUserTokenState userTokenState =
-                new AuthUserTokenState(jws, EXPIRES_IN, user.getUserId());
+            AuthUserTokenState userTokenState = null; //
+            User userDetails = usersDAO.getUser(user.getUsername());
+            UserStep userStep = userStepsDao.getUsersCurrentStep(user.getUsername());
+            if (userDetails != null && userStep != null) {
+                userTokenState =
+                    new AuthUserTokenState(jws, EXPIRES_IN, user.getUserId(), userDetails.getEmail(),
+                                           userDetails.getUserRole(), userDetails.getFirstName(),
+                                           userDetails.getLastName(), String.valueOf(userStep.getCurStepId()),
+                                           userStep.getCurStepCode(), String.valueOf(userStep.getPreStepId()),
+                                           userStep.getPreStepCode());
+            }
+            else if(userDetails != null && userStep == null) {
+                userTokenState =
+                    new AuthUserTokenState(jws, EXPIRES_IN, user.getUserId(), userDetails.getEmail(),
+                                           userDetails.getUserRole(), userDetails.getFirstName(),
+                                           userDetails.getLastName(), "","", "", "");
+            }
+            else if(userDetails == null && userStep == null) {
+                userTokenState =
+                    new AuthUserTokenState(jws, EXPIRES_IN, user.getUserId(), "","", "","", "","", "", "");
+            }
             usersDAO.updateLastLoggedIn(user.getUsername());
             ObjectMapper mapper = new ObjectMapper();
             String jwtResponse = mapper.writeValueAsString(userTokenState);
