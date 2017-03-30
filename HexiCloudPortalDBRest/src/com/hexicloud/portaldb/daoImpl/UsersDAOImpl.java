@@ -58,7 +58,7 @@ public class UsersDAOImpl implements UsersDAO {
             jdbcTemplate.update(SqlQueryConstantsUtil.SQL_CREATE_USER,
                                 new Object[] { user.getUserId(), EncryptionUtil.encryptString(user.getPassword()),
                                                user.getEmail(), user.getUserRole(), user.getFirstName(),
-                                               user.getLastName(), user.getRegistryId() });
+                                               user.getLastName(), user.getRegistryId(), user.getPhone() });
         } catch (Exception ex) {
             logger.error("Encryption failed or user creation failed" + ex);
             throw ex;
@@ -170,7 +170,7 @@ public class UsersDAOImpl implements UsersDAO {
         if(user != null)
         {
               jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_USER_QUERY,
-                      new Object[]{user.getEmail(),user.getUserRole(),user.getFirstName(),user.getLastName(),user.getRegistryId(), user.getUserId()});
+                      new Object[]{user.getEmail(),user.getUserRole(),user.getFirstName(),user.getLastName(),user.getRegistryId(), user.getPhone(), user.getUserId()});
         }
         logger.info("Exiting method updateUser()");
     }

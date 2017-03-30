@@ -87,17 +87,17 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
                                            userDetails.getUserRole(), userDetails.getFirstName(),
                                            userDetails.getLastName(), String.valueOf(userStep.getCurStepId()),
                                            userStep.getCurStepCode(), String.valueOf(userStep.getPreStepId()),
-                                           userStep.getPreStepCode());
+                                           userStep.getPreStepCode(), userDetails.getPhone());
             }
             else if(userDetails != null && userStep == null) {
                 userTokenState =
                     new AuthUserTokenState(jws, EXPIRES_IN, user.getUserId(), userDetails.getEmail(),
                                            userDetails.getUserRole(), userDetails.getFirstName(),
-                                           userDetails.getLastName(), "","", "", "");
+                                           userDetails.getLastName(), "","", "", "",  userDetails.getPhone());
             }
             else if(userDetails == null && userStep == null) {
                 userTokenState =
-                    new AuthUserTokenState(jws, EXPIRES_IN, user.getUserId(), "","", "","", "","", "", "");
+                    new AuthUserTokenState(jws, EXPIRES_IN, user.getUserId(), "","", "","", "","", "", "", "");
             }
             usersDAO.updateLastLoggedIn(user.getUsername());
             ObjectMapper mapper = new ObjectMapper();

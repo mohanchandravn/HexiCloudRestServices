@@ -1,9 +1,12 @@
 package com.hexicloud.portaldb.serviceImpl;
 
+import com.hexicloud.portaldb.bean.CallBack;
 import com.hexicloud.portaldb.bean.User;
 import com.hexicloud.portaldb.bean.UserEmail;
 import com.hexicloud.portaldb.dao.UserEmailsDAO;
 import com.hexicloud.portaldb.service.EmailsService;
+
+import java.math.BigDecimal;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -33,9 +36,9 @@ public class EmailsServiceImpl implements EmailsService {
     UserEmailsDAO userEmailsDAO;
 
     @Override
-    public List<UserEmail> getUserEmails(String userId, String isResolved, Number requestId) {
+    public List<UserEmail> getUserEmails(String userId, String isResolved, Number requestId, String searchCallBacks) {
         logger.info("*******  findDocsByStepId() of  service *****************");
-        return userEmailsDAO.getUserEmails(userId, isResolved, requestId);
+        return userEmailsDAO.getUserEmails(userId, isResolved, requestId, searchCallBacks);
     }
 
     @Override
@@ -57,8 +60,14 @@ public class EmailsServiceImpl implements EmailsService {
                                                              IllegalBlockSizeException, BadPaddingException {
         logger.info("Entering sendMail method");
         return userEmailsDAO.sendEmail(sendTo, user);
-    
+
     }
-    
-   
+
+
+    @Override
+    public BigDecimal requestCallback(CallBack callBack) {
+        logger.info("Entering requestCallback method");
+        return userEmailsDAO.requestCallBack(callBack);
+
+    }
 }

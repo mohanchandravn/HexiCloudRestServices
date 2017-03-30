@@ -18,21 +18,9 @@ public class User implements Serializable {
     private Timestamp pwdLastChanged;
     private Timestamp lastLoggedIn;
     private String registryId;
+    private String phone;
     public User() {
 
-    }
-    public User(String userId, String password, String email, String userRole, String firstName, String lastName,
-                boolean active, Timestamp pwdLastChanged, Timestamp lastLoggedIn, String registryId) {
-        this.userId = userId;
-        this.password = password;
-        this.email = email;
-        this.userRole = userRole;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.active = active;
-        this.pwdLastChanged = pwdLastChanged;
-        this.lastLoggedIn = lastLoggedIn;
-        this.registryId = registryId;
     }
 
     public void setUserId(String userId) {
@@ -113,5 +101,13 @@ public class User implements Serializable {
 
     public String getRegistryId() {
         return registryId;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPhone() {
+        return phone;
     }
 }
