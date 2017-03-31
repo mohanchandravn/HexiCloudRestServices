@@ -84,15 +84,16 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
         
         if (null != searchCallBacks && "Y".equalsIgnoreCase(searchCallBacks)) {
             if (whereClause.length() > 0) {
-                whereClause.append(" AND SUBJECT like ('Callback%')");
+                whereClause.append(" AND CALL_BACK_REQUEST = 'Y'");
 
             } else {
-                whereClause.append(" WHERE SUBJECT like ('Callback%')");
+                whereClause.append(" WHERE CALL_BACK_REQUEST = 'Y'");
             }
         }
 
         if (whereClause.length() > 0) {
             query = query.concat(whereClause.toString());
+            query = query.concat(" ORDER BY SR_ID ASC");
         }
         @SuppressWarnings({ "unchecked", "rawtypes" })
         List<UserEmail> userEmailsList = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserEmail.class));
