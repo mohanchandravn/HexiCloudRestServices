@@ -631,6 +631,26 @@
             <value n="id" v="Org.json.jar"/>
             <value n="isJDK" v="false"/>
          </hash>
+         <hash>
+            <value n="id" v="Jjwt-0.6.0.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Spring-security-config-4.1.3.RELEASE.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Spring-security-core-4.1.3.RELEASE.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Spring-security-web-4.1.3.RELEASE.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Joda-time-2.9.4.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
       </list>
       <hash n="internalDefinitions">
          <list n="libraryDefinitions">
@@ -931,6 +951,51 @@
                <value n="id" v="Org.json.jar"/>
                <value n="locked" v="true"/>
             </hash>
+            <hash>
+               <list n="classPath">
+                  <url path="public_html/WEB-INF/lib/jjwt-0.6.0.jar" jar-entry=""/>
+               </list>
+               <value n="deployedByDefault" v="true"/>
+               <value n="description" v="Jjwt-0.6.0.jar"/>
+               <value n="id" v="Jjwt-0.6.0.jar"/>
+               <value n="locked" v="true"/>
+            </hash>
+            <hash>
+               <list n="classPath">
+                  <url path="public_html/WEB-INF/lib/spring-security-config-4.1.3.RELEASE.jar" jar-entry=""/>
+               </list>
+               <value n="deployedByDefault" v="true"/>
+               <value n="description" v="Spring-security-config-4.1.3.RELEASE.jar"/>
+               <value n="id" v="Spring-security-config-4.1.3.RELEASE.jar"/>
+               <value n="locked" v="true"/>
+            </hash>
+            <hash>
+               <list n="classPath">
+                  <url path="public_html/WEB-INF/lib/spring-security-core-4.1.3.RELEASE.jar" jar-entry=""/>
+               </list>
+               <value n="deployedByDefault" v="true"/>
+               <value n="description" v="Spring-security-core-4.1.3.RELEASE.jar"/>
+               <value n="id" v="Spring-security-core-4.1.3.RELEASE.jar"/>
+               <value n="locked" v="true"/>
+            </hash>
+            <hash>
+               <list n="classPath">
+                  <url path="public_html/WEB-INF/lib/spring-security-web-4.1.3.RELEASE.jar" jar-entry=""/>
+               </list>
+               <value n="deployedByDefault" v="true"/>
+               <value n="description" v="Spring-security-web-4.1.3.RELEASE.jar"/>
+               <value n="id" v="Spring-security-web-4.1.3.RELEASE.jar"/>
+               <value n="locked" v="true"/>
+            </hash>
+            <hash>
+               <list n="classPath">
+                  <url path="public_html/WEB-INF/lib/joda-time-2.9.4.jar" jar-entry=""/>
+               </list>
+               <value n="deployedByDefault" v="true"/>
+               <value n="description" v="Joda-time-2.9.4.jar"/>
+               <value n="id" v="Joda-time-2.9.4.jar"/>
+               <value n="locked" v="true"/>
+            </hash>
          </list>
       </hash>
       <list n="libraryReferences">
@@ -1088,6 +1153,26 @@
          </hash>
          <hash>
             <value n="id" v="Org.json.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Jjwt-0.6.0.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Spring-security-config-4.1.3.RELEASE.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Spring-security-core-4.1.3.RELEASE.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Spring-security-web-4.1.3.RELEASE.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Joda-time-2.9.4.jar"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>

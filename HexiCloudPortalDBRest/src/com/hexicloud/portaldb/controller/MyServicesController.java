@@ -11,11 +11,9 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,13 +24,8 @@ public class MyServicesController {
     private MyServices myservice;
 
 
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Not found in the system")
-    @ExceptionHandler(Exception.class)
-    public void exceptionHandler(Exception ex) {
-        logger.error("Exception is :", ex);
-    }
-
     @RequestMapping(value = "/services/rest/getCookie/", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
     public String getCookie(@QueryParam("restEndPoint") String restEndPoint, @QueryParam("input") String input) {
 
         logger.info("******* Start of getCookie() in controller ***********");
@@ -43,6 +36,7 @@ public class MyServicesController {
     }
 
     @RequestMapping(value = "/services/rest/getShapes/", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
     public Response getShapes(@QueryParam("restEndPoint") String restEndPoint, String cookie) {
 
         logger.info("******* Start of getShapes() in controller ***********");
@@ -54,6 +48,7 @@ public class MyServicesController {
 
 
     @RequestMapping(value = "/services/rest/instance/{container}/{userName}", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
     public Response getInstances(@QueryParam("restEndPoint") String restEndPoint,
                                  @PathParam("container") String container, @PathParam("userName") String userName,
                                  String cookie) {
@@ -66,6 +61,7 @@ public class MyServicesController {
     }
 
     @RequestMapping(value = "/services/rest/storage/volume/{container}/{userName}", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
     public Response getStorageVolumes(@QueryParam("restEndPoint") String restEndPoint,
                                       @PathParam("container") String container, @PathParam("userName") String userName,
                                       String cookie) {
@@ -78,6 +74,7 @@ public class MyServicesController {
     }
 
     @RequestMapping(value = "/services/rest/myservices", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
     public JSONObject getMyServices(@QueryParam("restEndPoint") String restEndPoint,
                                     @QueryParam("container") String container, @QueryParam("userName") String userName,
                                     @QueryParam("password") String password) {

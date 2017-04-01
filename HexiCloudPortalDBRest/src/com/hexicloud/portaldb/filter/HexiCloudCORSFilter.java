@@ -19,14 +19,19 @@ public class HexiCloudCORSFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         response.addHeader("Access-Control-Allow-Origin", "*");
 
-        if (request.getHeader("Access-Control-Request-Method") != null && "OPTIONS".equals(request.getMethod())) {
+//        if (request.getHeader("Access-Control-Request-Method") != null && "OPTIONS".equals(request.getMethod())) {
             logger.trace("Sending Header....");
             // CORS "pre-flight" request
             response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
             //			response.addHeader("Access-Control-Allow-Headers", "Authorization");
-            response.addHeader("Access-Control-Allow-Headers", "Content-Type");
+            response.addHeader("Access-Control-Allow-Headers", "Content-Type, Portal-Type, Authorization, Accept");
+//            response.addHeader("Access-Control-Allow-Headers", "Portal-Type");
             response.addHeader("Access-Control-Max-Age", "1");
-        }
+//        }
+        if ( request.getMethod().equals("OPTIONS") ) {
+                response.setStatus(HttpServletResponse.SC_OK);
+                return;
+            }
 
         filterChain.doFilter(request, response);
     }
