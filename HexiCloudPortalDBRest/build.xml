@@ -262,6 +262,7 @@
       <include name="**/*.xml"/>
       <include name="**/*.xsd"/>
       <include name="**/*.xsl"/>
+<include name="**/*.jpr"/>      
       <exclude name="build.xml"/>
     </patternset>
     <copy todir="${output.dir}">
