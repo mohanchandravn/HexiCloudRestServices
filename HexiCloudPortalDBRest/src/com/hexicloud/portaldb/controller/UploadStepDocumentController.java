@@ -23,6 +23,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,6 +45,7 @@ public class UploadStepDocumentController {
 
 
     @RequestMapping(value = "services/rest/uploadStepDocument", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity processUploadStepDocument(MultipartHttpServletRequest multipartHttpServletRequest) {
 
         try {
@@ -138,6 +140,7 @@ public class UploadStepDocumentController {
     }
 
     @RequestMapping(value = "services/rest/deleteStepDocument")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity handleDeleteDocument(@RequestBody String fileId, String fileVersion) {
         DeleteFileRequest deleteFileRequest = new DeleteFileRequest();
         DeleteFileResponse deleteFileResponse = null;

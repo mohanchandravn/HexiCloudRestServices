@@ -54,27 +54,7 @@ public class StepSubStepResultExtractor implements ResultSetExtractor<List<Step>
                 subStepList.add(subStep);
             }
 
-            //                   int type = rs.getInt("IS_BRAND");
-            //                   if(type == 1) {
-            //                       List brandList = customer.getBrands();
-            //                       if(brandsList == null) {
-            //                           brandsList = new ArrayList<Brand>();
-            //                           customer.setBrands(brandsList);
-            //                       }
-            //                       Brand brand = new Brand();
-            //                       brand.setId(rs.getLong("COL_A"));
-            //                       brand.setName(rs.getString("COL_B"));
-            //                       brandsList.add(brand);
-            //                   } else if(type == 0) {
-            //                       List ordersList = customer.getOrders();
-            //                       if(ordersList == null) {
-            //                           ordersList = new ArrayList<Order>();
-            //                           customer.setOrders(ordersList);
-            //                       }
-            //                       Order order = new Order();
-            //                       order.setId(rs.getLong("COL_A"));
-            //                       ordersList.add(order);
-            //                   }
+ 
         }
         return new ArrayList<Step>(stepsMap.values());
     }

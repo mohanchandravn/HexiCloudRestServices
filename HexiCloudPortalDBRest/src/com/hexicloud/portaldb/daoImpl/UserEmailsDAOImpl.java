@@ -1,9 +1,28 @@
 package com.hexicloud.portaldb.daoImpl;
 
+import com.hexicloud.portaldb.bean.CallBack;
+import com.hexicloud.portaldb.bean.RuleConfiguration;
+import com.hexicloud.portaldb.bean.User;
+import com.hexicloud.portaldb.bean.UserEmail;
+import com.hexicloud.portaldb.dao.UserEmailsDAO;
+import com.hexicloud.portaldb.util.SqlQueryConstantsUtil;
+import com.hexicloud.portaldb.util.encryption.EncryptionUtil;
+
 import java.math.BigDecimal;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import java.sql.SQLException;
 
 import java.util.List;
 import java.util.Map;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+import javax.naming.NamingException;
 
 import javax.sql.DataSource;
 
@@ -16,9 +35,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
-import com.hexicloud.portaldb.bean.UserEmail;
-import com.hexicloud.portaldb.dao.UserEmailsDAO;
-import com.hexicloud.portaldb.util.SqlQueryConstantsUtil;
 
 @Repository
 public class UserEmailsDAOImpl implements UserEmailsDAO {
@@ -26,16 +42,22 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
     private JdbcTemplate jdbcTemplate;
     private DataSource dataSource;
     private SimpleJdbcCall saveUserEmailPrc;
+    private SimpleJdbcCall requestCallbackPrc;
+    private static String FORGOT_PASSWORD_EMAIL_TEMPLATE_KEY = "FORGOT_PASSWORD_EMAIL_TEMPLATE";
+    private static String FORGOT_PASSWORD_EMAIL_SUBJECT_KEY = "FORGOT_PASSWORD_EMAIL_SUBJECT";
+    private static String EMAIL_ACCOUND_ADMIN = "metcs-cloud.admin@oracleads.com";
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
         jdbcTemplate = new JdbcTemplate(this.dataSource);
         this.saveUserEmailPrc =
             new SimpleJdbcCall(dataSource).withCatalogName("PKG_EMAIL").withProcedureName("PRC_SAVE_USER_EMAIL");
+        this.requestCallbackPrc =
+            new SimpleJdbcCall(dataSource).withCatalogName("PKG_EMAIL").withProcedureName("PRC_REQUEST_CALL_BACK");
     }
 
     @Override
-    public List<UserEmail> getUserEmails(String userId, String isResolved, Number requestId) {
+    public List<UserEmail> getUserEmails(String userId, String isResolved, Number requestId, String searchCallBacks) {
         logger.info(" Begining of getUserEmails() ");
         StringBuilder whereClause = new StringBuilder();
         String query = SqlQueryConstantsUtil.SQL_FIND_USER_EMAILS;
@@ -60,8 +82,18 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
             }
         }
 
+        if (null != searchCallBacks && "Y".equalsIgnoreCase(searchCallBacks)) {
+        if (whereClause.length() > 0) {
+                whereClause.append(" AND CALL_BACK_REQUEST = 'Y'");
+
+            } else {
+                whereClause.append(" WHERE CALL_BACK_REQUEST = 'Y'");
+            }
+        }
+
         if (whereClause.length() > 0) {
             query = query.concat(whereClause.toString());
+            query = query.concat(" ORDER BY SR_ID ASC");
         }
         @SuppressWarnings({ "unchecked", "rawtypes" })
         List<UserEmail> userEmailsList = jdbcTemplate.query(query, new BeanPropertyRowMapper(UserEmail.class));
@@ -74,17 +106,6 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
     @Override
     public UserEmail saveUserEmail(UserEmail userEmail) {
         logger.info(" Begining of saveUserEmail() ");
-
-        // SQL_SAVE_USER_EMAIL = "INSERT INTO USER_EMAILS (USER_ID, SUBJECT,
-        // MESSAGE, CREATED_DATE, SENT_TO,SENT_CC,SENT_BCC) VALUES
-        // (?,?,?,SYSDATE,?,?,?)";
-
-        // jdbcTemplate.update(SqlQueryConstantsUtil.SQL_SAVE_USER_EMAIL,
-        // new Object[] { userEmail.getUserId(), userEmail.getSubject(),
-        // userEmail.getMessage(),
-        // userEmail.getSentTo(), userEmail.getSentCC(), userEmail.getSentBCC()
-        // });
-
         SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_USER_ID", userEmail.getUserId())
                                                                     .addValue("IN_SUBJECT", userEmail.getSubject())
                                                                     .addValue("IN_MESSAGE", userEmail.getMessage())
@@ -103,8 +124,86 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
         logger.info(" Begining of updateResolution() ");
 
         jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_EMAIL_RESOLUTION,
-                            new Object[] { userEmail.isIsResolved(), userEmail.getResolutionComments(),userEmail.getSrId()});
+                            new Object[] { userEmail.isIsResolved(), userEmail.getResolutionComments(),
+                                           userEmail.getSrId() });
         logger.info(" End of updateResolution() ");
 
+    }
+
+
+    private RuleConfiguration getEmailRule(String ruleKey) {
+        logger.info(" Begining of getEmailContent() ");
+        @SuppressWarnings("unchecked")
+        List<RuleConfiguration> rulesList =
+            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_RULE_CONFIGURATION, new Object[] { ruleKey },
+                               new BeanPropertyRowMapper(RuleConfiguration.class));
+
+
+        if (rulesList != null && !(rulesList.isEmpty())) {
+            if (rulesList.size() == 1) {
+                return rulesList.get(0);
+}
+        }
+        logger.info(" End of getEmailContent() ");
+        return null;
+    }
+
+
+    @Override
+    public String sendEmail(String sendTo, User user) throws SQLException, NamingException, NoSuchAlgorithmException,
+                                                             NoSuchPaddingException, InvalidKeyException,
+                                                             IllegalBlockSizeException, BadPaddingException {
+
+        String result = null;
+        if (user != null && this.dataSource != null) {
+            SimpleJdbcCall sendEmailPrc = new SimpleJdbcCall(this.dataSource).withProcedureName("SEND_EMAIL");
+            String decodedPassword = EncryptionUtil.decryptString(user.getPassword());
+            String emailSubject = null;
+            String emailContent = null;
+
+            RuleConfiguration emailSubjectRule = this.getEmailRule(FORGOT_PASSWORD_EMAIL_SUBJECT_KEY);
+            RuleConfiguration emailContentRule = this.getEmailRule(FORGOT_PASSWORD_EMAIL_TEMPLATE_KEY);
+            if (emailSubjectRule == null) {
+                emailSubject = "Password Details";
+                logger.error("no rule is not configured for forgot password email subject and hence subject is described by application");
+            } else {
+                emailSubject = emailSubjectRule.getRuleValue();
+            }
+            if (emailContentRule == null) {
+                logger.error("rule is not configured for forgot password email content hence content is described by application");
+                emailContent = "The requested password for user id " + user.getUserId() + " is " + decodedPassword;
+            } else {
+                emailContent = emailContentRule.getRuleValue();
+                emailContent = emailContent.replaceAll("<<USER_ID>>", user.getUserId());
+                emailContent = emailContent.replaceAll("<<PASSWORD>>", decodedPassword);
+            }
+            SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("from_email_address", EMAIL_ACCOUND_ADMIN)
+                                                                        .addValue("to_email_address", sendTo)
+                                                                        .addValue("email_subject", emailSubject)
+                                                                        .addValue("email_body", emailContent);
+            Map<String, Object> out = sendEmailPrc.execute(inParamsMap);
+            if (out != null && !(out.isEmpty())) {
+                result = (String) out.get("OUT_SR_ID");
+            }
+
+
+        }
+
+
+        return result;
+    }
+
+
+    @Override
+    public BigDecimal requestCallBack(CallBack callBack) {
+        logger.info(" Begining of requestCallBack() ");
+        SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_USER_ID", callBack.getUserId())
+                                                                    .addValue("IN_PHONE", callBack.getPhone())
+                                                                    .addValue("IN_MESSAGE", callBack.getMessage());
+
+        Map<String, Object> out = requestCallbackPrc.execute(inParamsMap);
+        BigDecimal requestId = (BigDecimal) out.get("OUT_SR_ID");
+        logger.info(" End of requestCallBack() ");
+        return requestId;
     }
 }

@@ -1,6 +1,7 @@
 package com.hexicloud.portaldb.serviceImpl;
 
 import com.hexicloud.portaldb.bean.ClmData;
+import com.hexicloud.portaldb.bean.ProvisionedService;
 import com.hexicloud.portaldb.dao.ClmDataDAO;
 import com.hexicloud.portaldb.service.ClmDataService;
 
@@ -22,8 +23,8 @@ public class ClmDataServiceImpl implements ClmDataService {
     ClmDataDAO clmDataDAO;
 
     @Override
-    public List<ClmData> getClmData(BigDecimal registryId) {
+    public List<ProvisionedService> getClmData(String userId) {
         logger.info("*******  getApplicationSteps() of  service *****************");
-        return clmDataDAO.getClmData(registryId);
+        return clmDataDAO.getClmData(userId);
     }
 }

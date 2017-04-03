@@ -59,6 +59,7 @@ public class UserStepsDAOImpl implements UserStepsDAO {
         // ?, UPDATED_DATE = SYSDATE WHERE USER_ID = ?";
         SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_USER_ID", userStep.getUserId())
                                                                     .addValue("IN_STEP_LABEL", steps.getStepLabel(userStep.getPreStepCode()))
+                                                                    .addValue("IN_CUR_STEP_LABEL", userStep.getCurStepCode())
                                                                     .addValue("IN_ACTION", userStep.getUserAction());
 
         if (null != existingUserSteps && existingUserSteps.size() > 0) {
