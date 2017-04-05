@@ -22,38 +22,57 @@ public class ClmDataResultExtractor implements ResultSetExtractor<List<Provision
         super();
     }
 
-    public static Map<String, String> uomMap = new HashMap<String, String>();
+    private static Map<String, String> uomMap = new HashMap<String, String>();
+    private static Map<String, String> tier9ShortMap = new HashMap<String, String>();
+    private static Map<String, String> tier9LongMap = new HashMap<String, String>();
 
     @Override
     public List<ProvisionedService> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
         Map<String, ProvisionedService> provisionedServicesMap = new HashMap<String, ProvisionedService>();
+        String tier6 = null;
+        ProvisionedService provisionedService = null;
+        List<ServiceDetail> detailsList = null;
+        ServiceDetail detail = null;
+        String tier9 = null;
+        boolean hasSimilarTier9 = false;
         while (resultSet.next()) {
-            String tier6 = resultSet.getString("FPH_DESCRIPTION_TIER_6");
-            ProvisionedService provisionedService = provisionedServicesMap.get(tier6);
+            hasSimilarTier9 = false;
+            tier6 = resultSet.getString("FPH_DESCRIPTION_TIER_6");
+            provisionedService = provisionedServicesMap.get(tier6);
             if (provisionedService == null) {
                 provisionedService = new ProvisionedService();
                 provisionedService.setPlatform(makePlatform(resultSet.getString("FPH_DESCRIPTION_TIER_4")));
                 provisionedService.setService(makeService(resultSet.getString("FPH_DESCRIPTION_TIER_6")));
                 provisionedService.setServiceType(makeServiceType(resultSet.getString("FPH_DESCRIPTION_TIER_6")));
-                provisionedService.setDisplayOrder(makeDisplayOrder(provisionedService.getService(), provisionedService.getServiceType()));
+                provisionedService.setDisplayOrder(makeDisplayOrder(provisionedService.getService(),
+                                                                    provisionedService.getServiceType()));
                 provisionedServicesMap.put(tier6, provisionedService);
             }
-            List detailsList = provisionedService.getDetails();
+            detailsList = provisionedService.getDetails();
+            tier9 = resultSet.getString("PROD_TIER_9");
             if (detailsList == null) {
                 detailsList = new ArrayList<ServiceDetail>();
                 provisionedService.setDetails(detailsList);
+                detailsList.add(makeNewServiceDetail(resultSet, detail));
+            } else {
+                for (ServiceDetail sDetail : detailsList) {
+                    if (sDetail.getActualTier9().equalsIgnoreCase(tier9)) {
+                        sDetail.setQuantity(sDetail.getQuantity() + resultSet.getInt("QUANTITY"));
+                        hasSimilarTier9 = true;
+                    }
+                }
+                if (!hasSimilarTier9) {
+                    detailsList.add(makeNewServiceDetail(resultSet, detail));
+                }
             }
-            ServiceDetail detail = new ServiceDetail();
-            detail.setQuantity(resultSet.getInt("QUANTITY"));
-            detail.setUom(makeUom(resultSet.getString("QUANTITY_UNIT_OF_MEASURE")));
-            detailsList.add(detail);
         }
-        ArrayList<ProvisionedService> provisionedServicesList = new ArrayList<ProvisionedService>(provisionedServicesMap.values());
+        ArrayList<ProvisionedService> provisionedServicesList =
+            new ArrayList<ProvisionedService>(provisionedServicesMap.values());
         provisionedServicesList.sort(Comparator.comparing(ProvisionedService::getDisplayOrder));
         return provisionedServicesList;
     }
 
-    public static String makePlatform(String fullPlatformName) {
+    private static String makePlatform(String fullPlatformName) {
         if (fullPlatformName.length() == 4) {
             return fullPlatformName;
         } else if (fullPlatformName.length() > 4) {
@@ -63,7 +82,7 @@ public class ClmDataResultExtractor implements ResultSetExtractor<List<Provision
         }
     }
 
-    public static String makeService(String tier6) {
+    private static String makeService(String tier6) {
         if (tier6.contains(" ")) {
             return tier6.substring(0, tier6.indexOf(" "));
         } else {
@@ -71,7 +90,7 @@ public class ClmDataResultExtractor implements ResultSetExtractor<List<Provision
         }
     }
 
-    public static String makeServiceType(String tier6) {
+    private static String makeServiceType(String tier6) {
         if (tier6.toLowerCase().contains("non metered")) {
             return "NON METERED";
         } else {
@@ -79,7 +98,7 @@ public class ClmDataResultExtractor implements ResultSetExtractor<List<Provision
         }
     }
 
-    public int makeDisplayOrder(String service, String serviceType) {
+    private int makeDisplayOrder(String service, String serviceType) {
         if (service.equalsIgnoreCase("compute")) {
             return serviceType.equalsIgnoreCase("metered") ? 1 : 2;
         }
@@ -101,7 +120,7 @@ public class ClmDataResultExtractor implements ResultSetExtractor<List<Provision
         return 0;
     }
 
-    public static String makeUom(String fullUom) {
+    private static String makeUom(String fullUom) {
         if (uomMap.isEmpty()) {
             uomMap.put("GIGABYTE OUTBOUND DATA TRANS PER MONTH", "GB Data/Month");
             uomMap.put("OCPU PER HOUR", "OCPU/Hour");
@@ -118,5 +137,132 @@ public class ClmDataResultExtractor implements ResultSetExtractor<List<Provision
             uomMap.put("OCPU", "OCPU");
         }
         return uomMap.get(fullUom);
+    }
+
+    private static String makeShortTier9(String fullTier9) {
+        if (tier9ShortMap.isEmpty()) {
+            tier9ShortMap.put("Oracle Bare Metal Cloud Service - Standard Compute Capacity - Metered - OCPU Per Hour",
+                              "Compute Capicity");
+            tier9ShortMap.put("Oracle Compute Cloud Service - Additional Static IP - Static IP Per Hour",
+                              "Additional Static IP");
+            tier9ShortMap.put("Oracle Compute Cloud Service - Block Storage - Non-metered - Academy - TB of Storage Capacity",
+                              "Block Storage - Academy");
+            tier9ShortMap.put("Oracle Compute Cloud Service - Block Storage - Non-metered - Public Sector - TB of Storage Capacity",
+                              "Block Storage - Public Sector");
+            tier9ShortMap.put("Oracle Compute Cloud Service - Block Storage - Non-metered - TB of Storage Capacity",
+                              "Block Storage");
+            tier9ShortMap.put("Oracle Compute Cloud Service - Compute Capacity - Model 100 - Hosted Environment",
+                              "Model 100");
+            tier9ShortMap.put("Oracle Compute Cloud Service - Compute Capacity - Model 50 - Hosted Environment",
+                              "Model 50");
+            tier9ShortMap.put("Oracle Compute Cloud Service - Compute Capacity - Non-metered - OCPU", "Non-metered");
+            tier9ShortMap.put("Oracle Compute Cloud Service - Dedicated Compute Capacity - Model 1000 - Hosted Environment",
+                              "Model 1000");
+            tier9ShortMap.put("Oracle Compute Cloud Service - Dedicated Compute Capacity - Model 1500 - Hosted Environment",
+                              "Model 1500");
+            tier9ShortMap.put("Oracle Compute Cloud Service - Dedicated Compute Capacity - Model 2000 - Hosted Environment",
+                              "Model 2000");
+            tier9ShortMap.put("Oracle Compute Cloud Service - Dedicated Compute Capacity - Model 500 - Hosted Environment",
+                              "Model 500");
+            tier9ShortMap.put("Oracle Compute Cloud Service - Dedicated Compute Capacity - SPARC Model 300 - Non-metered - Hosted Environment",
+                              "SPARC Model 300");
+            tier9ShortMap.put("Oracle Compute Cloud Service - High I/O Compute Capacity - Non-metered - Hosted Environment",
+                              "High I/O");
+            tier9ShortMap.put("Oracle Compute Cloud Service - SPARC Block Storage - Non-metered - TB of Storage Capacity",
+                              "SPARC Block Storage");
+            tier9ShortMap.put("Oracle Container Cloud Service - Non-metered - Hosted Environment", "");
+            tier9ShortMap.put("Oracle Fusion Cloud Storage Free Month Promotion", "Free Month");
+            tier9ShortMap.put("Oracle Network Cloud Service - FastConnect Partner Edition - Equinix - Port Speed 10G - Hosted Environment",
+                              "Equinix - Port Speed 10G");
+            tier9ShortMap.put("Oracle Network Cloud Service - FastConnect Partner Edition - Equinix - Port Speed 1G - Hosted Environment",
+                              "Equinix - Port Speed 1G");
+            tier9ShortMap.put("Oracle Network Cloud Service - FastConnect Partner Edition - Verizon SCI - Non-metered - Hosted Environment",
+                              "Verizon SCI");
+            tier9ShortMap.put("Oracle Network Cloud Service - FastConnect Standard Edition - Port Speed 1G - Hosted Environment",
+                              "Port Speed 1G");
+            tier9ShortMap.put("Oracle Network Cloud Service - VPN for Engineered Systems - Non-metered - VPN Connection",
+                              "Engineered Systems");
+            tier9ShortMap.put("Oracle Public Cloud Machine X5 Model 288 - Each", "X5 Model 288");
+            tier9ShortMap.put("Oracle Public Cloud Machine ZS3 Model 268 - Non-metered - Each", "ZS3 Model 268");
+            tier9ShortMap.put("Oracle Public Cloud Machine ZS3 Model 536 - Non-metered - Each", "ZS3 Model 536");
+            tier9ShortMap.put("Oracle Storage Cloud Service - Non-metered - Academy - TB of Storage Capacity",
+                              "Object Stroge - Academy");
+            tier9ShortMap.put("Oracle Storage Cloud Service - Non-metered - Public Sector - TB of Storage Capacity",
+                              "Object Stroge - Public Sector");
+            tier9ShortMap.put("Oracle Storage Cloud Service - Non-metered - TB of Storage Capacity", "Object Stroge");
+
+
+        }
+        return tier9ShortMap.get(fullTier9);
+    }
+
+    private static String makeLongTier9(String fullTier9) {
+        if (tier9LongMap.isEmpty()) {
+            tier9LongMap.put("Oracle Bare Metal Cloud Service - Standard Compute Capacity - Metered - OCPU Per Hour",
+                             "Standard Compute Capacity");
+            tier9LongMap.put("Oracle Compute Cloud Service - Additional Static IP - Static IP Per Hour",
+                             "Additional Static IP - Static IP Per Hour");
+            tier9LongMap.put("Oracle Compute Cloud Service - Block Storage - Non-metered - Academy - TB of Storage Capacity",
+                             "Block Storage - Non-metered - Academy");
+            tier9LongMap.put("Oracle Compute Cloud Service - Block Storage - Non-metered - Public Sector - TB of Storage Capacity",
+                             "Block Storage - Non-metered - Public Sector");
+            tier9LongMap.put("Oracle Compute Cloud Service - Block Storage - Non-metered - TB of Storage Capacity",
+                             "Block Storage - Non-metered");
+            tier9LongMap.put("Oracle Compute Cloud Service - Compute Capacity - Model 100 - Hosted Environment",
+                             "Compute Capacity - Model 100 ");
+            tier9LongMap.put("Oracle Compute Cloud Service - Compute Capacity - Model 50 - Hosted Environment",
+                             "Compute Capacity - Model 50");
+            tier9LongMap.put("Oracle Compute Cloud Service - Compute Capacity - Non-metered - OCPU",
+                             " Compute Capacity - Non-metered");
+            tier9LongMap.put("Oracle Compute Cloud Service - Dedicated Compute Capacity - Model 1000 - Hosted Environment",
+                             "Dedicated Compute Capacity - Model 1000 ");
+            tier9LongMap.put("Oracle Compute Cloud Service - Dedicated Compute Capacity - Model 1500 - Hosted Environment",
+                             "Dedicated Compute Capacity - Model 1500 ");
+            tier9LongMap.put("Oracle Compute Cloud Service - Dedicated Compute Capacity - Model 2000 - Hosted Environment",
+                             "Dedicated Compute Capacity - Model 2000 ");
+            tier9LongMap.put("Oracle Compute Cloud Service - Dedicated Compute Capacity - Model 500 - Hosted Environment",
+                             "Dedicated Compute Capacity - Model 500 ");
+            tier9LongMap.put("Oracle Compute Cloud Service - Dedicated Compute Capacity - SPARC Model 300 - Non-metered - Hosted Environment",
+                             "Dedicated Compute Capacity - SPARC Model 300 - Non-metered");
+            tier9LongMap.put("Oracle Compute Cloud Service - High I/O Compute Capacity - Non-metered - Hosted Environment",
+                             "High I/O Compute Capacity - Non-metered");
+            tier9LongMap.put("Oracle Compute Cloud Service - SPARC Block Storage - Non-metered - TB of Storage Capacity",
+                             "SPARC Block Storage - Non-metered ");
+            tier9LongMap.put("Oracle Container Cloud Service - Non-metered - Hosted Environment", "");
+            tier9LongMap.put("Oracle Fusion Cloud Storage Free Month Promotion", "Free Month Promotion");
+            tier9LongMap.put("Oracle Network Cloud Service - FastConnect Partner Edition - Equinix - Port Speed 10G - Hosted Environment",
+                             "FastConnect Partner Edition - Equinix - Port Speed 10G");
+            tier9LongMap.put("Oracle Network Cloud Service - FastConnect Partner Edition - Equinix - Port Speed 1G - Hosted Environment",
+                             "FastConnect Partner Edition - Equinix - Port Speed 1G");
+            tier9LongMap.put("Oracle Network Cloud Service - FastConnect Partner Edition - Verizon SCI - Non-metered - Hosted Environment",
+                             "FastConnect Partner Edition - Verizon SCI - Non-metered");
+            tier9LongMap.put("Oracle Network Cloud Service - FastConnect Standard Edition - Port Speed 1G - Hosted Environment",
+                             "FastConnect Standard Edition - Port Speed 1G");
+            tier9LongMap.put("Oracle Network Cloud Service - VPN for Engineered Systems - Non-metered - VPN Connection",
+                             "VPN for Engineered Systems - Non-metered");
+            tier9LongMap.put("Oracle Public Cloud Machine X5 Model 288 - Each", "X5 Model 288 - Each");
+            tier9LongMap.put("Oracle Public Cloud Machine ZS3 Model 268 - Non-metered - Each",
+                             "ZS3 Model 268 - Non-metered - Each");
+            tier9LongMap.put("Oracle Public Cloud Machine ZS3 Model 536 - Non-metered - Each",
+                             "ZS3 Model 536 - Non-metered - Each");
+            tier9LongMap.put("Oracle Storage Cloud Service - Non-metered - Academy - TB of Storage Capacity",
+                             "Object Stroge - Academy");
+            tier9LongMap.put("Oracle Storage Cloud Service - Non-metered - Public Sector - TB of Storage Capacity",
+                             "Object Stroge - Public Sector");
+            tier9LongMap.put("Oracle Storage Cloud Service - Non-metered - TB of Storage Capacity", "Object Stroge");
+
+        }
+        return tier9LongMap.get(fullTier9);
+    }
+
+    private ServiceDetail makeNewServiceDetail(ResultSet resultSet, ServiceDetail detail) throws SQLException,
+                                                                                                 DataAccessException {
+        detail = new ServiceDetail();
+        detail.setQuantity(resultSet.getInt("QUANTITY"));
+        detail.setUom(makeUom(resultSet.getString("QUANTITY_UNIT_OF_MEASURE")));
+        detail.setActualTier9(resultSet.getString("PROD_TIER_9"));
+        detail.setTier9ShortDesc(makeShortTier9(resultSet.getString("PROD_TIER_9")));
+        detail.setTier9LongDesc(makeLongTier9(resultSet.getString("PROD_TIER_9")));
+        return detail;
     }
 }
