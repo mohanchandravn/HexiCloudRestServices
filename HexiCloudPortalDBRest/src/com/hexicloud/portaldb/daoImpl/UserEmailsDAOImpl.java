@@ -180,7 +180,8 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
             SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("from_email_address", EMAIL_ACCOUND_ADMIN)
                                                                         .addValue("to_email_address", sendTo)
                                                                         .addValue("email_subject", emailSubject)
-                                                                        .addValue("email_body", emailContent);
+                                                                        .addValue("email_body", emailContent)
+                                                                        .addValue("cc_email_address", "");
             Map<String, Object> out = sendEmailPrc.execute(inParamsMap);
             if (out != null && !(out.isEmpty())) {
                 result = (String) out.get("OUT_SR_ID");

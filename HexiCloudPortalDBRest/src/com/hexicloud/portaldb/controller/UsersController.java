@@ -71,11 +71,6 @@ public class UsersController {
                 if (user == null)
                     return new ResponseEntity<String>("not a valid user id", HttpStatus.NO_CONTENT);
                 else {
-//                    String decodedPassword = EncryptionUtil.decryptString(user.getPassword());
-//                    ;
-//                    String subject = "Password Details";
-//                    String emailContent = "your password is : " + decodedPassword;
-//                    //String emailId = "shivakumar.gunjur.manjukumar@oracle.com";//user.getEmail()
                     String result = emailsService.sendEmail(user.getEmail(),user);
                     if (result != null && result.equalsIgnoreCase("N")) {
                         return new ResponseEntity<String>(HttpStatus.EXPECTATION_FAILED);
@@ -84,13 +79,13 @@ public class UsersController {
                 }
             }
         } catch (SQLException sqlExp) {
-            sqlExp.printStackTrace();
+            logger.error(sqlExp);
             return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (NamingException nmExp) {
-            nmExp.printStackTrace();
+            logger.error(nmExp);
             return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception exp) {
-            exp.printStackTrace();
+            logger.error(exp);
             return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
