@@ -56,9 +56,11 @@ public class ClmDataResultExtractor implements ResultSetExtractor<List<Provision
                 detailsList.add(makeNewServiceDetail(resultSet, detail));
             } else {
                 for (ServiceDetail sDetail : detailsList) {
-                    if (sDetail.getActualTier9().equalsIgnoreCase(tier9)) {
-                        sDetail.setQuantity(sDetail.getQuantity() + resultSet.getInt("QUANTITY"));
-                        hasSimilarTier9 = true;
+                    if (null != sDetail.getActualTier9()) {
+                        if (sDetail.getActualTier9().equalsIgnoreCase(tier9)) {
+                            sDetail.setQuantity(sDetail.getQuantity() + resultSet.getInt("QUANTITY"));
+                            hasSimilarTier9 = true;
+                        } 
                     }
                 }
                 if (!hasSimilarTier9) {
@@ -83,7 +85,9 @@ public class ClmDataResultExtractor implements ResultSetExtractor<List<Provision
     }
 
     private static String makeService(String tier6) {
-        if (tier6.contains(" ")) {
+        if (tier6.contains("Bare Metal")) {
+            return "Bare Metal";
+        } else if (tier6.contains(" ")) {
             return tier6.substring(0, tier6.indexOf(" "));
         } else {
             return tier6;

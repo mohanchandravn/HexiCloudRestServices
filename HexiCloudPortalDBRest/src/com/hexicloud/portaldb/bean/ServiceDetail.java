@@ -1,11 +1,14 @@
 package com.hexicloud.portaldb.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 public class ServiceDetail {
     private Integer quantity;
     private String uom;
     private String tier9ShortDesc;
     private String tier9LongDesc;
+    @JsonIgnore
     private String actualTier9;
 
     public void setTier9ShortDesc(String tier9ShortDesc) {
