@@ -51,12 +51,6 @@ public class UserStepsDAOImpl implements UserStepsDAO {
         List<UserStep> existingUserSteps =
             jdbcTemplate.query(SqlQueryConstantsUtil.SQL_FIND_USER_CURRENT_STEP, new Object[] { userStep.getUserId() },
                                new BeanPropertyRowMapper(UserStep.class));
-        // SQL_CREATE_USER_STEP = "INSERT INTO USER_STEPS (USER_ID, USER_ROLE,
-        // CUR_STEP_ID, CUR_STEP_CODE, PRE_STEP_ID, PRE_STEP_CODE, CREATED_DATE,
-        // UPDATED_DATE) VALUES (?, ?, ?, ?, ?, ?, SYSDATE, SYSDATE)";
-        // SQL_UPDATE_USER_STEP = "UPDATE USER_STEPS SET USER_ROLE = ?,
-        // CUR_STEP_ID = ?, CUR_STEP_CODE = ?, PRE_STEP_ID = ?, PRE_STEP_CODE =
-        // ?, UPDATED_DATE = SYSDATE WHERE USER_ID = ?";
         SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_USER_ID", userStep.getUserId())
                                                                     .addValue("IN_STEP_LABEL", steps.getStepLabel(userStep.getPreStepCode()))
                                                                     .addValue("IN_CUR_STEP_LABEL", userStep.getCurStepCode())
@@ -72,6 +66,10 @@ public class UserStepsDAOImpl implements UserStepsDAO {
                                 new Object[] { userStep.getUserId(), userStep.getUserRole(),
                                                steps.getStepId(userStep.getCurStepCode()), userStep.getCurStepCode(),
                                                steps.getStepId(userStep.getPreStepCode()), userStep.getPreStepCode() });
+        }
+        if (userStep.isUpdateRole()) {
+            jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_USER_ROLE,
+                                new Object[] { userStep.getUserRole(), userStep.getUserId() });
         }
         saveUserNavAudit.execute(inParamsMap);
         logger.info(" End of createUserSteps() ");

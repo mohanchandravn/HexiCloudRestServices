@@ -150,11 +150,11 @@ public class ClmDataResultExtractor implements ResultSetExtractor<List<Provision
             tier9ShortMap.put("Oracle Compute Cloud Service - Additional Static IP - Static IP Per Hour",
                               "Additional Static IP");
             tier9ShortMap.put("Oracle Compute Cloud Service - Block Storage - Non-metered - Academy - TB of Storage Capacity",
-                              "Block Storage - Academy");
+                              "Academy");
             tier9ShortMap.put("Oracle Compute Cloud Service - Block Storage - Non-metered - Public Sector - TB of Storage Capacity",
-                              "Block Storage - Public Sector");
+                              "Public Sector");
             tier9ShortMap.put("Oracle Compute Cloud Service - Block Storage - Non-metered - TB of Storage Capacity",
-                              "Block Storage");
+                              "");
             tier9ShortMap.put("Oracle Compute Cloud Service - Compute Capacity - Model 100 - Hosted Environment",
                               "Model 100");
             tier9ShortMap.put("Oracle Compute Cloud Service - Compute Capacity - Model 50 - Hosted Environment",
@@ -190,10 +190,10 @@ public class ClmDataResultExtractor implements ResultSetExtractor<List<Provision
             tier9ShortMap.put("Oracle Public Cloud Machine ZS3 Model 268 - Non-metered - Each", "ZS3 Model 268");
             tier9ShortMap.put("Oracle Public Cloud Machine ZS3 Model 536 - Non-metered - Each", "ZS3 Model 536");
             tier9ShortMap.put("Oracle Storage Cloud Service - Non-metered - Academy - TB of Storage Capacity",
-                              "Object Stroge - Academy");
+                              "Academy");
             tier9ShortMap.put("Oracle Storage Cloud Service - Non-metered - Public Sector - TB of Storage Capacity",
-                              "Object Stroge - Public Sector");
-            tier9ShortMap.put("Oracle Storage Cloud Service - Non-metered - TB of Storage Capacity", "Object Stroge");
+                              "Public Sector");
+            tier9ShortMap.put("Oracle Storage Cloud Service - Non-metered - TB of Storage Capacity", "");
 
 
         }
@@ -250,10 +250,10 @@ public class ClmDataResultExtractor implements ResultSetExtractor<List<Provision
             tier9LongMap.put("Oracle Public Cloud Machine ZS3 Model 536 - Non-metered - Each",
                              "ZS3 Model 536 - Non-metered - Each");
             tier9LongMap.put("Oracle Storage Cloud Service - Non-metered - Academy - TB of Storage Capacity",
-                             "Object Stroge - Academy");
+                             "Object Storage - Academy");
             tier9LongMap.put("Oracle Storage Cloud Service - Non-metered - Public Sector - TB of Storage Capacity",
-                             "Object Stroge - Public Sector");
-            tier9LongMap.put("Oracle Storage Cloud Service - Non-metered - TB of Storage Capacity", "Object Stroge");
+                             "Object Storage - Public Sector");
+            tier9LongMap.put("Oracle Storage Cloud Service - Non-metered - TB of Storage Capacity", "Object Storage");
 
         }
         return tier9LongMap.get(fullTier9);

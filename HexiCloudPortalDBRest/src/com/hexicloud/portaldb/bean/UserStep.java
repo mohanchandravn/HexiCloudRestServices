@@ -1,5 +1,7 @@
 package com.hexicloud.portaldb.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 
 import java.sql.Timestamp;
@@ -19,31 +21,17 @@ public class UserStep implements Serializable {
     private String preStepCode;
     private Timestamp createdDate;
     private Timestamp updatedDate;
+    @JsonIgnore
     private boolean decisionMakingStep;
+    @JsonIgnore
     private boolean nonRedirectStep;
+    @JsonIgnore
     private boolean roleSelectionStep;
     private String userAction;
+    private boolean updateRole;
 
     public UserStep() {
 
-    }
-
-
-    public UserStep(String userId, String userRole, int curStepId, String curStepCode, int preStepId,
-                    String preStepCode, Timestamp createdDate, Timestamp updatedDate, boolean decisionMakingStep,
-                    boolean nonRedirectStep, boolean roleSelectionStep, String userAction) {
-        this.userId = userId;
-        this.userRole = userRole;
-        this.curStepId = curStepId;
-        this.curStepCode = curStepCode;
-        this.preStepId = preStepId;
-        this.preStepCode = preStepCode;
-        this.createdDate = createdDate;
-        this.updatedDate = updatedDate;
-        this.decisionMakingStep = decisionMakingStep;
-        this.nonRedirectStep = nonRedirectStep;
-        this.roleSelectionStep = roleSelectionStep;
-        this.userAction = userAction;
     }
 
     public String getUserId() {
@@ -158,5 +146,13 @@ public class UserStep implements Serializable {
 
     public String getUserAction() {
         return userAction;
+    }
+
+    public void setUpdateRole(boolean updateRole) {
+        this.updateRole = updateRole;
+    }
+
+    public boolean isUpdateRole() {
+        return updateRole;
     }
 }
