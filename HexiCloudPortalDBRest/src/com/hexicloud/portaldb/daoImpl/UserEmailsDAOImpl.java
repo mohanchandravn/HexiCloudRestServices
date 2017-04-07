@@ -135,7 +135,7 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
         logger.info(" Begining of getEmailContent() ");
         @SuppressWarnings("unchecked")
         List<RuleConfiguration> rulesList =
-            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_RULE_CONFIGURATION, new Object[] { ruleKey },
+            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_RULE_CONFIGURATION_BY_RULE_KEY, new Object[] { ruleKey },
                                new BeanPropertyRowMapper(RuleConfiguration.class));
 
 

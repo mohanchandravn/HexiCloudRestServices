@@ -2,7 +2,9 @@ package com.hexicloud.portaldb.controller;
 
 import com.hexicloud.portaldb.bean.JobConfiguration;
 import com.hexicloud.portaldb.bean.JobHistory;
+import com.hexicloud.portaldb.bean.RuleConfiguration;
 import com.hexicloud.portaldb.service.JobConfigurationService;
+import com.hexicloud.portaldb.service.RuleConfigService;
 
 import java.util.List;
 
@@ -24,6 +26,9 @@ public class SchedulerController {
 
     @Autowired
     private JobConfigurationService jobConfigurationService;
+    
+    @Autowired
+    private RuleConfigService ruleConfigService;
 
     @RequestMapping(value = "/services/rest/findJobConfigurations", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ADMIN')")
@@ -51,4 +56,18 @@ public class SchedulerController {
         logger.info("******** End of findJobHistoryForJob() in controller ***********");
         return new ResponseEntity<List<JobHistory>>(jobHistoryList, HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "/services/rest/findRulesByJob/{jobId}/", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<RuleConfiguration>> findRulesByJob(@PathVariable(value = "jobId") Integer jobId) throws Exception {
+        logger.info("******* Start of findRulesByJob() in controller ***********");
+        List<RuleConfiguration> ruleConfigs = ruleConfigService.getRuleConfigsByJob(jobId);
+        if (ruleConfigs.isEmpty()) {
+            logger.info("findRulesByJob not found");
+            return new ResponseEntity<List<RuleConfiguration>>(HttpStatus.NO_CONTENT);
+        }
+        logger.info("RuleConfiguration******** End of findRulesByJob() in controller ***********");
+        return new ResponseEntity<List<RuleConfiguration>>(ruleConfigs, HttpStatus.OK);
+    }
+    
 }
