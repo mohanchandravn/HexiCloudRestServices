@@ -53,6 +53,10 @@
     <bean id="jobHistoryDAO" class="com.hexicloud.portaldb.daoImpl.JobHistoryDAOImpl">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+    
+     <bean id="ruleConfigurationDAO" class="com.hexicloud.portaldb.daoImpl.RuleConfigurationDAOImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <!-- max upload size in bytes -->
         <property name="maxUploadSize" value="1073741824"/>
