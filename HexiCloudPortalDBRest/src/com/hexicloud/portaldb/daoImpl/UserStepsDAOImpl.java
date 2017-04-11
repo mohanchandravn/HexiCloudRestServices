@@ -18,6 +18,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 @Repository
 public class UserStepsDAOImpl implements UserStepsDAO {
@@ -45,32 +46,36 @@ public class UserStepsDAOImpl implements UserStepsDAO {
     public void createUserSteps(UserStep userStep) {
         logger.info(" Begining of createUserSteps() ");
 
-        logger.info("Retrieved id's, current Step : " + steps.getStepId(userStep.getCurStepCode()) + ", Previous : " +
-                    steps.getStepId(userStep.getPreStepCode()));
-        @SuppressWarnings({ "unchecked", "rawtypes" })
-        List<UserStep> existingUserSteps =
-            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_FIND_USER_CURRENT_STEP, new Object[] { userStep.getUserId() },
-                               new BeanPropertyRowMapper(UserStep.class));
-        SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_USER_ID", userStep.getUserId())
-                                                                    .addValue("IN_STEP_LABEL", steps.getStepLabel(userStep.getPreStepCode()))
-                                                                    .addValue("IN_CUR_STEP_LABEL", userStep.getCurStepCode())
-                                                                    .addValue("IN_ACTION", userStep.getUserAction());
+        logger.info("Retrieved id's, current Step : " + steps.getStepIdWithStepCode(userStep.getCurStepCode()) + ", Previous : " +
+                    steps.getStepIdWithStepCode(userStep.getPreStepCode()));
+        if (!StringUtils.isEmpty(userStep.getCurStepCode())) {
+            @SuppressWarnings({ "unchecked", "rawtypes" })
+            List<UserStep> existingUserSteps =
+                jdbcTemplate.query(SqlQueryConstantsUtil.SQL_FIND_USER_CURRENT_STEP, new Object[] { userStep.getUserId() },
+                                   new BeanPropertyRowMapper(UserStep.class));
+            
 
-        if (null != existingUserSteps && existingUserSteps.size() > 0) {
-            jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_USER_STEP,
-                                new Object[] { userStep.getUserRole(), steps.getStepId(userStep.getCurStepCode()),
-                                               userStep.getCurStepCode(), steps.getStepId(userStep.getPreStepCode()),
-                                               userStep.getPreStepCode(), userStep.getUserId() });
-        } else {
-            jdbcTemplate.update(SqlQueryConstantsUtil.SQL_CREATE_USER_STEP,
-                                new Object[] { userStep.getUserId(), userStep.getUserRole(),
-                                               steps.getStepId(userStep.getCurStepCode()), userStep.getCurStepCode(),
-                                               steps.getStepId(userStep.getPreStepCode()), userStep.getPreStepCode() });
+            if (null != existingUserSteps && existingUserSteps.size() > 0) {
+                jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_USER_STEP,
+                                    new Object[] { userStep.getUserRole(), steps.getStepIdWithStepCode(userStep.getCurStepCode()),
+                                                   userStep.getCurStepCode(), steps.getStepIdWithStepCode(userStep.getPreStepCode()),
+                                                   userStep.getPreStepCode(), userStep.getUserId() });
+            } else {
+                jdbcTemplate.update(SqlQueryConstantsUtil.SQL_CREATE_USER_STEP,
+                                    new Object[] { userStep.getUserId(), userStep.getUserRole(),
+                                                   steps.getStepIdWithStepCode(userStep.getCurStepCode()), userStep.getCurStepCode(),
+                                                   steps.getStepIdWithStepCode(userStep.getPreStepCode()), userStep.getPreStepCode() });
+            }
         }
         if (userStep.isUpdateRole()) {
             jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_USER_ROLE,
                                 new Object[] { userStep.getUserRole(), userStep.getUserId() });
         }
+        
+        SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_USER_ID", userStep.getUserId())
+                                                                    .addValue("IN_STEP_ID", steps.getStepIdWithStepCode(userStep.getPreStepCode()))
+                                                                    .addValue("IN_CUR_STEP_LABEL", userStep.getCurStepCode())
+                                                                    .addValue("IN_ACTION", userStep.getUserAction());
         saveUserNavAudit.execute(inParamsMap);
         logger.info(" End of createUserSteps() ");
 
@@ -86,7 +91,7 @@ public class UserStepsDAOImpl implements UserStepsDAO {
                                new BeanPropertyRowMapper(UserStep.class));
         if (null != existingUserSteps && existingUserSteps.size() > 0) {
             userStep = existingUserSteps.get(0);
-            Step dbStep = steps.getSteps().get(userStep.getCurStepCode());
+            Step dbStep = steps.getStepsMapWithStepCodeKey().get(userStep.getCurStepCode());
             userStep.setDecisionMakingStep(dbStep.isDecisionMaking());
             userStep.setRoleSelectionStep(dbStep.isRoleSelelction());
             userStep.setNonRedirectStep(dbStep.isNonRedirectStep());
