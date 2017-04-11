@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.hexicloud.portaldb.bean.AuthUser;
 import com.hexicloud.portaldb.bean.AuthUserTokenState;
-import com.hexicloud.portaldb.bean.User;
-import com.hexicloud.portaldb.bean.UserStep;
-import com.hexicloud.portaldb.dao.UserStepsDAO;
-import com.hexicloud.portaldb.dao.UsersDAO;
+import com.hexicloud.portaldb.service.LoginService;
 import com.hexicloud.portaldb.util.token.TokenHelper;
 
 import java.io.IOException;
@@ -30,15 +27,10 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
     private static final Logger logger = Logger.getLogger(AuthenticationSuccessHandler.class);
 
     @Autowired
-    UsersDAO usersDAO;
-    @Autowired
-    UserStepsDAO userStepsDao;
+    private LoginService loginService;
 
     @Value("${usercookie.expiresIn}")
     private int EXPIRES_IN;
-
-
-    //    private String TOKEN_COOKIE = "AUTH-TOKEN";
 
     @Value("${usercookie.name}")
     private String USER_COOKIE;
@@ -64,42 +56,16 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
                                                        .replace("ROLE_", "")
                                                        .equalsIgnoreCase("user")) {
             String jws = tokenHelper.generateToken(user.getUsername());
-
-            // Create token auth Cookie
-            //        Cookie authCookie = new Cookie( TOKEN_COOKIE, ( jws ) );
-            //              authCookie.setPath( "/" );
-            //              authCookie.setHttpOnly( true );
-            //              authCookie.setMaxAge( EXPIRES_IN );
-            // Create flag Cookie
             Cookie userCookie = new Cookie(USER_COOKIE, (user.getFirstName()));
             userCookie.setPath("/");
             userCookie.setMaxAge(EXPIRES_IN);
-            // Add cookie to response
-            //              response.addCookie( authCookie );
             response.addCookie(userCookie);
-            // JWT is also in the response
-            AuthUserTokenState userTokenState = null; //
-            User userDetails = usersDAO.getUser(user.getUsername());
-            UserStep userStep = userStepsDao.getUsersCurrentStep(user.getUsername());
-            if (userDetails != null && userStep != null) {
-                userTokenState =
-                    new AuthUserTokenState(jws, EXPIRES_IN, user.getUserId(), userDetails.getEmail(),
-                                           userDetails.getUserRole(), userDetails.getFirstName(),
-                                           userDetails.getLastName(), String.valueOf(userStep.getCurStepId()),
-                                           userStep.getCurStepCode(), String.valueOf(userStep.getPreStepId()),
-                                           userStep.getPreStepCode(), userDetails.getPhone());
+            AuthUserTokenState userTokenState = null;
+            if (portalType.equalsIgnoreCase("user")) {
+                userTokenState = loginService.getPortalUserDetails(user.getUserId(), jws, EXPIRES_IN);
+            } else {
+                userTokenState = loginService.getAdminUserDetails(user.getUserId(), jws, EXPIRES_IN);
             }
-            else if(userDetails != null && userStep == null) {
-                userTokenState =
-                    new AuthUserTokenState(jws, EXPIRES_IN, user.getUserId(), userDetails.getEmail(),
-                                           userDetails.getUserRole(), userDetails.getFirstName(),
-                                           userDetails.getLastName(), "","", "", "",  userDetails.getPhone());
-            }
-            else if(userDetails == null && userStep == null) {
-                userTokenState =
-                    new AuthUserTokenState(jws, EXPIRES_IN, user.getUserId(), "","", "","", "","", "", "", "");
-            }
-            usersDAO.updateLastLoggedIn(user.getUsername());
             ObjectMapper mapper = new ObjectMapper();
             String jwtResponse = mapper.writeValueAsString(userTokenState);
             response.setContentType("application/json");

@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -100,4 +101,32 @@ public class UserStepsDAOImpl implements UserStepsDAO {
         return !existingUserSteps.isEmpty() ? (UserStep) existingUserSteps.get(0) : null;
     }
 
+    @Override
+    public boolean onBoardingComplete(String userId) {
+       boolean onBoardingComplete = false;
+       String completionDate = null;
+        try {
+            completionDate =
+                jdbcTemplate.queryForObject(SqlQueryConstantsUtil.SQL_CHECK_ON_BOARDING_COMPLETION,
+                                            new Object[] { userId }, String.class);
+            if (null != completionDate) {
+                onBoardingComplete = true;
+            }
+        } catch (EmptyResultDataAccessException erdae) {
+            logger.error("Did not get the onboarding completion, expected error so not logging trace");
+            return onBoardingComplete;
+        }
+        return onBoardingComplete;
+    }
+
+    @Override
+    public void updateAuditOnly(String userId, String stepCode, String action) {
+        logger.info(" Start of updateAuditOnly() ");
+        SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_USER_ID", userId)
+                                                                    .addValue("IN_STEP_ID", steps.getStepIdWithStepCode(stepCode))
+                                                                    .addValue("IN_CUR_STEP_LABEL", null)
+                                                                    .addValue("IN_ACTION", action);
+        saveUserNavAudit.execute(inParamsMap);
+        logger.info(" End of updateAuditOnly() ");
+    }
 }

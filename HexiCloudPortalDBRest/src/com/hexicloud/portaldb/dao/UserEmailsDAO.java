@@ -19,8 +19,6 @@ import javax.crypto.NoSuchPaddingException;
 
 import javax.naming.NamingException;
 
-import javax.naming.NamingException;
-
 public interface UserEmailsDAO {
     public List<UserEmail> getUserEmails(String userId, String isResolved, Number requestId, String searchCallBacks);
 
