@@ -11,5 +11,5 @@ public interface UserStepsDAO {
     
     public boolean onBoardingComplete(String userId);
     
-    public void updateAuditOnly(String userId, String stepCode, String action);
+
 }

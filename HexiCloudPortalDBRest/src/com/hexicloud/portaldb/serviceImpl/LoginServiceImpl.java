@@ -3,6 +3,7 @@ package com.hexicloud.portaldb.serviceImpl;
 import com.hexicloud.portaldb.bean.AuthUserTokenState;
 import com.hexicloud.portaldb.bean.User;
 import com.hexicloud.portaldb.bean.UserStep;
+import com.hexicloud.portaldb.dao.UserNavigationAuditDAO;
 import com.hexicloud.portaldb.dao.UserStepsDAO;
 import com.hexicloud.portaldb.dao.UsersDAO;
 import com.hexicloud.portaldb.service.LoginService;
@@ -21,6 +22,8 @@ public class LoginServiceImpl implements LoginService {
     UsersDAO usersDAO;
     @Autowired
     UserStepsDAO userStepsDao;
+    @Autowired
+    UserNavigationAuditDAO userNavigationAuditDAO;
 
     //    @Override
     //    public User authenticate(User user) {
@@ -83,7 +86,7 @@ public class LoginServiceImpl implements LoginService {
             userTokenState.setOnBoardingCompleted(userStepsDao.onBoardingComplete(userName));
         }
         usersDAO.updateLastLoggedIn(userName);
-        userStepsDao.updateAuditOnly(userName, "login", "Login Successfull");
+        userNavigationAuditDAO.updateAuditOnly(userName, "login", "Login Successfull");
         return userTokenState;
     }
 

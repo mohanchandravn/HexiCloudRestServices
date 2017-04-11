@@ -119,14 +119,5 @@ public class UserStepsDAOImpl implements UserStepsDAO {
         return onBoardingComplete;
     }
 
-    @Override
-    public void updateAuditOnly(String userId, String stepCode, String action) {
-        logger.info(" Start of updateAuditOnly() ");
-        SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_USER_ID", userId)
-                                                                    .addValue("IN_STEP_ID", steps.getStepIdWithStepCode(stepCode))
-                                                                    .addValue("IN_CUR_STEP_LABEL", null)
-                                                                    .addValue("IN_ACTION", action);
-        saveUserNavAudit.execute(inParamsMap);
-        logger.info(" End of updateAuditOnly() ");
-    }
+  
 }

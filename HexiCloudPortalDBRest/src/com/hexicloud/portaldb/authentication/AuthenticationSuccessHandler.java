@@ -37,6 +37,15 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
 
     @Value("${forbidden.errorMessage}")
     private String FORBIDDEN_MESSAGE;
+    
+    @Value("${auth.portalType}")
+    private String PORTAL_TYPE;
+    
+    @Value("${auth.userType}")
+    private String USER_TYPE;
+    
+    @Value("${auth.adminType}")
+    private String ADMIN_TYPE;
 
     @Autowired
     TokenHelper tokenHelper;
@@ -48,13 +57,13 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
         logger.info("Authentication success, generating the token");
         clearAuthenticationAttributes(request);
         AuthUser user = (AuthUser) authentication.getPrincipal();
-        String portalType = request.getHeader("Portal-Type");
-        if (portalType.equalsIgnoreCase("admin") && user.getAuthority()
+        String portalType = request.getHeader(PORTAL_TYPE);
+        if (portalType.equalsIgnoreCase(ADMIN_TYPE) && user.getAuthority()
                                                         .replace("ROLE_", "")
-                                                        .equalsIgnoreCase("admin") ||
-            portalType.equalsIgnoreCase("user") && user.getAuthority()
+                                                        .equalsIgnoreCase(ADMIN_TYPE) ||
+            portalType.equalsIgnoreCase(USER_TYPE) && user.getAuthority()
                                                        .replace("ROLE_", "")
-                                                       .equalsIgnoreCase("user")) {
+                                                       .equalsIgnoreCase(USER_TYPE)) {
             String jws = tokenHelper.generateToken(user.getUsername());
             Cookie userCookie = new Cookie(USER_COOKIE, (user.getFirstName()));
             userCookie.setPath("/");
