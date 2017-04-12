@@ -1,11 +1,6 @@
 package com.hexicloud.portaldb.bean;
 
-import com.hexi.dcs.client.services.DCSFileService;
-
 import java.io.Serializable;
-
-import com.hexi.dcs.client.services.DocumentService;
-import com.hexi.dcs.client.util.DCSRestEndpointFactory;
 
 public class ServiceBenefit implements Serializable {
     @SuppressWarnings("compatibility:-8340279888218910692")

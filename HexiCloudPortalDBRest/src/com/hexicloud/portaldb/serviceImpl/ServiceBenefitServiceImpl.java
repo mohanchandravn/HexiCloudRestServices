@@ -7,7 +7,6 @@ import com.hexicloud.portaldb.bean.Usecase;
 import com.hexicloud.portaldb.dao.ServiceBenefitDAO;
 import com.hexicloud.portaldb.service.ServiceBenefitService;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;

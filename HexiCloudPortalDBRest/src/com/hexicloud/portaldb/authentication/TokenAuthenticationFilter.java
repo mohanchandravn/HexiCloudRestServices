@@ -30,6 +30,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     TokenHelper tokenHelper;
 
+
     @Autowired
     AuthenticateHexiUserServiceImpl authenticateHexiUserServiceImpl;
 
