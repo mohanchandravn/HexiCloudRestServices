@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,5 +41,16 @@ public class UserNavAuditController {
         logger.info("******** End of getUserNavAudit() in controller ***********");
         return new ResponseEntity<List<UserNavAudit>>(stepsList, HttpStatus.OK);
     }
+    
+    
+    @RequestMapping(value = "/services/rest/updateAudit/", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> updateAudit(@RequestBody UserNavAudit userNavAudit, Authentication authentication) throws Exception {
+        logger.info("******* Start of updateAudit() in controller ***********");
+        userNavigationAuditService.updateAuditOnly(authentication.getName(), userNavAudit.getStepCode(), userNavAudit.getAction());
+        logger.info("******** End of updateAudit() in controller ***********");
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
+    }
+
 
 }

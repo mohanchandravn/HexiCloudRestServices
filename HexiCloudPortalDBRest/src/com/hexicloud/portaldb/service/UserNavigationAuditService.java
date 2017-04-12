@@ -7,5 +7,5 @@ import java.util.List;
 public interface UserNavigationAuditService {
     public List<UserNavAudit> getUserNavAudit(String userId);
 
-
+    public void updateAuditOnly(String userId, String stepCode, String action);
 }

@@ -20,7 +20,7 @@ public class UserNavAudit implements Serializable {
     private Integer helpEmailSentCount;
     private Integer stepId;
     private String action;
-
+    private String stepCode;
     private String stepLabel;
 
     public void setNavId(Integer navId) {
@@ -93,5 +93,13 @@ public class UserNavAudit implements Serializable {
 
     public String getAction() {
         return action;
+    }
+
+    public void setStepCode(String stepCode) {
+        this.stepCode = stepCode;
+    }
+
+    public String getStepCode() {
+        return stepCode;
     }
 }

@@ -30,4 +30,10 @@ public class UserNavigationAuditServiceImpl implements UserNavigationAuditServic
         logger.info("the where clause is :" + whereClause.toString());
         return userNavigationAuditDAO.getUserNavAudit(whereClause.toString());
     }
+
+    @Override
+    public void updateAuditOnly(String userId, String stepCode, String action) {
+        logger.info("updateAuditOnly in the service");
+        userNavigationAuditDAO.updateAuditOnly(userId, stepCode, action);
+    }
 }
