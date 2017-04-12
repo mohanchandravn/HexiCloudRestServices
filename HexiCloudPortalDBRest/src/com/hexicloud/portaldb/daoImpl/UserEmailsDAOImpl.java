@@ -45,7 +45,7 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
     private SimpleJdbcCall requestCallbackPrc;
     private static String FORGOT_PASSWORD_EMAIL_TEMPLATE_KEY = "FORGOT_PASSWORD_EMAIL_TEMPLATE";
     private static String FORGOT_PASSWORD_EMAIL_SUBJECT_KEY = "FORGOT_PASSWORD_EMAIL_SUBJECT";
-    private static String EMAIL_ACCOUND_ADMIN = "metcs-cloud.admin@oracleads.com";
+//    private static String EMAIL_ACCOUND_ADMIN = "metcs-cloud.admin@oracleads.com";
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -147,6 +147,23 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
         logger.info(" End of getEmailContent() ");
         return null;
     }
+    
+    private RuleConfiguration getFromAddress(String ruleKey) {
+        logger.info(" Begining of getFromAddress() ");
+        @SuppressWarnings("unchecked")
+        List<RuleConfiguration> rulesList =
+            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_RULE_CONFIGURATION, new Object[] { ruleKey },
+                               new BeanPropertyRowMapper(RuleConfiguration.class));
+
+
+        if (rulesList != null && !(rulesList.isEmpty())) {
+            if (rulesList.size() == 1) {
+                return rulesList.get(0);
+    }
+        }
+        logger.info(" End of getFromAddress() ");
+        return null;
+    }
 
 
     @Override
@@ -177,7 +194,7 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
                 emailContent = emailContent.replaceAll("<<USER_ID>>", user.getUserId());
                 emailContent = emailContent.replaceAll("<<PASSWORD>>", decodedPassword);
             }
-            SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("from_email_address", EMAIL_ACCOUND_ADMIN)
+            SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("from_email_address", getFromAddress("PORTAL_NOTIFICATION_EMAIL_ID").getRuleValue())
                                                                         .addValue("to_email_address", sendTo)
                                                                         .addValue("email_subject", emailSubject)
                                                                         .addValue("email_body", emailContent)
