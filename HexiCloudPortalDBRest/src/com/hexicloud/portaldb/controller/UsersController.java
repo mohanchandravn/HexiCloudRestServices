@@ -1,6 +1,7 @@
 package com.hexicloud.portaldb.controller;
 
 import com.hexicloud.portaldb.bean.CustomerRegistry;
+import com.hexicloud.portaldb.bean.UpdatePassword;
 import com.hexicloud.portaldb.bean.User;
 import com.hexicloud.portaldb.service.EmailsService;
 import com.hexicloud.portaldb.service.UsersService;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +53,18 @@ public class UsersController {
 
         logger.info("******** End of updateUserPassword() in controller ***********");
         return new ResponseEntity<Void>(HttpStatus.CREATED);
+    }
+    
+    @RequestMapping(value = "/services/rest/resetPassword/", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> resetPassword(@RequestBody UpdatePassword updatePassword, Authentication authentication) throws Exception {
+        logger.info("******* Start of resetPassword() in controller ***********");
+        updatePassword.setUserName(authentication.getName());
+        HttpStatus status = usersService.checkAndUpdatePassword(updatePassword);
+        logger.info("******** status of rese password *********** : " + status);
+       
+        logger.info("******** End of resetPassword() in controller ***********");
+        return new ResponseEntity<Void>(status);
     }
 
     @RequestMapping(value = "/services/rest/checkUserIdAvailable/{userId}/", method = RequestMethod.GET)

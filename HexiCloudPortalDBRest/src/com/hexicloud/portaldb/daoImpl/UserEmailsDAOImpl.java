@@ -194,7 +194,7 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
                 emailContent = emailContent.replaceAll("<<USER_ID>>", user.getUserId());
                 emailContent = emailContent.replaceAll("<<PASSWORD>>", decodedPassword);
             }
-            SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("from_email_address", getFromAddress("PORTAL_NOTIFICATION_EMAIL_ID").getRuleValue())
+            SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("from_email_address", "")
                                                                         .addValue("to_email_address", sendTo)
                                                                         .addValue("email_subject", emailSubject)
                                                                         .addValue("email_body", emailContent)
