@@ -1,5 +1,6 @@
 package com.hexicloud.portaldb.controller;
 
+import com.hexicloud.portaldb.bean.ExportAudit;
 import com.hexicloud.portaldb.bean.UserNavAudit;
 import com.hexicloud.portaldb.service.UserNavigationAuditService;
 
@@ -50,6 +51,22 @@ public class UserNavAuditController {
         userNavigationAuditService.updateAuditOnly(authentication.getName(), userNavAudit.getStepCode(), userNavAudit.getAction());
         logger.info("******** End of updateAudit() in controller ***********");
         return new ResponseEntity<Void>(HttpStatus.CREATED);
+    }
+    
+    @RequestMapping(value = "/services/rest/exportAudit", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ExportAudit>> exportAudit(@RequestParam(value = "userId", required = false)
+                                                              String userId) throws Exception {
+        logger.info("******* Start of exportAudit() in controller ***********");
+        List<ExportAudit> stepsList = userNavigationAuditService.exportAudit(userId);
+        if (stepsList.isEmpty()) {
+
+            logger.info("No audit found");
+            return new ResponseEntity<List<ExportAudit>>(HttpStatus.NO_CONTENT);
+        }
+
+        logger.info("******** End of exportAudit() in controller ***********");
+        return new ResponseEntity<List<ExportAudit>>(stepsList, HttpStatus.OK);
     }
 
 

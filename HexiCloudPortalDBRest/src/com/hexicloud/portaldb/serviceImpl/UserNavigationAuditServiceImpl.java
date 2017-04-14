@@ -1,5 +1,6 @@
 package com.hexicloud.portaldb.serviceImpl;
 
+import com.hexicloud.portaldb.bean.ExportAudit;
 import com.hexicloud.portaldb.bean.UserNavAudit;
 import com.hexicloud.portaldb.dao.UserNavigationAuditDAO;
 import com.hexicloud.portaldb.service.UserNavigationAuditService;
@@ -35,5 +36,17 @@ public class UserNavigationAuditServiceImpl implements UserNavigationAuditServic
     public void updateAuditOnly(String userId, String stepCode, String action) {
         logger.info("updateAuditOnly in the service");
         userNavigationAuditDAO.updateAuditOnly(userId, stepCode, action);
+    }
+
+    @Override
+    public List<ExportAudit> exportAudit(String userId) {
+        StringBuilder whereClause = new StringBuilder();
+        if (!StringUtils.isEmpty(userId)) {
+            whereClause.append(" AND UNA.USER_ID = '")
+                       .append(userId)
+                       .append("'");
+        }
+        logger.info("the where clause is :" + whereClause.toString());
+        return userNavigationAuditDAO.exportAudit(whereClause.toString());
     }
 }

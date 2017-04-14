@@ -1,5 +1,6 @@
 package com.hexicloud.portaldb.daoImpl;
 
+import com.hexicloud.portaldb.bean.ExportAudit;
 import com.hexicloud.portaldb.bean.UserNavAudit;
 import com.hexicloud.portaldb.dao.UserNavigationAuditDAO;
 import com.hexicloud.portaldb.factory.Steps;
@@ -50,7 +51,7 @@ public class UserNavigationAuditDAOImpl implements UserNavigationAuditDAO {
         @SuppressWarnings({ "unchecked", "rawtypes" })
         List<UserNavAudit> auditList =
             (List<UserNavAudit>) jdbcTemplate.query(searchQuery, new BeanPropertyRowMapper(UserNavAudit.class));
-        
+
         logger.info("getUserNavAudit size ===========> " + auditList != null ? auditList.size() : null);
         if (!StringUtils.isEmpty(auditList)) {
             for (UserNavAudit auditRecord : auditList) {
@@ -60,7 +61,7 @@ public class UserNavigationAuditDAOImpl implements UserNavigationAuditDAO {
         logger.info(" End of getUserNavAudit() ");
         return auditList;
     }
-    
+
     @Override
     public void updateAuditOnly(String userId, String stepCode, String action) {
         logger.info(" Start of updateAuditOnly() ");
@@ -70,5 +71,27 @@ public class UserNavigationAuditDAOImpl implements UserNavigationAuditDAO {
                                                                     .addValue("IN_ACTION", action);
         saveUserNavAudit.execute(inParamsMap);
         logger.info(" End of updateAuditOnly() ");
+    }
+
+    @Override
+    public List<ExportAudit> exportAudit(String whereClause) {
+        logger.info(" Begining of exportAudit() ");
+        String searchQuery = SqlQueryConstantsUtil.SQL_GET_AUDIT_FOR_EXPORT;
+        if (!StringUtils.isEmpty(whereClause)) {
+            searchQuery = searchQuery.concat(whereClause);
+        }
+        searchQuery.concat("ORDER BY UNA.USER_ID, UNA.CREATED_DATE DESC");
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        List<ExportAudit> auditList =
+            (List<ExportAudit>) jdbcTemplate.query(searchQuery, new BeanPropertyRowMapper(ExportAudit.class));
+
+        logger.info("exportAudit size ===========> " + auditList != null ? auditList.size() : null);
+        if (!StringUtils.isEmpty(auditList)) {
+            for (ExportAudit auditRecord : auditList) {
+                auditRecord.setStepLabel(steps.getStepLabelWithStepId(auditRecord.getStepId()));
+            }
+        }
+        logger.info(" End of exportAudit() ");
+        return auditList;
     }
 }
