@@ -9,5 +9,5 @@ public interface LoginService {
 
     public AuthUserTokenState getPortalUserDetails(String userName, String accessToken, long expiresIn);
 
-    public AuthUserTokenState getAdminUserDetails(String userName, String accessToken, long expiresIn);
+    public AuthUserTokenState getAdminUserDetails(String userName, String accessToken, long expiresIn, String portalRole);
 }

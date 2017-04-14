@@ -91,7 +91,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public AuthUserTokenState getAdminUserDetails(String userName, String accessToken, long expiresIn) {
+    public AuthUserTokenState getAdminUserDetails(String userName, String accessToken, long expiresIn, String portalRole) {
         AuthUserTokenState userTokenState = new AuthUserTokenState();
         User userDetails = usersDAO.getUser(userName);
         if (userDetails != null) {
@@ -103,6 +103,7 @@ public class LoginServiceImpl implements LoginService {
             userTokenState.setFirstName(userDetails.getFirstName());
             userTokenState.setLastName(userDetails.getLastName());
             userTokenState.setPhone(userDetails.getPhone());
+            userTokenState.setPortalRole(portalRole);
         }
         usersDAO.updateLastLoggedIn(userName);
         return userTokenState;

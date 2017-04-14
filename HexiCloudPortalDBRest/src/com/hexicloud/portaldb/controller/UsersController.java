@@ -36,7 +36,7 @@ public class UsersController {
     private EmailsService emailsService;
 
     @RequestMapping(value = "/services/rest/createPortalUser/", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','CSC')")
     public ResponseEntity<Void> createPortalUser(@RequestBody User user) throws Exception {
         logger.info("******* Start of createPortalUser() in controller ***********");
         usersService.createUser(user);
@@ -68,7 +68,7 @@ public class UsersController {
     }
 
     @RequestMapping(value = "/services/rest/checkUserIdAvailable/{userId}/", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','CSC')")
     public ResponseEntity<Boolean> checkUserIdExist(@PathVariable("userId") String userId) throws Exception {
 
         logger.info("******* Start of checkUserIdExist() in controller ***********");
@@ -108,7 +108,7 @@ public class UsersController {
     }
 
     @RequestMapping(value = "/services/rest/getCustRegistries/", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','CSC')")
     public ResponseEntity<List<CustomerRegistry>> getCustRegistries() {
         logger.info("******* Start of getCustRegistries() in controller ***********");
 
@@ -125,7 +125,7 @@ public class UsersController {
     }
 
     @RequestMapping(value = "/services/rest/searchUsers/", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','CSC')")
     public ResponseEntity<List<User>> searchUserDetails(@RequestParam(value = "userId", required = false)String userId,
                                                         @RequestParam(value = "emailId", required = false)String emailId,
                                                         @RequestParam(value = "customerId", required = false)String customerId)
@@ -136,7 +136,7 @@ public class UsersController {
     }
 
     @RequestMapping(value = "services/rest/updateUser/", method = RequestMethod.PUT)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','CSC')")
     public ResponseEntity updateUserDetails(@RequestBody User user)
     {
         try{

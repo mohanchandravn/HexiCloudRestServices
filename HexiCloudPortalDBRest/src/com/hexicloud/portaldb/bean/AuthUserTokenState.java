@@ -21,6 +21,7 @@ public class AuthUserTokenState {
     private boolean firstLogin;
     private boolean changePwd;
     private boolean onBoardingCompleted;
+    private String portalRole;
 
     public void setAccess_token(String access_token) {
         this.access_token = access_token;
@@ -140,5 +141,13 @@ public class AuthUserTokenState {
 
     public boolean isChangePwd() {
         return changePwd;
+    }
+
+    public void setPortalRole(String portalRole) {
+        this.portalRole = portalRole;
+    }
+
+    public String getPortalRole() {
+        return portalRole;
     }
 }

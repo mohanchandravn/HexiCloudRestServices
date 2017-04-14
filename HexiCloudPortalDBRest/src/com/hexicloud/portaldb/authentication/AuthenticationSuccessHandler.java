@@ -37,15 +37,18 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
 
     @Value("${forbidden.errorMessage}")
     private String FORBIDDEN_MESSAGE;
-    
+
     @Value("${auth.portalType}")
     private String PORTAL_TYPE;
-    
+
     @Value("${auth.userType}")
     private String USER_TYPE;
-    
+
     @Value("${auth.adminType}")
     private String ADMIN_TYPE;
+
+    @Value("${auth.cscType}")
+    private String CSC_TYPE;
 
     @Autowired
     TokenHelper tokenHelper;
@@ -58,22 +61,19 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
         clearAuthenticationAttributes(request);
         AuthUser user = (AuthUser) authentication.getPrincipal();
         String portalType = request.getHeader(PORTAL_TYPE);
-        if (portalType.equalsIgnoreCase(ADMIN_TYPE) && user.getAuthority()
-                                                        .replace("ROLE_", "")
-                                                        .equalsIgnoreCase(ADMIN_TYPE) ||
-            portalType.equalsIgnoreCase(USER_TYPE) && user.getAuthority()
-                                                       .replace("ROLE_", "")
-                                                       .equalsIgnoreCase(USER_TYPE)) {
+        if (portalType.equalsIgnoreCase(ADMIN_TYPE) && (user.getAuthority().replace("ROLE_", "").equalsIgnoreCase(ADMIN_TYPE) ||
+                                                        user.getAuthority().replace("ROLE_","").equalsIgnoreCase(CSC_TYPE)) 
+            || portalType.equalsIgnoreCase(USER_TYPE) && user.getAuthority().replace("ROLE_", "").equalsIgnoreCase(USER_TYPE)) {
             String jws = tokenHelper.generateToken(user.getUsername());
             Cookie userCookie = new Cookie(USER_COOKIE, (user.getFirstName()));
             userCookie.setPath("/");
             userCookie.setMaxAge(EXPIRES_IN);
             response.addCookie(userCookie);
             AuthUserTokenState userTokenState = null;
-            if (portalType.equalsIgnoreCase("user")) {
+            if (portalType.equalsIgnoreCase(USER_TYPE)) {
                 userTokenState = loginService.getPortalUserDetails(user.getUserId(), jws, EXPIRES_IN);
             } else {
-                userTokenState = loginService.getAdminUserDetails(user.getUserId(), jws, EXPIRES_IN);
+                userTokenState = loginService.getAdminUserDetails(user.getUserId(), jws, EXPIRES_IN, user.getAuthority().replace("ROLE_", "").equalsIgnoreCase(ADMIN_TYPE) ? ADMIN_TYPE : CSC_TYPE);
             }
             ObjectMapper mapper = new ObjectMapper();
             String jwtResponse = mapper.writeValueAsString(userTokenState);

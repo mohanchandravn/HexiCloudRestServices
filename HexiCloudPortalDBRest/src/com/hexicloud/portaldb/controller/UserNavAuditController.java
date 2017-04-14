@@ -28,7 +28,7 @@ public class UserNavAuditController {
 
 
     @RequestMapping(value = "/services/rest/getUserNavAudit", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','CSC')")
     public ResponseEntity<List<UserNavAudit>> getUserNavAudit(@RequestParam(value = "userId", required = false)
                                                               String userId) throws Exception {
         logger.info("******* Start of getUserNavAudit() in controller ***********");
@@ -54,7 +54,7 @@ public class UserNavAuditController {
     }
     
     @RequestMapping(value = "/services/rest/exportAudit", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','CSC')")
     public ResponseEntity<List<ExportAudit>> exportAudit(@RequestParam(value = "userId", required = false)
                                                               String userId) throws Exception {
         logger.info("******* Start of exportAudit() in controller ***********");

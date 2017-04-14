@@ -45,7 +45,7 @@ public class UploadStepDocumentController {
 
 
     @RequestMapping(value = "services/rest/uploadStepDocument", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','CSC')")
     public ResponseEntity processUploadStepDocument(MultipartHttpServletRequest multipartHttpServletRequest) {
 
         try {
@@ -140,7 +140,7 @@ public class UploadStepDocumentController {
     }
 
     @RequestMapping(value = "services/rest/deleteStepDocument")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','CSC')")
     public ResponseEntity handleDeleteDocument(@RequestBody String fileId, String fileVersion) {
         DeleteFileRequest deleteFileRequest = new DeleteFileRequest();
         DeleteFileResponse deleteFileResponse = null;

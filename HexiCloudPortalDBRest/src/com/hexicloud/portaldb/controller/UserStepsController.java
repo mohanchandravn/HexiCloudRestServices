@@ -57,7 +57,7 @@ public class UserStepsController {
 
 
     @RequestMapping(value = "/services/rest/getApplicationSteps", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','CSC')") 
     public ResponseEntity<List<Step>> getApplicationSteps() throws Exception {
         logger.info("******* Start of getApplicationSteps() in controller ***********");
         List<Step> stepsList = userStepsService.getApplicationSteps();
