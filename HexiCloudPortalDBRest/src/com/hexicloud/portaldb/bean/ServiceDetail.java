@@ -9,6 +9,8 @@ public class ServiceDetail {
     private String tier9ShortDesc;
     private String tier9LongDesc;
     @JsonIgnore
+    private String contractNbr;
+    @JsonIgnore
     private String actualTier9;
 
     public void setTier9ShortDesc(String tier9ShortDesc) {
@@ -52,5 +54,13 @@ public class ServiceDetail {
 
     public String getActualTier9() {
         return actualTier9;
+    }
+
+    public void setContractNbr(String contractNbr) {
+        this.contractNbr = contractNbr;
+    }
+
+    public String getContractNbr() {
+        return contractNbr;
     }
 }

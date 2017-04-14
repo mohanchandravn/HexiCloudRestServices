@@ -28,7 +28,9 @@ public class ClmDataResultExtractor implements ResultSetExtractor<List<Provision
 
     @Override
     public List<ProvisionedService> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-        Map<String, ProvisionedService> provisionedServicesMap = new HashMap<String, ProvisionedService>();
+        Map<String, HashMap> contractNumberMap = new HashMap <String, HashMap>();
+        Map<String, ProvisionedService> provisionedServicesMap = null;
+        String contractNumber = null;
         String tier6 = null;
         ProvisionedService provisionedService = null;
         List<ServiceDetail> detailsList = null;
@@ -36,18 +38,25 @@ public class ClmDataResultExtractor implements ResultSetExtractor<List<Provision
         String tier9 = null;
         boolean hasSimilarTier9 = false;
         while (resultSet.next()) {
-            hasSimilarTier9 = false;
-            tier6 = resultSet.getString("FPH_DESCRIPTION_TIER_6");
-            provisionedService = provisionedServicesMap.get(tier6);
-            if (provisionedService == null) {
-                provisionedService = new ProvisionedService();
-                provisionedService.setPlatform(makePlatform(resultSet.getString("FPH_DESCRIPTION_TIER_4")));
-                provisionedService.setService(makeService(resultSet.getString("FPH_DESCRIPTION_TIER_6")));
-                provisionedService.setServiceType(makeServiceType(resultSet.getString("FPH_DESCRIPTION_TIER_6")));
-                provisionedService.setDisplayOrder(makeDisplayOrder(provisionedService.getService(),
-                                                                    provisionedService.getServiceType()));
-                provisionedServicesMap.put(tier6, provisionedService);
+            contractNumber = resultSet.getString("CONTRACT_NBR");
+            provisionedServicesMap = contractNumberMap.get(contractNumber);
+            if (provisionedServicesMap == null) {
+                provisionedServicesMap  = new HashMap<String, ProvisionedService>();
+                contractNumberMap.put(contractNumber, (HashMap) provisionedServicesMap);
             }
+                hasSimilarTier9 = false;
+                tier6 = resultSet.getString("FPH_DESCRIPTION_TIER_6");
+                provisionedService = provisionedServicesMap.get(tier6);
+                if (provisionedService == null) {
+                    provisionedService = new ProvisionedService();
+                    provisionedService.setPlatform(makePlatform(resultSet.getString("FPH_DESCRIPTION_TIER_4")));
+                    provisionedService.setService(makeService(resultSet.getString("FPH_DESCRIPTION_TIER_6")));
+                    provisionedService.setServiceType(makeServiceType(resultSet.getString("FPH_DESCRIPTION_TIER_6")));
+                    provisionedService.setDisplayOrder(makeDisplayOrder(provisionedService.getService(),
+                                                                        provisionedService.getServiceType()));
+                    provisionedServicesMap.put(tier6, provisionedService);
+                }
+           
             detailsList = provisionedService.getDetails();
             tier9 = resultSet.getString("PROD_TIER_9");
             if (detailsList == null) {
@@ -68,8 +77,12 @@ public class ClmDataResultExtractor implements ResultSetExtractor<List<Provision
                 }
             }
         }
+        
         ArrayList<ProvisionedService> provisionedServicesList =
-            new ArrayList<ProvisionedService>(provisionedServicesMap.values());
+            new ArrayList<ProvisionedService>();
+        for (Map contractMap : contractNumberMap.values()) {
+            provisionedServicesList.addAll(contractMap.values());
+        }
         provisionedServicesList.sort(Comparator.comparing(ProvisionedService::getDisplayOrder));
         return provisionedServicesList;
     }
@@ -267,6 +280,7 @@ public class ClmDataResultExtractor implements ResultSetExtractor<List<Provision
         detail.setActualTier9(resultSet.getString("PROD_TIER_9"));
         detail.setTier9ShortDesc(makeShortTier9(resultSet.getString("PROD_TIER_9")));
         detail.setTier9LongDesc(makeLongTier9(resultSet.getString("PROD_TIER_9")));
+        detail.setContractNbr(resultSet.getString("CONTRACT_NBR"));
         return detail;
     }
 }
