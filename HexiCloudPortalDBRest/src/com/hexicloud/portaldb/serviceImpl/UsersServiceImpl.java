@@ -1,8 +1,10 @@
 package com.hexicloud.portaldb.serviceImpl;
 
 import com.hexicloud.portaldb.bean.CustomerRegistry;
+import com.hexicloud.portaldb.bean.RuleConfiguration;
 import com.hexicloud.portaldb.bean.UpdatePassword;
 import com.hexicloud.portaldb.bean.User;
+import com.hexicloud.portaldb.dao.UserEmailsDAO;
 import com.hexicloud.portaldb.dao.UsersDAO;
 import com.hexicloud.portaldb.service.UsersService;
 import com.hexicloud.portaldb.util.encryption.EncryptionUtil;
@@ -22,12 +24,22 @@ public class UsersServiceImpl implements UsersService {
 
     @Autowired
     UsersDAO usersDAO;
+    
+    @Autowired
+    UserEmailsDAO userEmailsDAO;
 
 
     @Override
     public void createUser(User user) throws Exception {
         logger.info("*******  createUser() of  service *****************");
-        usersDAO.createUser(user);
+        String password = usersDAO.createUser(user);
+        RuleConfiguration configuration = userEmailsDAO.getEmailRule("CUSTOMER_WELCOME_EMAIL_FLAG");
+        if ("Y".equalsIgnoreCase(configuration.getRuleValue())) {
+            if (!StringUtils.isEmpty(password)) {
+                usersDAO.sendWelcomeEmail(user.getUserId(), password, user.getFirstName(), user.getEmail());
+            }
+        }
+        
     }
 
     @Override

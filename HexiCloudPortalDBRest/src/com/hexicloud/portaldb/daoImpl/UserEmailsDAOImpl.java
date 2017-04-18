@@ -131,7 +131,7 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
     }
 
 
-    private RuleConfiguration getEmailRule(String ruleKey) {
+    public RuleConfiguration getEmailRule(String ruleKey) {
         logger.info(" Begining of getEmailContent() ");
         @SuppressWarnings("unchecked")
         List<RuleConfiguration> rulesList =
