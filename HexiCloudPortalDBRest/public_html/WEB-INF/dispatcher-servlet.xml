@@ -1,6 +1,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="         http://www.springframework.org/schema/beans              http://www.springframework.org/schema/beans/spring-beans-4.2.xsd         http://www.springframework.org/schema/mvc          http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd         http://www.springframework.org/schema/context          http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+    <bean id="jobHistoryDAO" class="com.hexicloud.portaldb.daoImpl.JobHistoryDAOImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <bean id="ruleConfigurationDAO" class="com.hexicloud.portaldb.daoImpl.RuleConfigurationDAOImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
     <mvc:annotation-driven/>
     <context:component-scan base-package="com.hexicloud.portaldb"/>
     <!-- If you are using tomcat then un comment the below code and comment 
@@ -21,7 +27,7 @@
     <bean id="hexiApplicationProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="classpath:hexiApplication.properties"/>
     </bean>
-    <bean id="steps" class="com.hexicloud.portaldb.factory.Steps" scope="singleton"></bean>
+    <bean id="steps" class="com.hexicloud.portaldb.factory.Steps" scope="singleton"/>
     <bean id="userStepsDao" class="com.hexicloud.portaldb.daoImpl.UserStepsDAOImpl">
         <property name="dataSource" ref="dataSource"/>
         <property name="steps" ref="steps"/>
@@ -47,14 +53,11 @@
     <bean id="serviceBenefitDAO" class="com.hexicloud.portaldb.daoImpl.ServiceBenefitDAOImpl">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+    <bean id="userNavigationAuditDAO" class="com.hexicloud.portaldb.daoImpl.UserNavigationAuditDAOImpl">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="steps" ref="steps"/>
+    </bean>
     <bean id="jobConfigurationDAO" class="com.hexicloud.portaldb.daoImpl.JobConfigurationDAOImpl">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-    <bean id="jobHistoryDAO" class="com.hexicloud.portaldb.daoImpl.JobHistoryDAOImpl">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-    
-     <bean id="ruleConfigurationDAO" class="com.hexicloud.portaldb.daoImpl.RuleConfigurationDAOImpl">
         <property name="dataSource" ref="dataSource"/>
     </bean>
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

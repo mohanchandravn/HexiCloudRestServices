@@ -1,6 +1,7 @@
 package com.hexicloud.portaldb.dao;
 
 import com.hexicloud.portaldb.bean.CallBack;
+import com.hexicloud.portaldb.bean.RuleConfiguration;
 import com.hexicloud.portaldb.bean.User;
 import com.hexicloud.portaldb.bean.UserEmail;
 
@@ -19,8 +20,6 @@ import javax.crypto.NoSuchPaddingException;
 
 import javax.naming.NamingException;
 
-import javax.naming.NamingException;
-
 public interface UserEmailsDAO {
     public List<UserEmail> getUserEmails(String userId, String isResolved, Number requestId, String searchCallBacks);
 
@@ -33,6 +32,8 @@ public interface UserEmailsDAO {
                                                              IllegalBlockSizeException, BadPaddingException;
 
     public BigDecimal requestCallBack(CallBack callBack);
+    
+    public RuleConfiguration getEmailRule(String ruleKey);
 
 
 }

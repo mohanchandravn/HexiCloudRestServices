@@ -13,33 +13,55 @@ import com.hexicloud.portaldb.service.UserStepsService;
 
 public class Steps {
     private static final Logger logger = Logger.getLogger(Steps.class);
-    public Map<String, Step> steps = new HashMap<String, Step>();
-
+    public Map<String, Step> stepsMapWithStepCodeKey = new HashMap<String, Step>();
+    public Map<Integer, Step> stepsMapWithStepIdKey = new HashMap<Integer, Step>();
     @Autowired
     private UserStepsService userStepsService;
 
-    public Map<String, Step> getSteps() {
-        if (steps == null || steps.size() == 0) {
+    public void setStepsMapWithStepCodeKey(Map<String, Step> stepsMapWithStepCodeKey) {
+        this.stepsMapWithStepCodeKey = stepsMapWithStepCodeKey;
+    }
+
+    public Map<String, Step> getStepsMapWithStepCodeKey() {
+        if (stepsMapWithStepCodeKey.isEmpty()) {
             logger.info("Steps not loaded yet, loading the steps from DB");
             List<Step> dbSteps = userStepsService.getApplicationSteps();
             for (Step dbStep : dbSteps) {
-                steps.put(dbStep.getStepCode(), dbStep);
+                stepsMapWithStepCodeKey.put(dbStep.getStepCode(), dbStep);
             }
             logger.info("No of steps loaded from DB : " + dbSteps.size());
         }
-        return steps;
+        return stepsMapWithStepCodeKey;
     }
 
-    public void setSteps(Map<String, Step> steps) {
-        this.steps = steps;
+    public void setStepsMapWithStepIdKey(Map<Integer, Step> stepsMapWithStepIdKey) {
+        this.stepsMapWithStepIdKey = stepsMapWithStepIdKey;
     }
 
-    public int getStepId(String stepCode) {
-        return getSteps() != null ? getSteps().get(stepCode).getStepId() : 0;
+    public Map<Integer, Step> getStepsMapWithStepIdKey() {
+        if (stepsMapWithStepIdKey.isEmpty()) {
+            logger.info("Steps not loaded yet, loading the steps from DB");
+            List<Step> dbSteps = userStepsService.getApplicationSteps();
+            for (Step dbStep : dbSteps) {
+                stepsMapWithStepIdKey.put(dbStep.getStepId(), dbStep);
+            }
+            logger.info("No of steps loaded from DB : " + dbSteps.size());
+        }
+        return stepsMapWithStepIdKey;
     }
 
-    public String getStepLabel(String stepCode) {
-        return getSteps() != null ? getSteps().get(stepCode).getStepLabel() : null;
+
+    public int getStepIdWithStepCode(String stepCode) {
+        return getStepsMapWithStepCodeKey() != null ? getStepsMapWithStepCodeKey().get(stepCode).getStepId() : 0;
     }
+
+    public String getStepLabelWithStepCode(String stepCode) {
+        return getStepsMapWithStepCodeKey() != null ? getStepsMapWithStepCodeKey().get(stepCode).getStepLabel() : null;
+    }
+
+    public String getStepLabelWithStepId(Integer stepId) {
+        return getStepsMapWithStepIdKey() != null ? getStepsMapWithStepIdKey().get(stepId).getStepLabel() : null;
+    }
+
 
 }

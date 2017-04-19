@@ -11,7 +11,7 @@ public interface UsersDAO {
 
     public void updateLastLoggedIn(String userId);
 
-    public void createUser(User user) throws Exception;
+    public String createUser(User user) throws Exception;
 
     public void updatePassword(User user) throws Exception;
 
@@ -24,5 +24,7 @@ public interface UsersDAO {
     public List<User> searchUserDetails(String userId, String emailId, String customerId);
 
     public void updateUser(User user);
+    
+    public String sendWelcomeEmail(String userId, String password, String firstName, String userEmail);
 
 }

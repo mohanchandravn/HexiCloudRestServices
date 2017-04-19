@@ -8,6 +8,7 @@ import com.hexicloud.portaldb.util.SqlQueryConstantsUtil;
 import com.hexicloud.portaldb.util.encryption.EncryptionUtil;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -15,6 +16,9 @@ import org.apache.log4j.Logger;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -23,10 +27,14 @@ public class UsersDAOImpl implements UsersDAO {
     private static final Logger logger = Logger.getLogger(UsersDAOImpl.class);
     private JdbcTemplate jdbcTemplate;
     private DataSource dataSource;
+    private SimpleJdbcCall sendWelcomeEmail;
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
         jdbcTemplate = new JdbcTemplate(this.dataSource);
+        this.sendWelcomeEmail =
+            new SimpleJdbcCall(dataSource).withCatalogName("PKG_EMAIL")
+            .withProcedureName("PRC_SEND_WELCOME_EMAIL");
     }
 
 
@@ -52,7 +60,7 @@ public class UsersDAOImpl implements UsersDAO {
     }
 
     @Override
-    public void createUser(User user) throws Exception {
+    public String createUser(User user) throws Exception {
         logger.info(" Begining of createUser() ");
         try {
             jdbcTemplate.update(SqlQueryConstantsUtil.SQL_CREATE_USER,
@@ -62,8 +70,21 @@ public class UsersDAOImpl implements UsersDAO {
         } catch (Exception ex) {
             logger.error("Encryption failed or user creation failed" + ex);
             throw ex;
-        }
+        }   
         logger.info(" End of createUser() ");
+        return user.getPassword();
+    }
+    
+    public String sendWelcomeEmail(String userId, String password, String firstName, String userEmail) {
+        logger.info(" Start of sendWelcomeEmail() ");
+        SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_USER_ID", userId)
+                                                                    .addValue("IN_PASSWORD", password)
+                                                                    .addValue("IN_FIRST_NAME", firstName)
+                                                                    .addValue("IN_USER_EMAIL", userEmail);
+        Map<String, Object> out = sendWelcomeEmail.execute(inParamsMap);
+         
+        logger.info(" End of sendWelcomeEmail() ");
+       return (String) out.get("OUT_SR_ID");
     }
 
     @Override
@@ -134,24 +155,26 @@ public class UsersDAOImpl implements UsersDAO {
         logger.info("Entering method searchUserDetails");
         String query = SqlQueryConstantsUtil.SQL_USER_QUERY;
         StringBuilder whereClause = new StringBuilder();
+        whereClause.append(" WHERE AUTHORITY = 'ROLE_USER'");
         if (!(StringUtils.isEmpty(userId))) {
-            whereClause.append(" WHERE USER_ID = '" + userId + "'");
+//            whereClause.append(" WHERE USER_ID = '" + userId + "'");
+            whereClause.append(" AND USER_ID = '"+ userId + "'");
         }
         if (!(StringUtils.isEmpty(emailId))) {
-            if (whereClause.length() > 0) {
+//            if (whereClause.length() > 0) {
                 whereClause.append(" AND EMAIL = '"+ emailId + "'");
-
-            } else {
-                whereClause.append(" WHERE EMAIL = '"+ emailId + "'");
-            }
+//
+//            } else {
+//                whereClause.append(" WHERE EMAIL = '"+ emailId + "'");
+//            }
         }
         if (!(StringUtils.isEmpty(customerId))) {
-            if (whereClause.length() > 0) {
+//            if (whereClause.length() > 0) {
                 whereClause.append(" AND REGISTRY_ID = '" +customerId + "'" );
-
-            } else {
-                whereClause.append(" WHERE REGISTRY_ID = '" +customerId + "'" );
-            }
+//
+//            } else {
+//                whereClause.append(" WHERE REGISTRY_ID = '" +customerId + "'" );
+//            }
         }
 
         if (whereClause.length() > 0) {

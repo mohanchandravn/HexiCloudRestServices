@@ -28,7 +28,7 @@ public class EmailController {
     private EmailsService emailsService;
 
     @RequestMapping(value = "/services/rest/findUserEmails", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','CSC')") 
     public ResponseEntity<List<UserEmail>> findUserEmails(@RequestParam(value = "userId", required = false)
                                                           String userId,
                                                           @RequestParam(value = "isResolved", required = false)
@@ -62,7 +62,7 @@ public class EmailController {
     }
 
     @RequestMapping(value = "/services/rest/updateEmailResolution/", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','CSC')")
     public ResponseEntity<Void> updateEmailResolution(@RequestBody UserEmail userEmail) throws Exception {
         logger.info("******* Start of updateEmailResolution() in controller ***********");
 

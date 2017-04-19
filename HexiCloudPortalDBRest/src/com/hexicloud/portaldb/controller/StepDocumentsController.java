@@ -79,7 +79,7 @@ public class StepDocumentsController {
 
 
     @RequestMapping(value = "/services/rest/addStepDocument/", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','CSC')")
     public ResponseEntity<Void> addStepDocument(@RequestBody StepDocument stepDocument) throws Exception {
 
         logger.info("******* Start of addStepDocument() in controller ***********");

@@ -1,9 +1,12 @@
 package com.hexicloud.portaldb.service;
 
 import com.hexicloud.portaldb.bean.CustomerRegistry;
+import com.hexicloud.portaldb.bean.UpdatePassword;
 import com.hexicloud.portaldb.bean.User;
 
 import java.util.List;
+
+import org.springframework.http.HttpStatus;
 
 public interface UsersService {
 
@@ -20,4 +23,6 @@ public interface UsersService {
     public List<User> searchUserDetails(String userId, String emailId, String customerId);
 
     public void updateUser(User user);
+    
+    public HttpStatus checkAndUpdatePassword(UpdatePassword updatePassword) throws Exception;
 }
