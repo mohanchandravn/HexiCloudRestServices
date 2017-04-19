@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,14 +27,15 @@ public class SchedulerController {
 
     @Autowired
     private JobConfigurationService jobConfigurationService;
-    
+
     @Autowired
     private RuleConfigService ruleConfigService;
 
     @RequestMapping(value = "/services/rest/findJobConfigurations", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<JobConfiguration>> findJobConfigurations(@RequestParam(value = "jobName", required = false)
-                                                                              String jobName) throws Exception {
+    public ResponseEntity<List<JobConfiguration>> findJobConfigurations(@RequestParam(value = "jobName",
+                                                                                      required = false)
+                                                                        String jobName) throws Exception {
         logger.info("******* Start of findJobConfigurations() in controller ***********");
         List<JobConfiguration> jobsList = jobConfigurationService.getJobConfigurations(jobName);
         if (jobsList.isEmpty()) {
@@ -43,10 +45,11 @@ public class SchedulerController {
         logger.info("******** End of findJobConfigurations() in controller ***********");
         return new ResponseEntity<List<JobConfiguration>>(jobsList, HttpStatus.OK);
     }
-    
+
     @RequestMapping(value = "/services/rest/findJobHistoryForJob/{jobId}/", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<JobHistory>> findJobHistoryForJob(@PathVariable(value = "jobId") Integer jobId) throws Exception {
+    public ResponseEntity<List<JobHistory>> findJobHistoryForJob(@PathVariable(value = "jobId")
+                                                                 Integer jobId) throws Exception {
         logger.info("******* Start of findJobHistoryForJob() in controller ***********");
         List<JobHistory> jobHistoryList = jobConfigurationService.getJobHistoryForJob(jobId);
         if (jobHistoryList.isEmpty()) {
@@ -56,10 +59,11 @@ public class SchedulerController {
         logger.info("******** End of findJobHistoryForJob() in controller ***********");
         return new ResponseEntity<List<JobHistory>>(jobHistoryList, HttpStatus.OK);
     }
-    
+
     @RequestMapping(value = "/services/rest/findRulesByJob/{jobId}/", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<RuleConfiguration>> findRulesByJob(@PathVariable(value = "jobId") Integer jobId) throws Exception {
+    public ResponseEntity<List<RuleConfiguration>> findRulesByJob(@PathVariable(value = "jobId")
+                                                                  Integer jobId) throws Exception {
         logger.info("******* Start of findRulesByJob() in controller ***********");
         List<RuleConfiguration> ruleConfigs = ruleConfigService.getRuleConfigsByJob(jobId);
         if (ruleConfigs.isEmpty()) {
@@ -69,5 +73,14 @@ public class SchedulerController {
         logger.info("RuleConfiguration******** End of findRulesByJob() in controller ***********");
         return new ResponseEntity<List<RuleConfiguration>>(ruleConfigs, HttpStatus.OK);
     }
-    
+
+    @RequestMapping(value = "/services/rest/updateRuleConfig/", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> updateRuleConfig(@RequestBody List<RuleConfiguration> ruleConfigs) throws Exception {
+        logger.info("******* Start of updateRuleConfig() in controller ***********");
+        ruleConfigService.updateBulkRuleConfigs(ruleConfigs);
+        logger.info("******** End of updateRuleConfig() in controller ***********");
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
 }
