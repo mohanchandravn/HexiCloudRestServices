@@ -83,4 +83,50 @@ public class SchedulerController {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/services/rest/addJob/", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> addJob(@RequestBody JobConfiguration jobConfig) throws Exception {
+        logger.info("******* Start of addJob() in controller ***********");
+        jobConfigurationService.addJobConfiguration(jobConfig);
+        logger.info("******** End of addJob() in controller ***********");
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/services/rest/updateJobFrequency/", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> updateJobFrequency(@RequestBody JobConfiguration jobConfig) throws Exception {
+        logger.info("******* Start of updateJobFrequency() in controller ***********");
+        jobConfigurationService.updateJobFrequency(jobConfig);
+        logger.info("******** End of updateJobFrequency() in controller ***********");
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/services/rest/deletJob/{jobId}", method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteJob(@PathVariable(value = "jobId") Integer jobId) throws Exception {
+        logger.info("******* Start of deleteJob() in controller ***********");
+        jobConfigurationService.deleteJob(jobId);
+        logger.info("******** End of deleteJob() in controller ***********");
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/services/rest/runJobNow/{jobId}", method = RequestMethod.PATCH)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> runJobNow(@PathVariable(value = "jobId") Integer jobId) throws Exception {
+        logger.info("******* Start of runJobNow() in controller ***********");
+        jobConfigurationService.runJobNow(jobId);
+        logger.info("******** End of runJobNow() in controller ***********");
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/services/rest/startStopJob", method = RequestMethod.PATCH)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> startStopJob(@RequestParam(value = "jobId", required = true) Integer jobId,
+                                             @RequestParam(value = "status", required = true) String status) throws Exception {
+        logger.info("******* Start of startStopJob() in controller ***********");
+        jobConfigurationService.runJobNow(jobId, status);
+        logger.info("******** End of startStopJob() in controller ***********");
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
 }

@@ -31,12 +31,14 @@ public class JobConfigurationDAOImpl implements JobConfigurationDAO {
         logger.info(" Begining of getJobConfigurations() ");
         StringBuilder query = new StringBuilder(SqlQueryConstantsUtil.SQL_GET_JOB_CONFIGURATION);
         if (!StringUtils.isEmpty(jobName)) {
-            query.append(" WHERE JOB_NAME LIKE ('").append(jobName).append("%')");
+            query.append(" WHERE JOB_NAME LIKE ('")
+                 .append(jobName)
+                 .append("%')");
         }
         @SuppressWarnings({ "unchecked", "rawtypes" })
         List<JobConfiguration> jobConfigurationList =
             (List<JobConfiguration>) jdbcTemplate.query(query.toString(),
-                                                              new BeanPropertyRowMapper(JobConfiguration.class));
+                                                        new BeanPropertyRowMapper(JobConfiguration.class));
         logger.info("JobConfigurations size ===========> " + jobConfigurationList != null ?
                     jobConfigurationList.size() : null);
         logger.info(" End of getJobConfigurations() ");
@@ -44,10 +46,16 @@ public class JobConfigurationDAOImpl implements JobConfigurationDAO {
     }
 
 
-
     @Override
-    public void addJob(JobConfiguration jobConifg) {
-        
+    public void addJob(JobConfiguration jobConfig) {
+        logger.info(" Begining of addJob() ");
+        jdbcTemplate.update(SqlQueryConstantsUtil.SQL_CREATE_JOB_CONFIGURATION,
+                            new Object[] { jobConfig.getJobName(), jobConfig.getJobDescription(),
+                                           jobConfig.getJobFrequency(), jobConfig.getJobFrequencyType(),
+                                           jobConfig.getJobFrequencyHour(), jobConfig.getJobFrequencyMinute(),
+                                           jobConfig.getJobStatus() });
+        logger.info(" End of addJob() ");
+
     }
 
     @Override
@@ -55,15 +63,53 @@ public class JobConfigurationDAOImpl implements JobConfigurationDAO {
         logger.info(" Begining of getJobConfigurations() ");
         StringBuilder query = new StringBuilder(SqlQueryConstantsUtil.SQL_GET_JOB_CONFIGURATION);
         if (!StringUtils.isEmpty(jobName)) {
-            query.append(" WHERE JOB_NAME = '").append(jobName).append("')");
+            query.append(" WHERE JOB_NAME = '")
+                 .append(jobName)
+                 .append("')");
         }
         @SuppressWarnings({ "unchecked", "rawtypes" })
         List<JobConfiguration> jobConfigurationList =
             (List<JobConfiguration>) jdbcTemplate.query(query.toString(),
-                                                              new BeanPropertyRowMapper(JobConfiguration.class));
+                                                        new BeanPropertyRowMapper(JobConfiguration.class));
         logger.info("JobConfigurations size ===========> " + jobConfigurationList != null ?
                     jobConfigurationList.size() : null);
         logger.info(" End of getJobConfigurations() ");
         return jobConfigurationList.isEmpty() ? null : jobConfigurationList.get(0);
+    }
+
+    @Override
+    public JobConfiguration getJobConfigurationByJobId(Integer jobId) {
+        logger.info(" Begining of getJobConfigurationByJobId() ");
+        StringBuilder query = new StringBuilder(SqlQueryConstantsUtil.SQL_GET_JOB_CONFIGURATION);
+        if (null != jobId && jobId.intValue() > 0) {
+            query.append(" WHERE JOB_ID = ")
+                 .append(jobId);
+        }
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        List<JobConfiguration> jobConfigurationList =
+            (List<JobConfiguration>) jdbcTemplate.query(query.toString(),
+                                                        new BeanPropertyRowMapper(JobConfiguration.class));
+        logger.info("JobConfigurations size ===========> " + jobConfigurationList != null ?
+                    jobConfigurationList.size() : null);
+        logger.info(" End of getJobConfigurationByJobId() ");
+        return jobConfigurationList.isEmpty() ? null : jobConfigurationList.get(0);
+    }
+
+    @Override
+    public void updateJob(JobConfiguration jobConfig) {
+        logger.info(" Begining of updateJob() ");
+        jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_JOB_CONFIGURATION,
+                            new Object[] { jobConfig.getJobFrequency(), jobConfig.getJobFrequencyType(),
+                                           jobConfig.getJobFrequencyHour(), jobConfig.getJobFrequencyMinute(),
+                                           jobConfig.getJobId() });
+        logger.info(" End of updateJob() ");
+    }
+
+    @Override
+    public void deleteJob(Integer jobId) {
+        logger.info(" Begining of deleteJob() ");
+        jdbcTemplate.update(SqlQueryConstantsUtil.SQL_DELETE_JOB_CONFIGURATION,
+                            new Object[] { jobId });
+        logger.info(" End of deleteJob() ");
     }
 }

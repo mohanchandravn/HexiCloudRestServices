@@ -15,4 +15,14 @@ public interface JobConfigurationService {
     public Integer createJobHistory(JobHistory jobHistory);
     
     public void updateJobHistory(JobHistory jobHistory);
+    
+    public void addJobConfiguration(JobConfiguration jobConfig);
+    
+    public void updateJobFrequency(JobConfiguration jobConfig);
+    
+    public void deleteJob(Integer jobId);
+    
+    public void runJobNow(Integer jobId);
+    
+    public void startStopJob(Integer jobId, String status);
 }
