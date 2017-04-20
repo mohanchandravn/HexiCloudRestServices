@@ -33,8 +33,7 @@ public class UsersDAOImpl implements UsersDAO {
         this.dataSource = dataSource;
         jdbcTemplate = new JdbcTemplate(this.dataSource);
         this.sendWelcomeEmail =
-            new SimpleJdbcCall(dataSource).withCatalogName("PKG_EMAIL")
-            .withProcedureName("PRC_SEND_WELCOME_EMAIL");
+            new SimpleJdbcCall(dataSource).withCatalogName("PKG_EMAIL").withProcedureName("PRC_SEND_WELCOME_EMAIL");
     }
 
 
@@ -64,17 +63,20 @@ public class UsersDAOImpl implements UsersDAO {
         logger.info(" Begining of createUser() ");
         try {
             jdbcTemplate.update(SqlQueryConstantsUtil.SQL_CREATE_USER,
-                                new Object[] { user.getUserId(), EncryptionUtil.encryptString(user.getPassword()),
-                                               user.getEmail(), user.getUserRole(), user.getFirstName(),
-                                               user.getLastName(), user.getRegistryId(), user.getPhone() });
+                                new Object[] { user.getUserId().trim(),
+                                               EncryptionUtil.encryptString(user.getPassword()), user.getEmail().trim(),
+                                               user.getUserRole(), user.getFirstName(), user.getLastName(),
+                                               user.getRegistryId(), user.getPhone()
+                                                                         .trim()
+                                                                         .equals("-") ? "" : user.getPhone().trim() });
         } catch (Exception ex) {
             logger.error("Encryption failed or user creation failed" + ex);
             throw ex;
-        }   
+        }
         logger.info(" End of createUser() ");
         return user.getPassword();
     }
-    
+
     public String sendWelcomeEmail(String userId, String password, String firstName, String userEmail) {
         logger.info(" Start of sendWelcomeEmail() ");
         SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_USER_ID", userId)
@@ -82,9 +84,9 @@ public class UsersDAOImpl implements UsersDAO {
                                                                     .addValue("IN_FIRST_NAME", firstName)
                                                                     .addValue("IN_USER_EMAIL", userEmail);
         Map<String, Object> out = sendWelcomeEmail.execute(inParamsMap);
-         
+
         logger.info(" End of sendWelcomeEmail() ");
-       return (String) out.get("OUT_SR_ID");
+        return (String) out.get("OUT_SR_ID");
     }
 
     @Override
@@ -106,7 +108,7 @@ public class UsersDAOImpl implements UsersDAO {
 
         @SuppressWarnings({ "unchecked", "rawtypes" })
         List<User> users =
-            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_CHECK_USER_ID_EXISTS, new Object[] { userId },
+            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_CHECK_USER_ID_EXISTS, new Object[] { userId.trim() },
                                new BeanPropertyRowMapper(User.class));
 
         logger.info("users size ===========> " + users != null ? users.size() : null);
@@ -136,16 +138,17 @@ public class UsersDAOImpl implements UsersDAO {
         List<CustomerRegistry> customerRegistries =
             jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_CUSTOMER_REGISTRY_DATA,
                                new BeanPropertyRowMapper(CustomerRegistry.class));
-//        String customerRegistry = null;
-//        for (CustomerRegistry registry : customerRegistries) {
-//            if(registry.getCustomerNameTransl().length() > 50) {
-////                customerRegistry = registry.getCustomerRegistry().substring(0, registry.getCustomerRegistry().lastIndexOf(" - "));
-//                customerRegistry = registry.getCustomerNameTransl().substring(0, 50).concat("** - ").concat(registry.getRegistryId());
-//                registry.setCustomerRegistry(customerRegistry);
-//            }
-//        }
+        //        String customerRegistry = null;
+        //        for (CustomerRegistry registry : customerRegistries) {
+        //            if(registry.getCustomerNameTransl().length() > 50) {
+        ////                customerRegistry = registry.getCustomerRegistry().substring(0, registry.getCustomerRegistry().lastIndexOf(" - "));
+        //                customerRegistry = registry.getCustomerNameTransl().substring(0, 50).concat("** - ").concat(registry.getRegistryId());
+        //                registry.setCustomerRegistry(customerRegistry);
+        //            }
+        //        }
 
-        logger.info("customerRegistries size ===========> " + customerRegistries != null ? customerRegistries.size() : null);
+        logger.info("customerRegistries size ===========> " + customerRegistries != null ? customerRegistries.size() :
+                    null);
         logger.info(" End of getCustomerRegistryForLov() ");
         return customerRegistries;
     }
@@ -157,24 +160,24 @@ public class UsersDAOImpl implements UsersDAO {
         StringBuilder whereClause = new StringBuilder();
         whereClause.append(" WHERE AUTHORITY = 'ROLE_USER'");
         if (!(StringUtils.isEmpty(userId))) {
-//            whereClause.append(" WHERE USER_ID = '" + userId + "'");
-            whereClause.append(" AND USER_ID = '"+ userId + "'");
+            //            whereClause.append(" WHERE USER_ID = '" + userId + "'");
+            whereClause.append(" AND USER_ID = '" + userId + "'");
         }
         if (!(StringUtils.isEmpty(emailId))) {
-//            if (whereClause.length() > 0) {
-                whereClause.append(" AND EMAIL = '"+ emailId + "'");
-//
-//            } else {
-//                whereClause.append(" WHERE EMAIL = '"+ emailId + "'");
-//            }
+            //            if (whereClause.length() > 0) {
+            whereClause.append(" AND EMAIL = '" + emailId + "'");
+            //
+            //            } else {
+            //                whereClause.append(" WHERE EMAIL = '"+ emailId + "'");
+            //            }
         }
         if (!(StringUtils.isEmpty(customerId))) {
-//            if (whereClause.length() > 0) {
-                whereClause.append(" AND REGISTRY_ID = '" +customerId + "'" );
-//
-//            } else {
-//                whereClause.append(" WHERE REGISTRY_ID = '" +customerId + "'" );
-//            }
+            //            if (whereClause.length() > 0) {
+            whereClause.append(" AND REGISTRY_ID = '" + customerId + "'");
+            //
+            //            } else {
+            //                whereClause.append(" WHERE REGISTRY_ID = '" +customerId + "'" );
+            //            }
         }
 
         if (whereClause.length() > 0) {
@@ -190,10 +193,11 @@ public class UsersDAOImpl implements UsersDAO {
     @Override
     public void updateUser(User user) {
         logger.info("Entering method updateUser()");
-        if(user != null)
-        {
-              jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_USER_QUERY,
-                      new Object[]{user.getEmail(),user.getUserRole(),user.getFirstName(),user.getLastName(),user.getRegistryId(), user.getPhone(), user.getUserId()});
+        if (user != null) {
+            jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_USER_QUERY,
+                                new Object[] { user.getEmail().trim(), user.getUserRole(), user.getFirstName(),
+                                               user.getLastName(), user.getRegistryId(), user.getPhone().trim().equals("-") ? "" : user.getPhone().trim(),
+                                               user.getUserId() });
         }
         logger.info("Exiting method updateUser()");
     }
