@@ -15,6 +15,10 @@ public interface JobConfigurationDAO {
     public void addJob(JobConfiguration jobConfig);
 
     public void updateJob(JobConfiguration jobConfig);
+    
+    public void updateJobStatus(Integer jobId, String status);
 
     public void deleteJob(Integer jobId);
+    
+   // public void runCSCRequestReminderJob(String jobName);
 }

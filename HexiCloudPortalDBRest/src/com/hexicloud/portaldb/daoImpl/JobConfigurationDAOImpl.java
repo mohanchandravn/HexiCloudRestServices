@@ -20,10 +20,14 @@ public class JobConfigurationDAOImpl implements JobConfigurationDAO {
     private static final Logger logger = Logger.getLogger(JobConfigurationDAOImpl.class);
     private JdbcTemplate jdbcTemplate;
     private DataSource dataSource;
+    //    private SimpleJdbcCall sendRemainderJob;
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
         jdbcTemplate = new JdbcTemplate(this.dataSource);
+        //        this.sendRemainderJob =
+        //            new SimpleJdbcCall(dataSource).withCatalogName("PKG_RULES_ENGINE")
+        //            .withProcedureName("PRC_SEND_REMINDER_TO_CSM");
     }
 
     @Override
@@ -52,8 +56,8 @@ public class JobConfigurationDAOImpl implements JobConfigurationDAO {
         jdbcTemplate.update(SqlQueryConstantsUtil.SQL_CREATE_JOB_CONFIGURATION,
                             new Object[] { jobConfig.getJobName(), jobConfig.getJobDescription(),
                                            jobConfig.getJobFrequency(), jobConfig.getJobFrequencyType(),
-                                           jobConfig.getJobFrequencyHour(), jobConfig.getJobFrequencyMinute(),
-                                           jobConfig.getJobStatus() });
+                                           jobConfig.getClassName(), jobConfig.getJobFrequencyHour(),
+                                           jobConfig.getJobFrequencyMinute(), jobConfig.getJobStatus() });
         logger.info(" End of addJob() ");
 
     }
@@ -82,8 +86,7 @@ public class JobConfigurationDAOImpl implements JobConfigurationDAO {
         logger.info(" Begining of getJobConfigurationByJobId() ");
         StringBuilder query = new StringBuilder(SqlQueryConstantsUtil.SQL_GET_JOB_CONFIGURATION);
         if (null != jobId && jobId.intValue() > 0) {
-            query.append(" WHERE JOB_ID = ")
-                 .append(jobId);
+            query.append(" WHERE JOB_ID = ").append(jobId);
         }
         @SuppressWarnings({ "unchecked", "rawtypes" })
         List<JobConfiguration> jobConfigurationList =
@@ -108,8 +111,23 @@ public class JobConfigurationDAOImpl implements JobConfigurationDAO {
     @Override
     public void deleteJob(Integer jobId) {
         logger.info(" Begining of deleteJob() ");
-        jdbcTemplate.update(SqlQueryConstantsUtil.SQL_DELETE_JOB_CONFIGURATION,
-                            new Object[] { jobId });
+        jdbcTemplate.update(SqlQueryConstantsUtil.SQL_DELETE_JOB_CONFIGURATION, new Object[] { jobId });
         logger.info(" End of deleteJob() ");
+    }
+
+    //    @Override
+    //    public void runCSCRequestReminderJob(String jobName) {
+    //        logger.info(" Start of runCSCRequestReminderJob ");
+    //        SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_JOB_NAME", jobName);
+    //
+    //        sendRemainderJob.execute(inParamsMap);
+    //        logger.info(" End of runCSCRequestReminderJob");
+    //    }
+
+    @Override
+    public void updateJobStatus(Integer jobId, String status) {
+        logger.info(" Begining of updateJobStatus() ");
+        jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_JOB_CONFIGURATION_STATUS, new Object[] { status, jobId });
+        logger.info(" End of updateJobStatus() ");
     }
 }

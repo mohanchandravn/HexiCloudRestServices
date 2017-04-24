@@ -15,6 +15,9 @@ import org.quartz.Scheduler;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class QuartzAPI {
     private static final Logger logger = Logger.getLogger(QuartzAPI.class.getName());
 
@@ -59,7 +62,6 @@ public class QuartzAPI {
             }
         } catch (Exception e) {
             logger.error(e);
-            e.printStackTrace();
         }
 
         logger.info("Exiting the method runJobNow");
@@ -198,7 +200,6 @@ public class QuartzAPI {
             }
         } catch (Exception ex) {
             logger.error(ex);
-            ex.printStackTrace();
             throw new RuntimeException(ex);
 
         }

@@ -124,7 +124,7 @@ public class SchedulerController {
     public ResponseEntity<Void> startStopJob(@RequestParam(value = "jobId", required = true) Integer jobId,
                                              @RequestParam(value = "status", required = true) String status) throws Exception {
         logger.info("******* Start of startStopJob() in controller ***********");
-        jobConfigurationService.runJobNow(jobId, status);
+        jobConfigurationService.startStopJob(jobId, status);
         logger.info("******** End of startStopJob() in controller ***********");
         return new ResponseEntity<Void>(HttpStatus.OK);
     }

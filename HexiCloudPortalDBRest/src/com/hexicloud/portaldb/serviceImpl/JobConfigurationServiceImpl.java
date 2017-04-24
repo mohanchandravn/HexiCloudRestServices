@@ -24,6 +24,8 @@ public class JobConfigurationServiceImpl implements JobConfigurationService {
 
     @Autowired
     JobHistoryDAO jobHistoryDAO;
+    @Autowired
+    QuartzAPI quartzAPI;
 
     @Override
     public List<JobConfiguration> getJobConfigurations(String jobName) {
@@ -76,11 +78,10 @@ public class JobConfigurationServiceImpl implements JobConfigurationService {
     @Override
     public void runJobNow(Integer jobId) {
         logger.info("******* start of run job now of  service *****************");
-        QuartzAPI apiObj = new QuartzAPI();
         JobConfiguration jobConfig = jobConfigurationDAO.getJobConfigurationByJobId(jobId);
         if (jobConfig != null) {
             logger.info("Job running immediately :" + jobConfig.getJobName());
-            apiObj.runJobNow(jobConfig.getJobName(), jobConfig.getClassName());
+            quartzAPI.runJobNow(jobConfig.getJobName(), jobConfig.getClassName());
         }
         logger.info("******* end of run job now of  service *****************");
     }
@@ -88,15 +89,16 @@ public class JobConfigurationServiceImpl implements JobConfigurationService {
     @Override
     public void startStopJob(Integer jobId, String status) {
         logger.info("******* start of run job now of  service *****************");
-        QuartzAPI apiObj = new QuartzAPI();
         JobConfiguration jobConfig = jobConfigurationDAO.getJobConfigurationByJobId(jobId);
-        if (jobConfig.getJobStatus() != null && "stop".equalsIgnoreCase(jobConfig.getJobStatus().toString())) {
+        if (jobConfig.getJobStatus() != null && "Stopped".equalsIgnoreCase(status)) {
             if (jobConfig.getJobName() != null) {
-                apiObj.stopJobNow(jobConfig.getJobName()); //stop
+                jobConfigurationDAO.updateJobStatus(jobId, status);
+                quartzAPI.stopJobNow(jobConfig.getJobName()); //stop
             }
         } else if (jobConfig.getJobStatus() != null &&
-                   "running".equalsIgnoreCase(jobConfig.getJobStatus().toString())) {
-            apiObj.saveAndRunJob(jobConfig);
+                   "running".equalsIgnoreCase(status)) {
+            jobConfigurationDAO.updateJobStatus(jobId, status);
+            quartzAPI.saveAndRunJob(jobConfig);
         }
         logger.info("******* end of run job now of  service *****************");
     }

@@ -18,7 +18,7 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
 
 public class QuartzSchedulerSingleton {
-    private static final Logger logger = Logger.getLogger(QuartzSchedulerSingleton.class.getName());
+    private static final Logger logger = Logger.getLogger(QuartzSchedulerSingleton.class);
 
     /**
      * Singleton static instance for the class.
@@ -139,7 +139,6 @@ public class QuartzSchedulerSingleton {
         try {
             // Construct the key for the job to be deleted
             JobKey jobKey = new JobKey(jobName, groupName);
-
             // Delete the job
             _scheduler.deleteJob(jobKey);
         } catch (Exception e) {
