@@ -46,4 +46,17 @@ public class ClmDataDAOImpl implements ClmDataDAO {
         logger.info(" End of getClmData() ");
         return servicesList;
     }
+
+    @Override
+    public List<String> getServicesForUser(String userId) {
+        logger.info(" Start of getServicesForUser() ");
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        List<String> servicesList =
+            jdbcTemplate.queryForList(SqlQueryConstantsUtil.SQL_GET_SERVICES_FOR_USER, new Object[] { userId },
+                                      String.class);
+
+        logger.info("getServicesForUser size ===========> " + servicesList != null ? servicesList.size() : null);
+        logger.info(" End of getServicesForUser() ");
+        return servicesList;
+    }
 }

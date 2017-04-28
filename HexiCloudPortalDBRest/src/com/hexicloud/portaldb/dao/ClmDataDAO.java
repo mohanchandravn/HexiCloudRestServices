@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ClmDataDAO {
     public List<ProvisionedService> getClmData(String userId);
+    
+    public List<String> getServicesForUser(String userId);
 }
