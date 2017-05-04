@@ -2,6 +2,7 @@ package com.hexicloud.portaldb.dao;
 
 import com.hexicloud.portaldb.bean.DecisionTree;
 import com.hexicloud.portaldb.bean.Services;
+import com.hexicloud.portaldb.bean.UseCaseBenefits;
 import com.hexicloud.portaldb.bean.UseCases;
 import com.hexicloud.portaldb.bean.UserUseCases;
 
@@ -19,4 +20,6 @@ public interface UseCasesDAO {
     public DecisionTree getDecisionTree();
     
     public void createUserUseCases(UserUseCases userUseCases);
+    
+    public UseCaseBenefits getUseCaseBenefits(int useCaseId);
 }

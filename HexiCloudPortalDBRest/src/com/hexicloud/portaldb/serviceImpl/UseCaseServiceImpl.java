@@ -2,6 +2,7 @@ package com.hexicloud.portaldb.serviceImpl;
 
 import com.hexicloud.portaldb.bean.DecisionTree;
 import com.hexicloud.portaldb.bean.Services;
+import com.hexicloud.portaldb.bean.UseCaseBenefits;
 import com.hexicloud.portaldb.bean.UseCaseDetail;
 import com.hexicloud.portaldb.bean.UseCases;
 import com.hexicloud.portaldb.bean.UserPhaseCompletion;
@@ -146,9 +147,17 @@ public class UseCaseServiceImpl implements UseCaseService {
 
     @Override
     public void markUseCaseCaptureCompletion(String userId) {
+        logger.info("*******  markUseCaseCaptureCompletion() of  service *****************");
         UserPhaseCompletion upComp = new UserPhaseCompletion();
         upComp.setUserId(userId);
         upComp.setPhase(USER_PHASE_COMPLETION_USECASE_CAPTURE);
         userPhaseCompletionDAO.createPhaseCompletion(upComp);
+    }
+
+    @Override
+    public UseCaseBenefits getOtherUseCaseBenefits() {
+        logger.info("*******  getOtherUseCaseBenefits() of  service *****************");
+        return useCasesDAO.getUseCaseBenefits(10);
+
     }
 }

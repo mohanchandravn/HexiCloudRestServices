@@ -2,6 +2,7 @@ package com.hexicloud.portaldb.controller;
 
 import com.hexicloud.portaldb.bean.DecisionTree;
 import com.hexicloud.portaldb.bean.Services;
+import com.hexicloud.portaldb.bean.UseCaseBenefits;
 import com.hexicloud.portaldb.bean.UseCases;
 import com.hexicloud.portaldb.bean.UserUseCases;
 import com.hexicloud.portaldb.service.UseCaseService;
@@ -107,5 +108,18 @@ public class UseCasesController {
         useCaseService.markUseCaseCaptureCompletion(authentication.getName());
         logger.info("******** End of markUCCaptureCompletion() in controller ***********");
         return new ResponseEntity<Void>(HttpStatus.CREATED);
+    }
+    
+    @RequestMapping(value = "/services/rest/getOtherUseCaseBenefits", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UseCaseBenefits> getOtherUseCaseBenefits() throws Exception {
+        logger.info("******* Start of getOtherUseCaseBenefits() in controller ***********");
+        UseCaseBenefits useCaseBenefits = useCaseService.getOtherUseCaseBenefits();
+            if (useCaseBenefits.getBenefits().isEmpty()) {
+                logger.info("No Tailored Use Cases found");
+                return new ResponseEntity<UseCaseBenefits>(HttpStatus.NO_CONTENT);
+            }
+        logger.info("******** End of getOtherUseCaseBenefits() in controller ***********");
+        return new ResponseEntity<UseCaseBenefits>(useCaseBenefits, HttpStatus.OK);
     }
 }

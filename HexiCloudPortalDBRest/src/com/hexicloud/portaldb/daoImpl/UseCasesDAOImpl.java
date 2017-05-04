@@ -4,6 +4,8 @@ import com.hexicloud.portaldb.bean.DecisionTree;
 import com.hexicloud.portaldb.bean.Service;
 import com.hexicloud.portaldb.bean.Services;
 import com.hexicloud.portaldb.bean.TreeDetail;
+import com.hexicloud.portaldb.bean.UseCaseBenefit;
+import com.hexicloud.portaldb.bean.UseCaseBenefits;
 import com.hexicloud.portaldb.bean.UseCases;
 import com.hexicloud.portaldb.bean.UserUseCase;
 import com.hexicloud.portaldb.bean.UserUseCases;
@@ -124,6 +126,7 @@ public class UseCasesDAOImpl implements UseCasesDAO {
                 ps.setString(3, useCase.getCode());
                 ps.setString(4, useCase.getSummary());
                 ps.setString(5, useCase.getServices());
+                ps.setString(6, useCase.getBenefits());
             }
 
             @Override
@@ -132,5 +135,17 @@ public class UseCasesDAOImpl implements UseCasesDAO {
             }
         });
         logger.info("Ending of the createUserUseCases method");
+    }
+
+    @Override
+    public UseCaseBenefits getUseCaseBenefits(int useCaseId) {
+        logger.info("Starting of the getUseCaseBenefits");
+        UseCaseBenefits useCaseBenefits = new UseCaseBenefits();
+        @SuppressWarnings("unchecked")
+        List<UseCaseBenefit> benefits =
+            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_USE_CASE_BENEFITS, new Object [] {useCaseId}, new BeanPropertyRowMapper(UseCaseBenefit.class));
+        useCaseBenefits.setBenefits(benefits);
+        logger.info("Ending of the getUseCaseBenefits");
+        return useCaseBenefits;
     }
 }
