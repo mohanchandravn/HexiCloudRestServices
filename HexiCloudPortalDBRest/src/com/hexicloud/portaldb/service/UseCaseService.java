@@ -17,6 +17,8 @@ public interface UseCaseService {
     public void createUserUseCases(UserUseCases userUseCases, String userId);
     
     public UseCases getTailoredUseCases(String userId);
+    
+    public void markUseCaseCaptureCompletion(String userId);
 
 
 }

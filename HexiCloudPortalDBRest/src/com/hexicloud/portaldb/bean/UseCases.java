@@ -13,6 +13,10 @@ public class UseCases implements Serializable {
     }
 
     private List<UseCaseDetail> useCases = null;
+    
+    private boolean capturePhaseCompleted;
+    
+    private boolean selectionPhaseCompleted;
 
     public List<UseCaseDetail> getUseCases() {
         return useCases;
@@ -20,5 +24,21 @@ public class UseCases implements Serializable {
 
     public void setUseCases(List<UseCaseDetail> useCases) {
         this.useCases = useCases;
+    }
+
+    public void setCapturePhaseCompleted(boolean capturePhaseCompleted) {
+        this.capturePhaseCompleted = capturePhaseCompleted;
+    }
+
+    public boolean isCapturePhaseCompleted() {
+        return capturePhaseCompleted;
+    }
+
+    public void setSelectionPhaseCompleted(boolean selectionPhaseCompleted) {
+        this.selectionPhaseCompleted = selectionPhaseCompleted;
+    }
+
+    public boolean isSelectionPhaseCompleted() {
+        return selectionPhaseCompleted;
     }
 }

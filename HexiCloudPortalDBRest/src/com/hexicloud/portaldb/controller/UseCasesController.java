@@ -92,12 +92,20 @@ public class UseCasesController {
     public ResponseEntity<UseCases> getTailoredUseCases(Authentication authentication) throws Exception {
         logger.info("******* Start of getTailoredUseCases() in controller ***********");
         UseCases useCases = useCaseService.getTailoredUseCases(authentication.getName());
-        if (useCases.getUseCases().isEmpty()) {
-            logger.info("No Tailored Use Cases found");
-            return new ResponseEntity<UseCases>(HttpStatus.NO_CONTENT);
-        }
+//        if (useCases.getUseCases().isEmpty()) {
+//            logger.info("No Tailored Use Cases found");
+//            return new ResponseEntity<UseCases>(HttpStatus.NO_CONTENT);
+//        }
         logger.info("******** End of getTailoredUseCases() in controller ***********");
         return new ResponseEntity<UseCases>(useCases, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/services/rest/markUCCaptureCompletion/", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> markUCCaptureCompletion(Authentication authentication) throws Exception {
+        logger.info("******* Start of markUCCaptureCompletion() in controller ***********");
+        useCaseService.markUseCaseCaptureCompletion(authentication.getName());
+        logger.info("******** End of markUCCaptureCompletion() in controller ***********");
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
+    }
 }

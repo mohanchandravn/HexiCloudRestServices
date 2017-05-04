@@ -112,7 +112,7 @@ public class UseCasesDAOImpl implements UseCasesDAO {
 
     @Override
     public void createUserUseCases(UserUseCases userUseCases) {
-        logger.info("Starting of the create users method");
+        logger.info("Starting of the createUserUseCases method");
         List<UserUseCase> cases = userUseCases.getUserUseCases();
         jdbcTemplate.batchUpdate(SqlQueryConstantsUtil.SQL_CREATE_USER_USE_CASE, new BatchPreparedStatementSetter() {
 
@@ -131,6 +131,6 @@ public class UseCasesDAOImpl implements UseCasesDAO {
                 return cases.size();
             }
         });
-        logger.info("Ending of the create users method");
+        logger.info("Ending of the createUserUseCases method");
     }
 }
