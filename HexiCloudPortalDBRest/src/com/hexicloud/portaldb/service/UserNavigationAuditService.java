@@ -9,6 +9,8 @@ public interface UserNavigationAuditService {
     public List<UserNavAudit> getUserNavAudit(String userId);
 
     public void updateAuditOnly(String userId, String stepCode, String action);
-    
+
     public List<ExportAudit> exportAudit(String userId);
+
+    public void deleteUserNavEmails(String userId);
 }
