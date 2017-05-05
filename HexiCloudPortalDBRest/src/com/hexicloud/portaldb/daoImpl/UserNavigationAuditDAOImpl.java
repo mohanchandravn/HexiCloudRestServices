@@ -27,6 +27,7 @@ public class UserNavigationAuditDAOImpl implements UserNavigationAuditDAO {
     private DataSource dataSource;
     private Steps steps;
     private SimpleJdbcCall saveUserNavAudit;
+    private SimpleJdbcCall deleteUserNavEmails;
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -34,6 +35,9 @@ public class UserNavigationAuditDAOImpl implements UserNavigationAuditDAO {
         this.saveUserNavAudit =
             new SimpleJdbcCall(dataSource).withCatalogName("PKG_USER_NAV_AUDIT")
             .withProcedureName("PRC_SAVE_USER_NAV_AUDIT");
+        this.deleteUserNavEmails =
+            new SimpleJdbcCall(dataSource).withCatalogName("PKG_USER_NAV_AUDIT")
+            .withProcedureName("PRC_DELETE_USERS_NAV");
     }
 
     public void setSteps(Steps steps) {
@@ -93,5 +97,13 @@ public class UserNavigationAuditDAOImpl implements UserNavigationAuditDAO {
         }
         logger.info(" End of exportAudit() ");
         return auditList;
+    }
+
+    @Override
+    public void deleteUserNavEmails(String userId) {
+        logger.info(" Start of deleteUserNavEmails() ");
+        SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_USER_ID", userId);
+        deleteUserNavEmails.execute(inParamsMap);
+        logger.info(" End of deleteUserNavEmails() ");
     }
 }

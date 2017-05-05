@@ -49,4 +49,11 @@ public class UserNavigationAuditServiceImpl implements UserNavigationAuditServic
         logger.info("the where clause is :" + whereClause.toString());
         return userNavigationAuditDAO.exportAudit(whereClause.toString());
     }
+
+    @Override
+    public void deleteUserNavEmails(String userId) {
+        logger.info("deleteUserNavEmails in the service");
+        userNavigationAuditDAO.deleteUserNavEmails(userId);
+    }
+
 }

@@ -42,21 +42,23 @@ public class UserNavAuditController {
         logger.info("******** End of getUserNavAudit() in controller ***********");
         return new ResponseEntity<List<UserNavAudit>>(stepsList, HttpStatus.OK);
     }
-    
-    
+
+
     @RequestMapping(value = "/services/rest/updateAudit/", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> updateAudit(@RequestBody UserNavAudit userNavAudit, Authentication authentication) throws Exception {
+    public ResponseEntity<Void> updateAudit(@RequestBody UserNavAudit userNavAudit,
+                                            Authentication authentication) throws Exception {
         logger.info("******* Start of updateAudit() in controller ***********");
-        userNavigationAuditService.updateAuditOnly(authentication.getName(), userNavAudit.getStepCode(), userNavAudit.getAction());
+        userNavigationAuditService.updateAuditOnly(authentication.getName(), userNavAudit.getStepCode(),
+                                                   userNavAudit.getAction());
         logger.info("******** End of updateAudit() in controller ***********");
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
-    
+
     @RequestMapping(value = "/services/rest/exportAudit", method = RequestMethod.GET)
     @PreAuthorize("hasAnyRole('ADMIN','CSC')")
     public ResponseEntity<List<ExportAudit>> exportAudit(@RequestParam(value = "userId", required = false)
-                                                              String userId) throws Exception {
+                                                         String userId) throws Exception {
         logger.info("******* Start of exportAudit() in controller ***********");
         List<ExportAudit> stepsList = userNavigationAuditService.exportAudit(userId);
         if (stepsList.isEmpty()) {
@@ -69,5 +71,13 @@ public class UserNavAuditController {
         return new ResponseEntity<List<ExportAudit>>(stepsList, HttpStatus.OK);
     }
 
-
+    @RequestMapping(value = "/services/rest/deleteUserNavEmails", method = RequestMethod.POST)
+    @PreAuthorize("hasAnyRole('ADMIN','CSC')")
+    public ResponseEntity<Void> deleteUserNavEmails(@RequestParam(value = "userId", required = true)
+                                                    String userId) throws Exception {
+        logger.info("******* Start of deleteUserNavEmails() in controller ***********");
+        userNavigationAuditService.deleteUserNavEmails(userId);
+        logger.info("******** End of deleteUserNavEmails() in controller ***********");
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
 }
