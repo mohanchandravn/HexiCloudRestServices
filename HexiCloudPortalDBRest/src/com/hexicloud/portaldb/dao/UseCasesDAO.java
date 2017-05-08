@@ -22,4 +22,6 @@ public interface UseCasesDAO {
     public void createUserUseCases(UserUseCases userUseCases);
     
     public UseCaseBenefits getUseCaseBenefits(int useCaseId);
+    
+    public String sendTailoredUseCasesToUser(String userId);
 }

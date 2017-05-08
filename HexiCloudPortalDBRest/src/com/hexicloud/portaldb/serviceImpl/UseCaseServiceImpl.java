@@ -136,6 +136,8 @@ public class UseCaseServiceImpl implements UseCaseService {
                 upComp.setPhase(USER_PHASE_COMPLETION_USECASE_SELECTION);
                 logger.info("Inserted user use cases after filtering from existing user use cases : " +
                             filterUseCases.getUserUseCases().size());
+                //SENDING EMAIL OF THE TAILORED USE CASES
+                useCasesDAO.sendTailoredUseCasesToUser(userId);
 
             } else {
                 for (UserUseCase useCase : userUseCases.getUserUseCases()) {

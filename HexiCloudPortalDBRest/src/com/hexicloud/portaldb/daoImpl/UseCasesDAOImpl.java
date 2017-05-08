@@ -29,6 +29,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -37,11 +39,15 @@ public class UseCasesDAOImpl implements UseCasesDAO {
     private JdbcTemplate jdbcTemplate;
     private DataSource dataSource;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private SimpleJdbcCall emailTailoredUCToUserPRC;
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
         jdbcTemplate = new JdbcTemplate(this.dataSource);
         namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate.getDataSource());
+        this.emailTailoredUCToUserPRC =
+            new SimpleJdbcCall(dataSource).withCatalogName("PKG_EMAIL").withProcedureName("PRC_SEND_TAILORED_USE_CASES");
+
     }
 
     @Override
@@ -147,5 +153,17 @@ public class UseCasesDAOImpl implements UseCasesDAO {
         useCaseBenefits.setBenefits(benefits);
         logger.info("Ending of the getUseCaseBenefits");
         return useCaseBenefits;
+    }
+
+    @Override
+    public String sendTailoredUseCasesToUser(String userId) {
+        logger.info(" Begining of sendTailoredUseCasesToUser() ");
+        SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_USER_ID", userId)
+                                                                    
+                                                                    .addValue("OUT_EMAIL_SENT", "N");
+        Map<String, Object> out = emailTailoredUCToUserPRC.execute(inParamsMap);
+        String emailSuccess = (String) out.get("OUT_EMAIL_SUCCESS");
+        logger.info(" End of sendTailoredUseCasesToUser() ");
+        return emailSuccess;
     }
 }
