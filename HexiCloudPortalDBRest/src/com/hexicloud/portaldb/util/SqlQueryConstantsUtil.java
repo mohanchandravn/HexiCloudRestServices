@@ -128,4 +128,7 @@ public class SqlQueryConstantsUtil {
     
     public static final String SQL_GET_USE_CASE_BENEFITS = 
         "SELECT ID, LABEL, USECASE_ID FROM USE_CASE_BENEFITS WHERE USECASE_ID = ?";
+    
+    public static final String SQL_GET_RULE_CONFIGURATIONS_WITH_RULE_KEYS =
+        "SELECT RULE_KEY, RULE_TYPE, RULE_VALUE FROM RULE_CONFIGURATION WHERE RULE_KEY IN (:ruleKeys)";
 }

@@ -8,4 +8,6 @@ public interface RuleConfigurationDAO {
     public List<RuleConfiguration> getRuleConfByJobId(Integer jobId);
 
     public void updateRuleConfigByRuleKey(RuleConfiguration ruleConfig);
+    
+    public List<RuleConfiguration> getRuleConfigurationsByRuleKeys(List<String> ruleKeys);
 }

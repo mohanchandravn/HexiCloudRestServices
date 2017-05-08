@@ -1,5 +1,6 @@
 package com.hexicloud.portaldb.controller;
 
+import com.hexicloud.portaldb.bean.AuthUser;
 import com.hexicloud.portaldb.bean.DecisionTree;
 import com.hexicloud.portaldb.bean.Services;
 import com.hexicloud.portaldb.bean.UseCaseBenefits;
@@ -121,5 +122,15 @@ public class UseCasesController {
             }
         logger.info("******** End of getOtherUseCaseBenefits() in controller ***********");
         return new ResponseEntity<UseCaseBenefits>(useCaseBenefits, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/services/rest/notifyUCSelectionIgnored", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> notifyUCSelectionIgnored(Authentication authentication) throws Exception {
+        logger.info("******* Start of notifyUCSelectionIgnored() in controller ***********");
+        AuthUser user = (AuthUser) authentication.getPrincipal();
+        useCaseService.emailCSCUseCaseSelectionIgnored(user.getUserId(), user.getFirstName());
+        logger.info("******** End of notifyUCSelectionIgnored() in controller ***********");
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 }

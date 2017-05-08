@@ -22,6 +22,7 @@ public interface UseCaseService {
     public void markUseCaseCaptureCompletion(String userId);
     
     public UseCaseBenefits getOtherUseCaseBenefits();
-
+    
+    public String emailCSCUseCaseSelectionIgnored(String userId, String firstName);
 
 }

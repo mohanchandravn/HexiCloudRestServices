@@ -1,6 +1,7 @@
 package com.hexicloud.portaldb.serviceImpl;
 
 import com.hexicloud.portaldb.bean.DecisionTree;
+import com.hexicloud.portaldb.bean.RuleConfiguration;
 import com.hexicloud.portaldb.bean.Services;
 import com.hexicloud.portaldb.bean.UseCaseBenefits;
 import com.hexicloud.portaldb.bean.UseCaseDetail;
@@ -9,6 +10,8 @@ import com.hexicloud.portaldb.bean.UserPhaseCompletion;
 import com.hexicloud.portaldb.bean.UserUseCase;
 import com.hexicloud.portaldb.bean.UserUseCases;
 import com.hexicloud.portaldb.dao.ClmDataDAO;
+import com.hexicloud.portaldb.dao.EmailUtilDAO;
+import com.hexicloud.portaldb.dao.RuleConfigurationDAO;
 import com.hexicloud.portaldb.dao.UseCasesDAO;
 import com.hexicloud.portaldb.dao.UserPhaseCompletionDAO;
 import com.hexicloud.portaldb.service.UseCaseService;
@@ -38,11 +41,29 @@ public class UseCaseServiceImpl implements UseCaseService {
     @Autowired
     UserPhaseCompletionDAO userPhaseCompletionDAO;
 
+    @Autowired
+    EmailUtilDAO emailUtilDAO;
+
+    @Autowired
+    RuleConfigurationDAO ruleConfigurationDAO;
+
     @Value("${user.phase.completion.usecase.capture}")
     private String USER_PHASE_COMPLETION_USECASE_CAPTURE;
 
     @Value("${user.phase.completion.usecase.selection}")
     private String USER_PHASE_COMPLETION_USECASE_SELECTION;
+
+    @Value("${usecase.selection.ignored.subject}")
+    private String USE_CASE_SEL_IGNORED_SUB;
+
+    @Value("${usecase.selection.ignored.body}")
+    private String USE_CASE_SEL_IGNORED_BODY;
+
+    @Value("${placeHolder.userId}")
+    private String userIdPlaceHolder;
+
+    @Value("${placeHolder.firstName}")
+    private String firstNamePlaceHolder;
 
     @Override
     public UseCases getAllUseCases() {
@@ -159,5 +180,27 @@ public class UseCaseServiceImpl implements UseCaseService {
         logger.info("*******  getOtherUseCaseBenefits() of  service *****************");
         return useCasesDAO.getUseCaseBenefits(10);
 
+    }
+
+    @Override
+    public String emailCSCUseCaseSelectionIgnored(String userId, String firstName) {
+        String subject = null;
+        String emailBody = null;
+        List<String> ruleKeys = new ArrayList<String>();
+        ruleKeys.add(USE_CASE_SEL_IGNORED_SUB);
+        ruleKeys.add(USE_CASE_SEL_IGNORED_BODY);
+        List<RuleConfiguration> ruleConfigs = ruleConfigurationDAO.getRuleConfigurationsByRuleKeys(ruleKeys);
+        for (RuleConfiguration ruleConfig : ruleConfigs) {
+            if (USE_CASE_SEL_IGNORED_SUB.equalsIgnoreCase(ruleConfig.getRuleKey())) {
+                subject = ruleConfig.getRuleValue();
+            } else if (USE_CASE_SEL_IGNORED_BODY.equalsIgnoreCase(ruleConfig.getRuleKey())) {
+                emailBody = ruleConfig.getRuleValue();
+            }
+        }
+        subject = subject.replaceAll(firstNamePlaceHolder, firstName);
+        emailBody = emailBody.replaceAll(firstNamePlaceHolder, firstName);
+        emailBody = emailBody.replaceAll(userIdPlaceHolder, userId);
+        String emailSucess = emailUtilDAO.sendEmailToCSC(subject, emailBody);
+        return emailSucess;
     }
 }
