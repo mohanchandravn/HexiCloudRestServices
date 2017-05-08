@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -36,9 +37,15 @@ public class UserPhaseCompletionDAOImpl implements UserPhaseCompletionDAO {
     @Override
     public void createPhaseCompletion(UserPhaseCompletion userPhaseCompletion) {
         logger.info(" Begining of createPhaseCompletion() ");
-        jdbcTemplate.update(SqlQueryConstantsUtil.SQL_CREATE_PHASE_COMPLETION,
-                            new Object[] { userPhaseCompletion.getUserId(), userPhaseCompletion.getPhase(), "N",
-                                           null });
+        try {
+            jdbcTemplate.update(SqlQueryConstantsUtil.SQL_CREATE_PHASE_COMPLETION,
+                                new Object[] { userPhaseCompletion.getUserId(), userPhaseCompletion.getPhase(), "N",
+                                               null });
+        } catch (DuplicateKeyException dae) {
+            logger.error("Expected error, updating completion date");
+            jdbcTemplate.update(SqlQueryConstantsUtil.SQL_UPDATE_PHASE_COMPLETION_DATE,
+                                new Object[] { userPhaseCompletion.getUserId(), userPhaseCompletion.getPhase()});
+        }
         logger.info(" End of createPhaseCompletion() ");
     }
 
