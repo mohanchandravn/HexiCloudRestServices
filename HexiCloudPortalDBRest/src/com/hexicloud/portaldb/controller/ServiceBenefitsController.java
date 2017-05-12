@@ -1,7 +1,7 @@
 package com.hexicloud.portaldb.controller;
 
 
-import com.hexicloud.portaldb.bean.Usecase;
+import com.hexicloud.portaldb.bean.UsecaseOld;
 import com.hexicloud.portaldb.service.ServiceBenefitService;
 
 import java.util.List;
@@ -67,18 +67,18 @@ public class ServiceBenefitsController {
 
     @RequestMapping(value = "/services/rest/usecases/", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<List<Usecase>> getUsecases() throws Exception {
+    public ResponseEntity<List<UsecaseOld>> getUsecases() throws Exception {
         logger.info("******* Start of getUsecases() in controller ***********");
 
-        List<Usecase> usecaseList = serviceBenefitService.getUsecases();
+        List<UsecaseOld> usecaseList = serviceBenefitService.getUsecases();
         if (usecaseList.isEmpty()) {
 
             logger.info("NO Usecases found");
-            return new ResponseEntity<List<Usecase>>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<List<UsecaseOld>>(HttpStatus.NO_CONTENT);
         }
 
         logger.info("******** End of getUsecases() in controller ***********");
-        return new ResponseEntity<List<Usecase>>(usecaseList, HttpStatus.OK);
+        return new ResponseEntity<List<UsecaseOld>>(usecaseList, HttpStatus.OK);
 
     }
 

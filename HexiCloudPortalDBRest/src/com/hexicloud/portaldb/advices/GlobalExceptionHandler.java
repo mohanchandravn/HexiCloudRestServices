@@ -7,11 +7,13 @@ import java.security.SignatureException;
 
 import org.apache.log4j.Logger;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -49,6 +51,13 @@ public class GlobalExceptionHandler {
     public void nullException(NullPointerException npe) {
         logger.error("Exception is :", npe);
     }
+    
+    @ResponseStatus(value=BAD_REQUEST, reason="Request parameters are either missing or mismatching")
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public void badRequestException(MissingServletRequestParameterException msrpe) {
+        logger.error("Exception is :", msrpe);
+    }
+    
     @ResponseStatus(value=INTERNAL_SERVER_ERROR, reason="Had issue processing your request")
     @ExceptionHandler(Exception.class)
     public void failedToProcess(Exception ex) {

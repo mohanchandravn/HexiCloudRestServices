@@ -1,10 +1,10 @@
 package com.hexicloud.portaldb.daoImpl;
 
+import com.hexicloud.portaldb.bean.Benefit;
 import com.hexicloud.portaldb.bean.DecisionTree;
 import com.hexicloud.portaldb.bean.Service;
 import com.hexicloud.portaldb.bean.Services;
 import com.hexicloud.portaldb.bean.TreeDetail;
-import com.hexicloud.portaldb.bean.UseCaseBenefit;
 import com.hexicloud.portaldb.bean.UseCaseBenefits;
 import com.hexicloud.portaldb.bean.UseCases;
 import com.hexicloud.portaldb.bean.UserUseCase;
@@ -148,8 +148,8 @@ public class UseCasesDAOImpl implements UseCasesDAO {
         logger.info("Starting of the getUseCaseBenefits");
         UseCaseBenefits useCaseBenefits = new UseCaseBenefits();
         @SuppressWarnings("unchecked")
-        List<UseCaseBenefit> benefits =
-            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_USE_CASE_BENEFITS, new Object [] {useCaseId}, new BeanPropertyRowMapper(UseCaseBenefit.class));
+        List<Benefit> benefits =
+            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_USE_CASE_BENEFITS, new Object [] {useCaseId}, new BeanPropertyRowMapper(Benefit.class));
         useCaseBenefits.setBenefits(benefits);
         logger.info("Ending of the getUseCaseBenefits");
         return useCaseBenefits;

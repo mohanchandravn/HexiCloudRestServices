@@ -3,7 +3,7 @@ package com.hexicloud.portaldb.serviceImpl;
 import com.hexi.dcs.client.pojo.DownloadFileRequest;
 import com.hexi.dcs.client.services.DCSFileService;
 
-import com.hexicloud.portaldb.bean.Usecase;
+import com.hexicloud.portaldb.bean.UsecaseOld;
 import com.hexicloud.portaldb.dao.ServiceBenefitDAO;
 import com.hexicloud.portaldb.service.ServiceBenefitService;
 
@@ -36,8 +36,8 @@ public class ServiceBenefitServiceImpl implements ServiceBenefitService {
     }
 
     @Override
-    public List<Usecase> getUsecases() {
-        List<Usecase> usecaseList = serviceBenefitDAO.getUsecases();
+    public List<UsecaseOld> getUsecases() {
+        List<UsecaseOld> usecaseList = serviceBenefitDAO.getUsecases();
         return usecaseList;
     }
 

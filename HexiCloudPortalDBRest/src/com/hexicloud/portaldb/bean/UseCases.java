@@ -12,17 +12,17 @@ public class UseCases implements Serializable {
         super();
     }
 
-    private List<UseCaseDetail> useCases = null;
+    private List<UseCase> useCases = null;
     
     private boolean capturePhaseCompleted;
     
     private boolean selectionPhaseCompleted;
 
-    public List<UseCaseDetail> getUseCases() {
+    public List<UseCase> getUseCases() {
         return useCases;
     }
 
-    public void setUseCases(List<UseCaseDetail> useCases) {
+    public void setUseCases(List<UseCase> useCases) {
         this.useCases = useCases;
     }
 

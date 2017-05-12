@@ -3,6 +3,7 @@ package com.hexicloud.portaldb.service;
 import com.hexicloud.portaldb.bean.DecisionTree;
 import com.hexicloud.portaldb.bean.Services;
 import com.hexicloud.portaldb.bean.UseCaseBenefits;
+import com.hexicloud.portaldb.bean.UseCaseDetail;
 import com.hexicloud.portaldb.bean.UseCases;
 import com.hexicloud.portaldb.bean.UserUseCases;
 
@@ -24,5 +25,7 @@ public interface UseCaseService {
     public UseCaseBenefits getOtherUseCaseBenefits();
     
     public String emailCSCUseCaseSelectionIgnored(String userId, String firstName);
+    
+    public UseCaseDetail getUseCaseDetails(int useCaseId);
 
 }

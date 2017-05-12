@@ -4,6 +4,7 @@ import com.hexicloud.portaldb.bean.AuthUser;
 import com.hexicloud.portaldb.bean.DecisionTree;
 import com.hexicloud.portaldb.bean.Services;
 import com.hexicloud.portaldb.bean.UseCaseBenefits;
+import com.hexicloud.portaldb.bean.UseCaseDetail;
 import com.hexicloud.portaldb.bean.UseCases;
 import com.hexicloud.portaldb.bean.UserUseCases;
 import com.hexicloud.portaldb.service.UseCaseService;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -132,5 +134,20 @@ public class UseCasesController {
         useCaseService.emailCSCUseCaseSelectionIgnored(user.getUserId(), user.getFirstName());
         logger.info("******** End of notifyUCSelectionIgnored() in controller ***********");
         return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/services/rest/getUseCaseDetails", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UseCaseDetail> getUseCaseDetails(@RequestParam(value = "useCaseId",
+                                                                                      required = true)
+                                                                        int useCaseId) throws Exception {
+        logger.info("******* Start of getUseCaseDetails() in controller ***********");
+        UseCaseDetail caseDetail = useCaseService.getUseCaseDetails(useCaseId);
+        if (caseDetail.getBenefits().isEmpty()) {
+                logger.info("No Use case details found");
+                return new ResponseEntity<UseCaseDetail>(HttpStatus.NO_CONTENT);
+            }
+        logger.info("******** End of getUseCaseDetails() in controller ***********");
+        return new ResponseEntity<UseCaseDetail>(caseDetail, HttpStatus.OK);
     }
 }

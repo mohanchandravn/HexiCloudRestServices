@@ -1,6 +1,6 @@
 package com.hexicloud.portaldb.daoImpl;
 
-import com.hexicloud.portaldb.bean.Usecase;
+import com.hexicloud.portaldb.bean.UsecaseOld;
 import com.hexicloud.portaldb.dao.ServiceBenefitDAO;
 import com.hexicloud.portaldb.util.SqlQueryConstantsUtil;
 
@@ -64,11 +64,11 @@ public class ServiceBenefitDAOImpl implements ServiceBenefitDAO {
     }
 
     @Override
-    public List<Usecase> getUsecases() {
+    public List<UsecaseOld> getUsecases() {
         logger.info("getUsecases from DAOIMPL ");
         @SuppressWarnings({ "unchecked", "rawtypes" })
-        List<Usecase> usecaseList =
-            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_ALL_USECASES, new BeanPropertyRowMapper(Usecase.class));
+        List<UsecaseOld> usecaseList =
+            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_ALL_USECASES, new BeanPropertyRowMapper(UsecaseOld.class));
         return usecaseList;
     }
 

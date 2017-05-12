@@ -3,6 +3,7 @@ package com.hexicloud.portaldb.serviceImpl;
 import com.hexicloud.portaldb.bean.DecisionTree;
 import com.hexicloud.portaldb.bean.RuleConfiguration;
 import com.hexicloud.portaldb.bean.Services;
+import com.hexicloud.portaldb.bean.UseCase;
 import com.hexicloud.portaldb.bean.UseCaseBenefits;
 import com.hexicloud.portaldb.bean.UseCaseDetail;
 import com.hexicloud.portaldb.bean.UseCases;
@@ -121,7 +122,7 @@ public class UseCaseServiceImpl implements UseCaseService {
             if ("T".equalsIgnoreCase(code)) {
                 UseCases tailoredUseCases = useCasesDAO.getTailoredUseCasesForUser(userId);
                 logger.info("Recieved user use cases : " + userUseCases.getUserUseCases().size());
-                for (UseCaseDetail useCaseDetail : tailoredUseCases.getUseCases()) {
+                for (UseCase useCaseDetail : tailoredUseCases.getUseCases()) {
                     existingTailoredIds.add(useCaseDetail.getId());
                 }
 
@@ -204,5 +205,13 @@ public class UseCaseServiceImpl implements UseCaseService {
         emailBody = emailBody.replaceAll(userIdPlaceHolder, userId);
         String emailSucess = emailUtilDAO.sendEmailToCSC(subject, emailBody);
         return emailSucess;
+    }
+
+    @Override
+    public UseCaseDetail getUseCaseDetails(int useCaseId) {
+        UseCaseDetail useCaseDetail = new UseCaseDetail();
+        UseCaseBenefits benefits = useCasesDAO.getUseCaseBenefits(useCaseId);
+        useCaseDetail.setBenefits(benefits.getBenefits());
+        return useCaseDetail;
     }
 }

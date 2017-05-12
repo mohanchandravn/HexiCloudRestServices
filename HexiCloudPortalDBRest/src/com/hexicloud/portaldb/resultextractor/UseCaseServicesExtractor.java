@@ -1,7 +1,7 @@
 package com.hexicloud.portaldb.resultextractor;
 
 import com.hexicloud.portaldb.bean.Service;
-import com.hexicloud.portaldb.bean.UseCaseDetail;
+import com.hexicloud.portaldb.bean.UseCase;
 import com.hexicloud.portaldb.bean.UseCases;
 
 import java.sql.ResultSet;
@@ -24,12 +24,12 @@ public class UseCaseServicesExtractor implements ResultSetExtractor<UseCases> {
     @Override
     public UseCases extractData(ResultSet resultSet) throws SQLException, DataAccessException {
         UseCases useCases = new UseCases();
-        Map<Integer, UseCaseDetail> useCaseDetailMap = new HashMap<Integer, UseCaseDetail>();
+        Map<Integer, UseCase> useCaseDetailMap = new HashMap<Integer, UseCase>();
         while (resultSet.next()) {
             Integer id = Integer.valueOf(resultSet.getInt("USECASE_ID"));
-            UseCaseDetail useCaseDetail = useCaseDetailMap.get(id);
+            UseCase useCaseDetail = useCaseDetailMap.get(id);
             if (useCaseDetail == null) {
-                useCaseDetail = new UseCaseDetail();
+                useCaseDetail = new UseCase();
                 useCaseDetail.setId(resultSet.getInt("USECASE_ID"));
                 useCaseDetail.setTitle(resultSet.getString("TITLE"));
                 useCaseDetail.setShortDesc(resultSet.getString("SHORT_DESC"));
@@ -49,7 +49,7 @@ public class UseCaseServicesExtractor implements ResultSetExtractor<UseCases> {
                 servicesList.add(service);
             }
         }
-        useCases.setUseCases(new ArrayList<UseCaseDetail>(useCaseDetailMap.values()));
+        useCases.setUseCases(new ArrayList<UseCase>(useCaseDetailMap.values()));
         return useCases;
     }
 }
