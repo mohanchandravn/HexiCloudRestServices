@@ -4,6 +4,7 @@ import com.hexicloud.portaldb.bean.guidedpath.GuidedPathDetailResponse;
 import com.hexicloud.portaldb.bean.guidedpath.GuidedPaths;
 import com.hexicloud.portaldb.bean.guidedpath.UpdateLearningPathRequest;
 import com.hexicloud.portaldb.dao.GuidedPathsDAO;
+import com.hexicloud.portaldb.resultextractor.GuidedPathDetailResultExtractor;
 import com.hexicloud.portaldb.resultextractor.GuidedPathsResultExtractor;
 import com.hexicloud.portaldb.util.SqlQueryConstantsUtil;
 
@@ -32,7 +33,7 @@ public class GuidedPathsDAOImpl implements GuidedPathsDAO {
         logger.info(" Begining of getCoreGuidedPaths() ");
         @SuppressWarnings({ "unchecked", "rawtypes" })
         GuidedPaths guidedPaths =
-            (GuidedPaths) jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_CORE_GUIDED_PATHS, new Object[] { userId},
+            (GuidedPaths) jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_CORE_GUIDED_PATHS, new Object[] { userId },
                                              new GuidedPathsResultExtractor());
         logger.info(" End of getCoreGuidedPaths() ");
         return guidedPaths;
@@ -43,16 +44,21 @@ public class GuidedPathsDAOImpl implements GuidedPathsDAO {
         logger.info(" Begining of getComplementaryGuidedPaths() ");
         @SuppressWarnings({ "unchecked", "rawtypes" })
         GuidedPaths guidedPaths =
-            (GuidedPaths) jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_COMPLE_GUIDED_PATHS, new Object[] { useCaseId, userId},
-                                             new GuidedPathsResultExtractor());
+            (GuidedPaths) jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_COMPLE_GUIDED_PATHS,
+                                             new Object[] { useCaseId, userId }, new GuidedPathsResultExtractor());
         logger.info(" End of getComplementaryGuidedPaths() ");
         return guidedPaths;
     }
 
     @Override
     public GuidedPathDetailResponse getGuidedPathDetail(Integer pathId, String userId) {
-        // TODO Implement this method
-        return null;
+        logger.info(" Begining of getGuidedPathDetail() ");
+        GuidedPathDetailResponse response =
+            (GuidedPathDetailResponse) jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_GUIDED_PATH_DETAIL,
+                                                          new Object[] { pathId, userId },
+                                                          new GuidedPathDetailResultExtractor());
+        logger.info(" End of getGuidedPathDetail() ");
+        return response;
     }
 
     @Override

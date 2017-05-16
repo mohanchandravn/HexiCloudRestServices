@@ -1,5 +1,6 @@
 package com.hexicloud.portaldb.controller;
 
+import com.hexicloud.portaldb.bean.guidedpath.GuidedPathDetailResponse;
 import com.hexicloud.portaldb.bean.guidedpath.GuidedPaths;
 import com.hexicloud.portaldb.service.GuidedPathsService;
 
@@ -35,14 +36,15 @@ public class GuidedPathsController {
         logger.info(" End of getCoreGuidedPaths()  in controller");
         return new ResponseEntity<GuidedPaths>(coreGuidedPaths, HttpStatus.OK);
     }
-    
+
     @RequestMapping(value = "/services/rest/getCompleGuidedPaths", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<GuidedPaths> getCompleGuidedPaths(@RequestParam(value = "useCaseId",
-                                                                                      required = true)
-                                                                        Integer useCaseId, Authentication authentication) throws Exception {
+    public ResponseEntity<GuidedPaths> getCompleGuidedPaths(@RequestParam(value = "useCaseId", required = true)
+                                                            Integer useCaseId,
+                                                            Authentication authentication) throws Exception {
         logger.info(" Begining of getCompleGuidedPaths() in controller");
-        GuidedPaths coreGuidedPaths = guidedPathsService.getComplementaryGuidedPaths(useCaseId, authentication.getName());
+        GuidedPaths coreGuidedPaths =
+            guidedPathsService.getComplementaryGuidedPaths(useCaseId, authentication.getName());
         if (coreGuidedPaths.getGuidedPaths().isEmpty()) {
 
             logger.info("getCompleGuidedPaths not found");
@@ -50,5 +52,20 @@ public class GuidedPathsController {
         }
         logger.info(" End of getCompleGuidedPaths()  in controller");
         return new ResponseEntity<GuidedPaths>(coreGuidedPaths, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/services/rest/getGuidedPathDetail", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<GuidedPathDetailResponse> getGuidedPathDetail(@RequestParam(value = "pathId", required = true)
+                                                                        Integer pathId,
+                                                                        Authentication authentication) throws Exception {
+        logger.info(" Begining of getGuidedPathDetail() in controller");
+        GuidedPathDetailResponse response = guidedPathsService.getGuidedPathDetail(pathId, authentication.getName());
+        if (response.getGuidedPathDetail() == null) {
+            logger.info("GuidedPath Detail not found");
+            return new ResponseEntity<GuidedPathDetailResponse>(HttpStatus.NO_CONTENT);
+        }
+        logger.info(" End of getGuidedPathDetail()  in controller");
+        return new ResponseEntity<GuidedPathDetailResponse>(response, HttpStatus.OK);
     }
 }

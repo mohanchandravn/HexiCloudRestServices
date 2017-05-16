@@ -2,6 +2,8 @@ package com.hexicloud.portaldb.bean.guidedpath;
 
 import java.io.Serializable;
 
+import java.sql.Timestamp;
+
 public class SectionDoc implements Serializable {
     @SuppressWarnings("compatibility:-6259651126280400017")
     private static final long serialVersionUID = 8201772427772696531L;
@@ -9,7 +11,7 @@ public class SectionDoc implements Serializable {
     public SectionDoc() {
         super();
     }
-
+   
     private Integer sectionDocId;
     private String docName;
     private String docType;
@@ -17,7 +19,9 @@ public class SectionDoc implements Serializable {
     private String publicLink;
     private String docDescription;
     private Integer docOrder;
-    private CurrentDoc currentDoc;
+    private String status;
+    private Timestamp lastUpdatedDate;
+    private Integer pageNumber;
 
     public Integer getSectionDocId() {
         return sectionDocId;
@@ -75,11 +79,27 @@ public class SectionDoc implements Serializable {
         this.docOrder = docOrder;
     }
 
-    public CurrentDoc getCurrentDoc() {
-        return currentDoc;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public void setCurrentDoc(CurrentDoc currentDoc) {
-        this.currentDoc = currentDoc;
+    public String getStatus() {
+        return status;
+    }
+
+    public void setLastUpdatedDate(Timestamp lastUpdatedDate) {
+        this.lastUpdatedDate = lastUpdatedDate;
+    }
+
+    public Timestamp getLastUpdatedDate() {
+        return lastUpdatedDate;
+    }
+
+    public void setPageNumber(Integer pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public Integer getPageNumber() {
+        return pageNumber;
     }
 }

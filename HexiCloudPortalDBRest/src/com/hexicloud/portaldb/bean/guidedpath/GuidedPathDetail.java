@@ -1,7 +1,5 @@
 package com.hexicloud.portaldb.bean.guidedpath;
 
-import com.hexicloud.portaldb.bean.Service;
-
 import java.io.Serializable;
 
 import java.util.List;
@@ -19,10 +17,9 @@ public class GuidedPathDetail implements Serializable {
     private String shortDesc;
     private String image;
     private String imageLink;
-    private Boolean isRecommmended;
-    private Service service;
-    private Integer useCaseId;
-    private Integer progress;
+    private double progress;
+    private Integer totalChapters;
+    private Integer completedChapters;
     private List<Section> sections = null;
 
     public Integer getPathId() {
@@ -65,35 +62,13 @@ public class GuidedPathDetail implements Serializable {
         this.imageLink = imageLink;
     }
 
-    public Boolean getIsRecommmended() {
-        return isRecommmended;
-    }
 
-    public void setIsRecommmended(Boolean isRecommmended) {
-        this.isRecommmended = isRecommmended;
-    }
 
-    public Service getService() {
-        return service;
-    }
-
-    public void setService(Service service) {
-        this.service = service;
-    }
-
-    public Integer getUseCaseId() {
-        return useCaseId;
-    }
-
-    public void setUseCaseId(Integer useCaseId) {
-        this.useCaseId = useCaseId;
-    }
-
-    public Integer getProgress() {
+     public double getProgress() {
         return progress;
     }
 
-    public void setProgress(Integer progress) {
+    public void setProgress(double progress) {
         this.progress = progress;
     }
 
@@ -103,5 +78,21 @@ public class GuidedPathDetail implements Serializable {
 
     public void setSections(List<Section> sections) {
         this.sections = sections;
+    }
+
+    public void setTotalChapters(Integer totalChapters) {
+        this.totalChapters = totalChapters;
+    }
+
+    public Integer getTotalChapters() {
+        return totalChapters;
+    }
+
+    public void setCompletedChapters(Integer completedChapters) {
+        this.completedChapters = completedChapters;
+    }
+
+    public Integer getCompletedChapters() {
+        return completedChapters;
     }
 }
