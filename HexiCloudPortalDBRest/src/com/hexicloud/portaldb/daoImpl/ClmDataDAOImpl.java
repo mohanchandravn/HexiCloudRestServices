@@ -8,6 +8,7 @@ import com.hexicloud.portaldb.dao.ClmDataDAO;
 import com.hexicloud.portaldb.resultextractor.ClmDataResultExtractor;
 import com.hexicloud.portaldb.util.SqlQueryConstantsUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -50,13 +51,21 @@ public class ClmDataDAOImpl implements ClmDataDAO {
     @Override
     public List<String> getServicesForUser(String userId) {
         logger.info(" Start of getServicesForUser() ");
+        List<String> trimmedServiceList = new ArrayList<String>();
+        String trimmedService = null;
         @SuppressWarnings({ "unchecked", "rawtypes" })
         List<String> servicesList =
             jdbcTemplate.queryForList(SqlQueryConstantsUtil.SQL_GET_SERVICES_FOR_USER, new Object[] { userId },
                                       String.class);
+        for (String service : servicesList) {
+            trimmedService = service.toUpperCase();
+            trimmedService = trimmedService.replaceAll(" ", "");
+            trimmedService = trimmedService.replace("-IAAS", "");
+            trimmedServiceList.add(trimmedService);
+        }
 
         logger.info("getServicesForUser size ===========> " + servicesList != null ? servicesList.size() : null);
         logger.info(" End of getServicesForUser() ");
-        return servicesList;
+        return trimmedServiceList;
     }
 }

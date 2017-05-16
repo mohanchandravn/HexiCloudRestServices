@@ -76,17 +76,17 @@ public class UseCaseServiceImpl implements UseCaseService {
     public UseCases getUseCasesValidForUser(String userId) {
         logger.info("******* Starting of getAllUseCases() of  service *****************");
 
-        List<String> trimmedServiceList = new ArrayList<String>();
+//        List<String> trimmedServiceList = new ArrayList<String>();
         List<String> userServicesList = clmDataDAO.getServicesForUser(userId);
-        String trimmedService = null;
-        for (String service : userServicesList) {
-            trimmedService = service.toUpperCase();
-            trimmedService = trimmedService.replaceAll(" ", "");
-            trimmedService = trimmedService.replace("-IAAS", "");
-            trimmedServiceList.add(trimmedService);
-        }
-        if (!trimmedServiceList.isEmpty()) {
-            return useCasesDAO.getUseCasesApplicableForServices(trimmedServiceList);
+//        String trimmedService = null;
+//        for (String service : userServicesList) {
+//            trimmedService = service.toUpperCase();
+//            trimmedService = trimmedService.replaceAll(" ", "");
+//            trimmedService = trimmedService.replace("-IAAS", "");
+//            trimmedServiceList.add(trimmedService);
+//        }
+        if (!userServicesList.isEmpty()) {
+            return useCasesDAO.getUseCasesApplicableForServices(userServicesList);
         }
         logger.info("******* Ending of getAllUseCases() of  service *****************");
         return null;

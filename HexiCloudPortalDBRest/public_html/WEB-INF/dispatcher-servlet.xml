@@ -66,6 +66,9 @@
     <bean id="emailUtilDAO" class="com.hexicloud.portaldb.daoImpl.EmailUtilDAOImpl">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+    <bean id="guidedPathsDAO" class="com.hexicloud.portaldb.daoImpl.GuidedPathsDAOImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <!-- max upload size in bytes -->
         <property name="maxUploadSize" value="1073741824"/>
