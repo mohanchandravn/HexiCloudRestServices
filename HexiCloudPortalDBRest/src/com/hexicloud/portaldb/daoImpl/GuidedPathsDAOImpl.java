@@ -40,8 +40,13 @@ public class GuidedPathsDAOImpl implements GuidedPathsDAO {
 
     @Override
     public GuidedPaths getComplementaryGuidedPaths(Integer useCaseId, String userId) {
-        // TODO Implement this method
-        return null;
+        logger.info(" Begining of getComplementaryGuidedPaths() ");
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        GuidedPaths guidedPaths =
+            (GuidedPaths) jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_COMPLE_GUIDED_PATHS, new Object[] { useCaseId, userId},
+                                             new GuidedPathsResultExtractor());
+        logger.info(" End of getComplementaryGuidedPaths() ");
+        return guidedPaths;
     }
 
     @Override

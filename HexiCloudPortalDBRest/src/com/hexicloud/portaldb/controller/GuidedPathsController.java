@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,10 +29,26 @@ public class GuidedPathsController {
         GuidedPaths coreGuidedPaths = guidedPathsService.getCoreGuidedPaths(authentication.getName());
         if (coreGuidedPaths.getGuidedPaths().isEmpty()) {
 
-            logger.info("Core Guided paths not fount");
+            logger.info("Core Guided paths not found");
             return new ResponseEntity<GuidedPaths>(HttpStatus.NO_CONTENT);
         }
         logger.info(" End of getCoreGuidedPaths()  in controller");
+        return new ResponseEntity<GuidedPaths>(coreGuidedPaths, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/services/rest/getCompleGuidedPaths", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<GuidedPaths> getCompleGuidedPaths(@RequestParam(value = "useCaseId",
+                                                                                      required = true)
+                                                                        Integer useCaseId, Authentication authentication) throws Exception {
+        logger.info(" Begining of getCompleGuidedPaths() in controller");
+        GuidedPaths coreGuidedPaths = guidedPathsService.getComplementaryGuidedPaths(useCaseId, authentication.getName());
+        if (coreGuidedPaths.getGuidedPaths().isEmpty()) {
+
+            logger.info("getCompleGuidedPaths not found");
+            return new ResponseEntity<GuidedPaths>(HttpStatus.NO_CONTENT);
+        }
+        logger.info(" End of getCompleGuidedPaths()  in controller");
         return new ResponseEntity<GuidedPaths>(coreGuidedPaths, HttpStatus.OK);
     }
 }

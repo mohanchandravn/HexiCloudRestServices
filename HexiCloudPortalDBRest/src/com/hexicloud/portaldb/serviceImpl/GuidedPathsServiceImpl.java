@@ -48,8 +48,25 @@ public class GuidedPathsServiceImpl implements GuidedPathsService {
     }
 
     @Override
-    public GuidedPaths getComplementaryGuidedPaths(Integer usecaseId) {
-        // TODO Implement this method
-        return null;
+    public GuidedPaths getComplementaryGuidedPaths(Integer usecaseId, String userId) {
+        logger.info(" Begining of getComplementaryGuidedPaths() ");
+
+        GuidedPaths guidedPaths = guidedPathsDAO.getComplementaryGuidedPaths(usecaseId, userId);
+//        List<String> servicesForUser = clmDataDAO.getServicesForUser(userId);
+        if (!guidedPaths.getGuidedPaths().isEmpty()) {
+            for (GuidedPath guidedPath : guidedPaths.getGuidedPaths()) {
+//                if (servicesForUser.contains(guidedPath.getService().getServiceId())) {
+//                    guidedPath.setIsRecommmended(true);
+//                }
+                if (null != guidedPath.getCompletedChapters() && null != guidedPath.getTotalChapters()) {
+                    guidedPath.setProgress(guidedPath.getCompletedChapters().doubleValue()/guidedPath.getTotalChapters().doubleValue());
+                } else {
+                    guidedPath.setCompletedChapters(guidedPath.getCompletedChapters() !=null ? guidedPath.getCompletedChapters() : 0);
+                    guidedPath.setProgress(0);
+                }
+            }
+        }
+        logger.info(" End of getComplementaryGuidedPaths() ");
+        return guidedPaths;
     }
 }
