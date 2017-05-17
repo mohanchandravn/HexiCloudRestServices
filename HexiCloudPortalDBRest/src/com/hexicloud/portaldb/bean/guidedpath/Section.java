@@ -16,6 +16,9 @@ public class Section implements Serializable {
     private String sectionTitle;
     private String description;
     private Integer sectionOrder;
+    private boolean isCompleted;
+    private Integer totalSubSections;
+    private Integer completedSubSections;
     private List<SectionDoc> sectionDocs = null;
 
     public Integer getSectionID() {
@@ -56,5 +59,29 @@ public class Section implements Serializable {
 
     public void setSectionDocs(List<SectionDoc> sectionDocs) {
         this.sectionDocs = sectionDocs;
+    }
+
+    public void setIsCompleted(boolean isCompleted) {
+        this.isCompleted = isCompleted;
+    }
+
+    public boolean isIsCompleted() {
+        return isCompleted;
+    }
+
+    public void setTotalSubSections(Integer totalSubSections) {
+        this.totalSubSections = totalSubSections;
+    }
+
+    public Integer getTotalSubSections() {
+        return totalSubSections;
+    }
+
+    public void setCompletedSubSections(Integer completedSubSections) {
+        this.completedSubSections = completedSubSections;
+    }
+
+    public Integer getCompletedSubSections() {
+        return completedSubSections;
     }
 }
