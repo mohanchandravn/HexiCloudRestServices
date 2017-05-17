@@ -6,6 +6,7 @@ import com.hexicloud.portaldb.bean.guidedpath.GuidedPathDetailResponse;
 import com.hexicloud.portaldb.bean.guidedpath.GuidedPaths;
 import com.hexicloud.portaldb.bean.guidedpath.Section;
 import com.hexicloud.portaldb.bean.guidedpath.SectionDoc;
+import com.hexicloud.portaldb.bean.guidedpath.UpdateLearningPathRequest;
 import com.hexicloud.portaldb.dao.ClmDataDAO;
 import com.hexicloud.portaldb.dao.GuidedPathsDAO;
 import com.hexicloud.portaldb.service.GuidedPathsService;
@@ -103,5 +104,13 @@ public class GuidedPathsServiceImpl implements GuidedPathsService {
         }
         logger.info(" End of getGuidedPathDetail() ");
         return response;
+    }
+
+    @Override
+    public void changeLearningHistory(UpdateLearningPathRequest learningPathRequest, String userId) {
+        logger.info(" Begining of changeLearningHistory() ");
+        guidedPathsDAO.insertUpdateLearningHistory(learningPathRequest, userId);
+        logger.info(" End of changeLearningHistory() ");
+
     }
 }

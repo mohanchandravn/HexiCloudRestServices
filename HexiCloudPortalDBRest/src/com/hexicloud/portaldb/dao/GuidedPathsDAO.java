@@ -12,5 +12,5 @@ public interface GuidedPathsDAO {
 
     public GuidedPathDetailResponse getGuidedPathDetail(Integer pathId, String userId);
 
-    public void updateLearningHistory(UpdateLearningPathRequest learningPathRequest);
+    public void insertUpdateLearningHistory(UpdateLearningPathRequest learningPathRequest, String userId);
 }

@@ -2,6 +2,7 @@ package com.hexicloud.portaldb.controller;
 
 import com.hexicloud.portaldb.bean.guidedpath.GuidedPathDetailResponse;
 import com.hexicloud.portaldb.bean.guidedpath.GuidedPaths;
+import com.hexicloud.portaldb.bean.guidedpath.UpdateLearningPathRequest;
 import com.hexicloud.portaldb.service.GuidedPathsService;
 
 import org.apache.log4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -67,5 +69,14 @@ public class GuidedPathsController {
         }
         logger.info(" End of getGuidedPathDetail()  in controller");
         return new ResponseEntity<GuidedPathDetailResponse>(response, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/services/rest/updateLearningHistory", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> updateLearningHistory(@RequestBody UpdateLearningPathRequest learningPathRequest, Authentication authentication) throws Exception {
+        logger.info(" ******* Start of updateLearningHistory() in controller ***********");
+        guidedPathsService.changeLearningHistory(learningPathRequest, authentication.getName());
+        logger.info("******** End of updateLearningHistory() in controller ***********");
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 }
