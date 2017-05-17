@@ -47,6 +47,11 @@ public class GuidedPathsResultExtractor implements ResultSetExtractor<GuidedPath
                 guidedPath.setImage(resultSet.getString("IMAGE"));
                 guidedPath.setImageLink(resultSet.getString("IMAGE_LINK"));
                 try {
+                    guidedPath.setUseCaseId(resultSet.getInt("USECASE_ID"));
+                } catch (SQLException sqle) {
+                    logger.warn("Expected error as Core guided paths are not related to useCase ");
+                }
+                try {
                     if (!StringUtils.isEmpty(resultSet.getString("SERVICE_ID"))) {
                         service = new Service();
                         service.setServiceId(resultSet.getString("SERVICE_ID"));
@@ -74,7 +79,7 @@ public class GuidedPathsResultExtractor implements ResultSetExtractor<GuidedPath
                 }
                 documentCompletion = resultSet.getString("STATUS");
                 if (!StringUtils.isEmpty(documentCompletion) && "C".equalsIgnoreCase(documentCompletion)) {
-                    guidedPath.setCompletedChapters(guidedPath.getCompletedChapters() + 1);
+                    guidedPath.setCompletedChapters(null == guidedPath.getCompletedChapters() ? 1 : guidedPath.getCompletedChapters() + 1);
                 } else if (!StringUtils.isEmpty(documentCompletion) && "I".equalsIgnoreCase(documentCompletion)) {
                     currentDoc = guidedPath.getCurrentDoc();
                     if (null != currentDoc) {
@@ -97,6 +102,7 @@ public class GuidedPathsResultExtractor implements ResultSetExtractor<GuidedPath
         curDoc.setSectionId(rs.getInt("SECTION_ID"));
         curDoc.setSectionDocId(rs.getInt("SECTION_DOC_ID"));
         curDoc.setDocName(rs.getString("DOC_NAME"));
+        curDoc.setStatus(rs.getString("STATUS"));
         curDoc.setDocDescription(rs.getString("DOC_DESCRIPTION"));
         curDoc.setDocType(rs.getString("DOC_TYPE"));
         curDoc.setPublicLink(rs.getString("PUBLIC_LINK"));
