@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +72,10 @@ public class GuidedPathDetailResultExtractor implements ResultSetExtractor<Guide
             }
         }
         gpDetail.setSections(new ArrayList<Section>(sectionMap.values()));
+        gpDetail.getSections().sort(Comparator.comparing(Section::getSectionOrder));
+        for (Section sortedSection : gpDetail.getSections()) {
+            sortedSection.getSectionDocs().sort(Comparator.comparing(SectionDoc::getDocOrder));
+        }
         response.setGuidedPathDetail(gpDetail);
         return response;
     }
