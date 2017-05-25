@@ -29,6 +29,6 @@ public interface UseCaseService {
     
     public UseCaseDetail getUseCaseDetails(int useCaseId);
     
-    public UseCases getAllUseCasesGuidedPathProgress(String userId);
+    public UseCases getGuidedPathProgressForAllUseCases(String userId);
 
 }
