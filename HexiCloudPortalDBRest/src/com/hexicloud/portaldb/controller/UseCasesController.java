@@ -151,16 +151,16 @@ public class UseCasesController {
         return new ResponseEntity<UseCaseDetail>(caseDetail, HttpStatus.OK);
     }
     
-    @RequestMapping(value = "/services/rest/getGuidedPathProgressForAllUseCases", method = RequestMethod.GET)
+    @RequestMapping(value = "/services/rest/getGuidedPathsProgressForAllUseCases", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<UseCases> getGuidedPathProgressForAllUseCases(Authentication authentication) throws Exception {
-        logger.info("******* Start of getGuidedPathProgressForAllUseCases() in controller ***********");
-        UseCases useCases = useCaseService.getGuidedPathProgressForAllUseCases(authentication.getName());
+    public ResponseEntity<UseCases> getGuidedPathsProgressForAllUseCases(Authentication authentication) throws Exception {
+        logger.info("******* Start of getGuidedPathsProgressForAllUseCases() in controller ***********");
+        UseCases useCases = useCaseService.getGuidedPathsProgressForAllUseCases(authentication.getName());
         if (useCases.getUseCases().isEmpty()) {
             logger.info("No Use Cases fount");
             return new ResponseEntity<UseCases>(HttpStatus.NO_CONTENT);
         }
-        logger.info("******** End of getGuidedPathProgressForAllUseCases() in controller ***********");
+        logger.info("******** End of getGuidedPathsProgressForAllUseCases() in controller ***********");
         return new ResponseEntity<UseCases>(useCases, HttpStatus.OK);
     }
     

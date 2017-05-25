@@ -223,8 +223,8 @@ public class UseCaseServiceImpl implements UseCaseService {
     }
     
     @Override
-    public UseCases getGuidedPathProgressForAllUseCases(String userId) {
-        logger.info("*******  getGuidedPathProgressForAllUseCases() of  service *****************");
+    public UseCases getGuidedPathsProgressForAllUseCases(String userId) {
+        logger.info("*******  getGuidedPathsProgressForAllUseCases() of  service *****************");
 
         UseCases useCases = new UseCases();
         List<UseCase> useCaseList = new ArrayList<UseCase>();
