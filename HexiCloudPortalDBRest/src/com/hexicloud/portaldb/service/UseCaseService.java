@@ -8,6 +8,7 @@ import com.hexicloud.portaldb.bean.UseCases;
 import com.hexicloud.portaldb.bean.UserUseCases;
 
 public interface UseCaseService {
+    
     public UseCases getAllUseCases();
 
     public UseCases getUseCasesValidForUser(String userId);
@@ -27,5 +28,7 @@ public interface UseCaseService {
     public String emailCSCUseCaseSelectionIgnored(String userId, String firstName);
     
     public UseCaseDetail getUseCaseDetails(int useCaseId);
+    
+    public UseCases getAllUseCasesGuidedPathProgress(String userId);
 
 }

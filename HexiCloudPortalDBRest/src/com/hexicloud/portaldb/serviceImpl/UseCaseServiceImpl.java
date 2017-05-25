@@ -10,11 +10,16 @@ import com.hexicloud.portaldb.bean.UseCases;
 import com.hexicloud.portaldb.bean.UserPhaseCompletion;
 import com.hexicloud.portaldb.bean.UserUseCase;
 import com.hexicloud.portaldb.bean.UserUseCases;
+import com.hexicloud.portaldb.bean.guidedpath.GuidedPath;
+import com.hexicloud.portaldb.bean.guidedpath.GuidedPaths;
+import com.hexicloud.portaldb.bean.guidedpath.PathProgressDetail;
 import com.hexicloud.portaldb.dao.ClmDataDAO;
 import com.hexicloud.portaldb.dao.EmailUtilDAO;
+import com.hexicloud.portaldb.dao.GuidedPathsDAO;
 import com.hexicloud.portaldb.dao.RuleConfigurationDAO;
 import com.hexicloud.portaldb.dao.UseCasesDAO;
 import com.hexicloud.portaldb.dao.UserPhaseCompletionDAO;
+import com.hexicloud.portaldb.service.GuidedPathsService;
 import com.hexicloud.portaldb.service.UseCaseService;
 
 import java.util.ArrayList;
@@ -47,6 +52,9 @@ public class UseCaseServiceImpl implements UseCaseService {
 
     @Autowired
     RuleConfigurationDAO ruleConfigurationDAO;
+    
+    @Autowired
+    GuidedPathsService guidedPathsService;
 
     @Value("${user.phase.completion.usecase.capture}")
     private String USER_PHASE_COMPLETION_USECASE_CAPTURE;
@@ -182,7 +190,6 @@ public class UseCaseServiceImpl implements UseCaseService {
     public UseCaseBenefits getOtherUseCaseBenefits() {
         logger.info("*******  getOtherUseCaseBenefits() of  service *****************");
         return useCasesDAO.getUseCaseBenefits(10);
-
     }
 
     @Override
@@ -214,4 +221,87 @@ public class UseCaseServiceImpl implements UseCaseService {
         useCaseDetail.setBenefits(benefits.getBenefits());
         return useCaseDetail;
     }
+    
+    @Override
+    public UseCases getAllUseCasesGuidedPathProgress(String userId) {
+        logger.info("*******  getAllUseCasesGuidedPathProgress() of  service *****************");
+
+        UseCases useCases = new UseCases();
+        List<UseCase> useCaseList = new ArrayList<UseCase>();
+        UseCase useCase = null;
+        PathProgressDetail pathProgressDetail = null;
+        List<PathProgressDetail> pathProgressDetails = null;
+        
+        UseCases tailoredUseCases = useCasesDAO.getTailoredUseCasesForUser(userId);
+        for (UseCase eachUseCase : tailoredUseCases.getUseCases()) {
+            useCase = new UseCase();
+            useCase.setId(eachUseCase.getId());
+            useCase.setTitle(eachUseCase.getTitle());
+            
+            pathProgressDetails = new ArrayList<PathProgressDetail>();
+            
+            // Core Technical Knowledge
+            pathProgressDetail = new PathProgressDetail();
+            pathProgressDetail.setCode("core");
+            pathProgressDetail.setLabel("Core Technical Knowledge");
+            double coreTechKnowledgeProgress = getCoreTechKnowledgeProgress(userId);
+            pathProgressDetail.setProgress(coreTechKnowledgeProgress);
+            pathProgressDetails.add(pathProgressDetail);
+            
+            // Complementary Knowledge
+            pathProgressDetail = new PathProgressDetail();
+            pathProgressDetail.setCode("complementary");
+            pathProgressDetail.setLabel("Complementary Knowledge");  
+            double complementaryKnowledgeProgress = getComplementaryKnowledgeProgress(eachUseCase.getId(), userId);
+            pathProgressDetail.setProgress(complementaryKnowledgeProgress);
+            pathProgressDetails.add(pathProgressDetail);
+            
+            // TCO Calculator
+            pathProgressDetail = new PathProgressDetail();
+            pathProgressDetail.setCode("tco");
+            pathProgressDetail.setLabel("TCO Calculator");
+            double tcoCalculatorProgress = 0;
+            pathProgressDetail.setProgress(tcoCalculatorProgress);
+            pathProgressDetails.add(pathProgressDetail);
+            
+            // Success Stories
+            pathProgressDetail = new PathProgressDetail();
+            pathProgressDetail.setCode("success");
+            pathProgressDetail.setLabel("Success Stories");
+            double successStoriesProgress = 0;
+            pathProgressDetail.setProgress(successStoriesProgress);
+            pathProgressDetails.add(pathProgressDetail);
+            
+            double overAllProgress = (coreTechKnowledgeProgress + complementaryKnowledgeProgress + tcoCalculatorProgress + successStoriesProgress) / 4;
+            useCase.setProgress(overAllProgress);
+            useCase.setPathProgressDetails(pathProgressDetails);
+            useCaseList.add(useCase);
+        }
+        
+        useCases.setUseCases(useCaseList);            
+        return useCases;        
+    }
+    
+    private double getCoreTechKnowledgeProgress(String userId) {
+        double coreTechKnowledgeProgress = 0;
+        GuidedPaths coreGuidedPaths = guidedPathsService.getCoreGuidedPaths(userId);
+        for (GuidedPath eachGuidedPath : coreGuidedPaths.getGuidedPaths()) {
+            coreTechKnowledgeProgress += eachGuidedPath.getProgress();
+        }        
+        return coreTechKnowledgeProgress / (double) coreGuidedPaths.getGuidedPaths().size();                                                         
+    }
+    
+    private double getComplementaryKnowledgeProgress(int useCaseId, String userId) {
+        double complementaryKnowledgeProgress = 0;
+        int count = 0;
+        GuidedPaths complementaryGuidedPaths = guidedPathsService.getComplementaryGuidedPaths(useCaseId, userId);
+        for (GuidedPath eachGuidedPath : complementaryGuidedPaths.getGuidedPaths()) {
+            if (eachGuidedPath.getUseCaseId() == useCaseId) {
+                complementaryKnowledgeProgress += eachGuidedPath.getProgress();
+                count++;
+            }
+        }
+        return (count == 0) ? 0 : (complementaryKnowledgeProgress / (double) count);                                                         
+    }
+    
 }

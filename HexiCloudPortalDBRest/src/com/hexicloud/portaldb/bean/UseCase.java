@@ -1,5 +1,7 @@
 package com.hexicloud.portaldb.bean;
 
+import com.hexicloud.portaldb.bean.guidedpath.PathProgressDetail;
+
 import java.io.Serializable;
 
 import java.util.List;
@@ -19,6 +21,8 @@ public class UseCase implements Serializable {
     private String image;
     private List<Service> services = null;
     private String benefits;
+    private Double progress;
+    private List<PathProgressDetail> pathProgressDetails = null;
 
     public Integer getId() {
         return id;
@@ -74,6 +78,22 @@ public class UseCase implements Serializable {
 
     public void setBenefits(String benefits) {
         this.benefits = benefits;
+    }
+
+    public void setProgress(Double progress) {
+        this.progress = progress;
+    }
+
+    public Double getProgress() {
+        return progress;
+    }
+
+    public void setPathProgressDetails(List<PathProgressDetail> pathProgressDetails) {
+        this.pathProgressDetails = pathProgressDetails;
+    }
+
+    public List<PathProgressDetail> getPathProgressDetails() {
+        return pathProgressDetails;
     }
 
 }
