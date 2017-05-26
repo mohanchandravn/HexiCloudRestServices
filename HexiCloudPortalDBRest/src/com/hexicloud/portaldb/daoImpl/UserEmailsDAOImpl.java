@@ -62,7 +62,7 @@ public class UserEmailsDAOImpl implements UserEmailsDAO {
         StringBuilder whereClause = new StringBuilder();
         String query = SqlQueryConstantsUtil.SQL_FIND_USER_EMAILS;
         if (null != userId) {
-            whereClause.append(" WHERE USER_ID = '" + userId + "'");
+            whereClause.append(" WHERE USER_ID LIKE '%" + userId + "%'");
         }
         if (null != isResolved && isResolved != "A") {
             if (whereClause.length() > 0) {

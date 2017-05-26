@@ -160,24 +160,13 @@ public class UsersDAOImpl implements UsersDAO {
         StringBuilder whereClause = new StringBuilder();
         whereClause.append(" WHERE AUTHORITY = 'ROLE_USER'");
         if (!(StringUtils.isEmpty(userId))) {
-            //            whereClause.append(" WHERE USER_ID = '" + userId + "'");
-            whereClause.append(" AND USER_ID = '" + userId + "'");
+            whereClause.append(" AND USER_ID like '%" + userId + "%'");
         }
         if (!(StringUtils.isEmpty(emailId))) {
-            //            if (whereClause.length() > 0) {
-            whereClause.append(" AND EMAIL = '" + emailId + "'");
-            //
-            //            } else {
-            //                whereClause.append(" WHERE EMAIL = '"+ emailId + "'");
-            //            }
+            whereClause.append(" AND EMAIL like '%" + emailId + "%'");
         }
         if (!(StringUtils.isEmpty(customerId))) {
-            //            if (whereClause.length() > 0) {
             whereClause.append(" AND REGISTRY_ID = '" + customerId + "'");
-            //
-            //            } else {
-            //                whereClause.append(" WHERE REGISTRY_ID = '" +customerId + "'" );
-            //            }
         }
 
         if (whereClause.length() > 0) {
