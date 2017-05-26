@@ -14,11 +14,14 @@ import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -29,6 +32,8 @@ public class UsersDAOImpl implements UsersDAO {
     private DataSource dataSource;
     private SimpleJdbcCall sendWelcomeEmail;
 
+    @Value("${auth.adminType}")
+    private String ADMIN_TYPE;
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
         jdbcTemplate = new JdbcTemplate(this.dataSource);
@@ -156,9 +161,17 @@ public class UsersDAOImpl implements UsersDAO {
     @Override
     public List<User> searchUserDetails(String userId, String emailId, String customerId) {
         logger.info("Entering method searchUserDetails");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AuthUser user = (AuthUser) authentication.getPrincipal();
         String query = SqlQueryConstantsUtil.SQL_USER_QUERY;
+          
         StringBuilder whereClause = new StringBuilder();
-        whereClause.append(" WHERE AUTHORITY = 'ROLE_USER'");
+        if(user.getAuthority().replace("ROLE_", "").equalsIgnoreCase(ADMIN_TYPE)) {
+            whereClause.append(" WHERE AUTHORITY IN ('ROLE_USER', 'ROLE_CSC')"); 
+        } else {
+            whereClause.append(" WHERE AUTHORITY = 'ROLE_USER'");
+        }
+        
         if (!(StringUtils.isEmpty(userId))) {
             whereClause.append(" AND USER_ID like '%" + userId + "%'");
         }
