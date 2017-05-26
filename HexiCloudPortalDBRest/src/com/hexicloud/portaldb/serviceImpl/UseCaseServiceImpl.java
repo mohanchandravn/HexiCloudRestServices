@@ -229,8 +229,29 @@ public class UseCaseServiceImpl implements UseCaseService {
         UseCases useCases = new UseCases();
         List<UseCase> useCaseList = new ArrayList<UseCase>();
         UseCase useCase = null;
-        PathProgressDetail pathProgressDetail = null;
+        PathProgressDetail complKnowledgePathProgressDetail = null;
         List<PathProgressDetail> pathProgressDetails = null;
+        
+        // Core Technical Knowledge
+        PathProgressDetail coreTechKnowledgePathProgressDetail = new PathProgressDetail();
+        coreTechKnowledgePathProgressDetail.setCode("core");
+        coreTechKnowledgePathProgressDetail.setLabel("Core Technical Knowledge");
+        double coreTechKnowledgeProgress = getCoreTechKnowledgeProgress(userId);
+        coreTechKnowledgePathProgressDetail.setProgress(coreTechKnowledgeProgress);
+        
+        // TCO Calculator
+        PathProgressDetail tcoCalculatorPathProgressDetail = new PathProgressDetail();
+        tcoCalculatorPathProgressDetail.setCode("tco");
+        tcoCalculatorPathProgressDetail.setLabel("TCO Calculator");
+        double tcoCalculatorProgress = 0;
+        tcoCalculatorPathProgressDetail.setProgress(tcoCalculatorProgress);
+        
+        // Success Stories
+        PathProgressDetail successStoriesPathProgressDetail = new PathProgressDetail();
+        successStoriesPathProgressDetail.setCode("success");
+        successStoriesPathProgressDetail.setLabel("Success Stories");
+        double successStoriesProgress = 0;
+        successStoriesPathProgressDetail.setProgress(successStoriesProgress);
         
         UseCases tailoredUseCases = useCasesDAO.getTailoredUseCasesForUser(userId);
         for (UseCase eachUseCase : tailoredUseCases.getUseCases()) {
@@ -238,39 +259,24 @@ public class UseCaseServiceImpl implements UseCaseService {
             useCase.setId(eachUseCase.getId());
             useCase.setTitle(eachUseCase.getTitle());
             
-            pathProgressDetails = new ArrayList<PathProgressDetail>();
+            pathProgressDetails = new ArrayList<PathProgressDetail>(); 
             
             // Core Technical Knowledge
-            pathProgressDetail = new PathProgressDetail();
-            pathProgressDetail.setCode("core");
-            pathProgressDetail.setLabel("Core Technical Knowledge");
-            double coreTechKnowledgeProgress = getCoreTechKnowledgeProgress(userId);
-            pathProgressDetail.setProgress(coreTechKnowledgeProgress);
-            pathProgressDetails.add(pathProgressDetail);
-            
+            pathProgressDetails.add(coreTechKnowledgePathProgressDetail);
+
             // Complementary Knowledge
-            pathProgressDetail = new PathProgressDetail();
-            pathProgressDetail.setCode("complementary");
-            pathProgressDetail.setLabel("Complementary Knowledge");  
+            complKnowledgePathProgressDetail = new PathProgressDetail();
+            complKnowledgePathProgressDetail.setCode("complementary");
+            complKnowledgePathProgressDetail.setLabel("Complementary Knowledge");  
             double complementaryKnowledgeProgress = getComplementaryKnowledgeProgress(eachUseCase.getId(), userId);
-            pathProgressDetail.setProgress(complementaryKnowledgeProgress);
-            pathProgressDetails.add(pathProgressDetail);
+            complKnowledgePathProgressDetail.setProgress(complementaryKnowledgeProgress);
+            pathProgressDetails.add(complKnowledgePathProgressDetail);
             
             // TCO Calculator
-            pathProgressDetail = new PathProgressDetail();
-            pathProgressDetail.setCode("tco");
-            pathProgressDetail.setLabel("TCO Calculator");
-            double tcoCalculatorProgress = 0;
-            pathProgressDetail.setProgress(tcoCalculatorProgress);
-            pathProgressDetails.add(pathProgressDetail);
+            pathProgressDetails.add(tcoCalculatorPathProgressDetail);
             
-            // Success Stories
-            pathProgressDetail = new PathProgressDetail();
-            pathProgressDetail.setCode("success");
-            pathProgressDetail.setLabel("Success Stories");
-            double successStoriesProgress = 0;
-            pathProgressDetail.setProgress(successStoriesProgress);
-            pathProgressDetails.add(pathProgressDetail);
+            // Success Stories            
+            pathProgressDetails.add(successStoriesPathProgressDetail);
             
             double overAllProgress = (coreTechKnowledgeProgress + complementaryKnowledgeProgress + tcoCalculatorProgress + successStoriesProgress) / 4;
             useCase.setProgress(overAllProgress);
