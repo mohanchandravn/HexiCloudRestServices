@@ -10,6 +10,8 @@ import com.hexicloud.portaldb.bean.UserUseCases;
 public interface UseCaseService {
     
     public UseCases getAllUseCases();
+    
+    public UseCases getAllOtherUseCases();
 
     public UseCases getUseCasesValidForUser(String userId);
     

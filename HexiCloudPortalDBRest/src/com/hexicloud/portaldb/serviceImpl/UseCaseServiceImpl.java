@@ -81,6 +81,12 @@ public class UseCaseServiceImpl implements UseCaseService {
     }
 
     @Override
+    public UseCases getAllOtherUseCases() {
+        logger.info("*******  getAllOtherUseCases() of  service *****************");
+        return useCasesDAO.getAllOtherUseCases();
+    }
+
+    @Override
     public UseCases getUseCasesValidForUser(String userId) {
         logger.info("******* Starting of getAllUseCases() of  service *****************");
 

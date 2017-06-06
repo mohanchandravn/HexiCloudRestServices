@@ -63,6 +63,18 @@ public class UseCasesDAOImpl implements UseCasesDAO {
     }
 
     @Override
+    public UseCases getAllOtherUseCases() {
+        logger.info(" Begining of getAllOtherUseCases() ");
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        UseCases useCases =
+            (UseCases) jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_ALL_OTHER_USECASES_WITH_JOINS,
+                                          new UseCaseServicesExtractor());
+        logger.info("useCases size ===========> " + useCases != null ? useCases.getUseCases().size() : null);
+        logger.info(" End of getAllOtherUseCases() ");
+        return useCases;
+    }
+    
+    @Override
     public UseCases getUseCasesApplicableForServices(List<String> services) {
         logger.info(" Begin of getUseCasesApplicableForServices() ");
         Map<String, List> paramMap = Collections.singletonMap("servs", services);

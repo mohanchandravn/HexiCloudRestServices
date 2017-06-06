@@ -42,6 +42,19 @@ public class UseCasesController {
         return new ResponseEntity<UseCases>(useCases, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/services/rest/getAllOtherUseCases", method = RequestMethod.GET)
+    @PreAuthorize("hasAnyRole('ADMIN','CSC')")
+    public ResponseEntity<UseCases> getAllOtherUseCases() throws Exception {
+        logger.info("******* Start of getAllOtherUseCases() in controller ***********");
+        UseCases useCases = useCaseService.getAllOtherUseCases();
+        if (useCases.getUseCases().isEmpty()) {
+            logger.info("No Use Cases fount");
+            return new ResponseEntity<UseCases>(HttpStatus.NO_CONTENT);
+        }
+        logger.info("******** End of getAllOtherUseCases() in controller ***********");
+        return new ResponseEntity<UseCases>(useCases, HttpStatus.OK);
+    }
+    
     @RequestMapping(value = "/services/rest/getUseCasesForUser", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<UseCases> getUseCasesForUser(Authentication authentication) throws Exception {

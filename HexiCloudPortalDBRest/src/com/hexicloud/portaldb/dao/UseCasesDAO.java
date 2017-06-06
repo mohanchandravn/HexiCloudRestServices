@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface UseCasesDAO {
     public UseCases getAllUseCases();
+    
+    public UseCases getAllOtherUseCases();
 
     public UseCases getUseCasesApplicableForServices(List<String> services);
 
