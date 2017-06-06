@@ -1,6 +1,7 @@
 package com.hexicloud.portaldb.dao;
 
 import com.hexicloud.portaldb.bean.DecisionTree;
+import com.hexicloud.portaldb.bean.OtherUseCases;
 import com.hexicloud.portaldb.bean.Services;
 import com.hexicloud.portaldb.bean.UseCaseBenefits;
 import com.hexicloud.portaldb.bean.UseCases;
@@ -11,7 +12,7 @@ import java.util.List;
 public interface UseCasesDAO {
     public UseCases getAllUseCases();
     
-    public UseCases getAllOtherUseCases();
+    public OtherUseCases getAllOtherUseCases();
 
     public UseCases getUseCasesApplicableForServices(List<String> services);
 

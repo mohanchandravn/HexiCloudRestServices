@@ -1,6 +1,7 @@
 package com.hexicloud.portaldb.service;
 
 import com.hexicloud.portaldb.bean.DecisionTree;
+import com.hexicloud.portaldb.bean.OtherUseCases;
 import com.hexicloud.portaldb.bean.Services;
 import com.hexicloud.portaldb.bean.UseCaseBenefits;
 import com.hexicloud.portaldb.bean.UseCaseDetail;
@@ -11,7 +12,7 @@ public interface UseCaseService {
     
     public UseCases getAllUseCases();
     
-    public UseCases getAllOtherUseCases();
+    public OtherUseCases getAllOtherUseCases();
 
     public UseCases getUseCasesValidForUser(String userId);
     

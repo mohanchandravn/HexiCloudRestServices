@@ -2,6 +2,8 @@ package com.hexicloud.portaldb.daoImpl;
 
 import com.hexicloud.portaldb.bean.Benefit;
 import com.hexicloud.portaldb.bean.DecisionTree;
+import com.hexicloud.portaldb.bean.OtherUseCase;
+import com.hexicloud.portaldb.bean.OtherUseCases;
 import com.hexicloud.portaldb.bean.Service;
 import com.hexicloud.portaldb.bean.Services;
 import com.hexicloud.portaldb.bean.TreeDetail;
@@ -46,7 +48,8 @@ public class UseCasesDAOImpl implements UseCasesDAO {
         jdbcTemplate = new JdbcTemplate(this.dataSource);
         namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate.getDataSource());
         this.emailTailoredUCToUserPRC =
-            new SimpleJdbcCall(dataSource).withCatalogName("PKG_EMAIL").withProcedureName("PRC_SEND_TAILORED_USE_CASES");
+            new SimpleJdbcCall(dataSource).withCatalogName("PKG_EMAIL")
+            .withProcedureName("PRC_SEND_TAILORED_USE_CASES");
 
     }
 
@@ -63,17 +66,28 @@ public class UseCasesDAOImpl implements UseCasesDAO {
     }
 
     @Override
-    public UseCases getAllOtherUseCases() {
+    public OtherUseCases getAllOtherUseCases() {
+        //        logger.info(" Begining of getAllOtherUseCases() ");
+        //        @SuppressWarnings({ "unchecked", "rawtypes" })
+        //        UseCases useCases =
+        //            (UseCases) jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_ALL_OTHER_USECASES_WITH_JOINS,
+        //                                          new UseCaseServicesExtractor());
+        //        logger.info("useCases size ===========> " + useCases != null ? useCases.getUseCases().size() : null);
+        //        logger.info(" End of getAllOtherUseCases() ");
+        //        return useCases;
+
         logger.info(" Begining of getAllOtherUseCases() ");
+        OtherUseCases otherUCS = new OtherUseCases();
         @SuppressWarnings({ "unchecked", "rawtypes" })
-        UseCases useCases =
-            (UseCases) jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_ALL_OTHER_USECASES_WITH_JOINS,
-                                          new UseCaseServicesExtractor());
-        logger.info("useCases size ===========> " + useCases != null ? useCases.getUseCases().size() : null);
+        List<OtherUseCase> otherUseCases =
+            (List<OtherUseCase>) jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_ALL_OTHER_USECASES,
+                                                    new BeanPropertyRowMapper(OtherUseCase.class));
+
+        otherUCS.setOtherUseCases(otherUseCases);
         logger.info(" End of getAllOtherUseCases() ");
-        return useCases;
+        return otherUCS;
     }
-    
+
     @Override
     public UseCases getUseCasesApplicableForServices(List<String> services) {
         logger.info(" Begin of getUseCasesApplicableForServices() ");
@@ -161,7 +175,8 @@ public class UseCasesDAOImpl implements UseCasesDAO {
         UseCaseBenefits useCaseBenefits = new UseCaseBenefits();
         @SuppressWarnings("unchecked")
         List<Benefit> benefits =
-            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_USE_CASE_BENEFITS, new Object [] {useCaseId}, new BeanPropertyRowMapper(Benefit.class));
+            jdbcTemplate.query(SqlQueryConstantsUtil.SQL_GET_USE_CASE_BENEFITS, new Object[] { useCaseId },
+                               new BeanPropertyRowMapper(Benefit.class));
         useCaseBenefits.setBenefits(benefits);
         logger.info("Ending of the getUseCaseBenefits");
         return useCaseBenefits;
@@ -170,9 +185,9 @@ public class UseCasesDAOImpl implements UseCasesDAO {
     @Override
     public String sendTailoredUseCasesToUser(String userId) {
         logger.info(" Begining of sendTailoredUseCasesToUser() ");
-        SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_USER_ID", userId)
-                                                                    
-                                                                    .addValue("OUT_EMAIL_SENT", "N");
+        SqlParameterSource inParamsMap = new MapSqlParameterSource().addValue("IN_USER_ID", userId).
+
+            addValue("OUT_EMAIL_SENT", "N");
         Map<String, Object> out = emailTailoredUCToUserPRC.execute(inParamsMap);
         String emailSuccess = (String) out.get("OUT_EMAIL_SUCCESS");
         logger.info(" End of sendTailoredUseCasesToUser() ");

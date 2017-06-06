@@ -2,6 +2,7 @@ package com.hexicloud.portaldb.controller;
 
 import com.hexicloud.portaldb.bean.AuthUser;
 import com.hexicloud.portaldb.bean.DecisionTree;
+import com.hexicloud.portaldb.bean.OtherUseCases;
 import com.hexicloud.portaldb.bean.Services;
 import com.hexicloud.portaldb.bean.UseCaseBenefits;
 import com.hexicloud.portaldb.bean.UseCaseDetail;
@@ -44,15 +45,15 @@ public class UseCasesController {
 
     @RequestMapping(value = "/services/rest/getAllOtherUseCases", method = RequestMethod.GET)
     @PreAuthorize("hasAnyRole('ADMIN','CSC')")
-    public ResponseEntity<UseCases> getAllOtherUseCases() throws Exception {
+    public ResponseEntity<OtherUseCases> getAllOtherUseCases() throws Exception {
         logger.info("******* Start of getAllOtherUseCases() in controller ***********");
-        UseCases useCases = useCaseService.getAllOtherUseCases();
-        if (useCases.getUseCases().isEmpty()) {
+        OtherUseCases otherUseCases = useCaseService.getAllOtherUseCases();
+        if (otherUseCases.getOtherUseCases().isEmpty()) {
             logger.info("No Use Cases fount");
-            return new ResponseEntity<UseCases>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<OtherUseCases>(HttpStatus.NO_CONTENT);
         }
         logger.info("******** End of getAllOtherUseCases() in controller ***********");
-        return new ResponseEntity<UseCases>(useCases, HttpStatus.OK);
+        return new ResponseEntity<OtherUseCases>(otherUseCases, HttpStatus.OK);
     }
     
     @RequestMapping(value = "/services/rest/getUseCasesForUser", method = RequestMethod.GET)
